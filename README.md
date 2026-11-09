@@ -1,4 +1,4 @@
-# UMC 8th 틈틈(teumteum) Frontend
+# RoadStudy Frontend
 *
 
 ## 🚀 Tech Stack
