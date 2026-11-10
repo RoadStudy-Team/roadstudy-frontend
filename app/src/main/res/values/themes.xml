@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources xmlns:tools="http://schemas.android.com/tools" xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- Base application theme. -->
     <style name="Base.Theme.Roadstudyfrontend" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
@@ -6,4 +6,37 @@
     </style>
 
     <style name="Theme.Roadstudyfrontend" parent="Base.Theme.Roadstudyfrontend" />
+
+    <!-- ===== 여기에 추가하기 ===== -->
+    <!-- BottomNavigationView 스타일 -->
+    <style name="NoIndicatorBottomNav" parent="Widget.Material3.BottomNavigationView">
+        <item name="itemActiveIndicatorStyle">@style/NoIndicator</item>
+
+        <item name="itemBackground">@color/transparent</item>
+        <item name="itemRippleColor">@color/transparent</item>
+
+
+        <item name="android:minHeight">70dp</item>
+        <item name="itemIconSize">28dp</item>
+        <item name="itemTextAppearanceActive">@style/BottomNavTextActive</item>
+        <item name="itemTextAppearanceInactive">@style/BottomNavTextInactive</item>
+    </style>
+
+    <style name="NoIndicator">
+        <item name="android:background">@color/transparent</item>
+        <item name="android:layout_marginTop">0dp</item>
+        <item name="android:layout_marginBottom">0dp</item>
+        <item name="android:minHeight">0dp</item>
+    </style>
+
+    <style name="BottomNavTextActive" parent="@android:style/TextAppearance">
+        <item name="android:textSize">10sp</item>
+        <item name="android:paddingTop">0dp</item>
+    </style>
+
+    <style name="BottomNavTextInactive" parent="@android:style/TextAppearance">
+        <item name="android:textSize">10sp</item>
+        <item name="android:paddingTop">0dp</item>
+    </style>
+
 </resources>

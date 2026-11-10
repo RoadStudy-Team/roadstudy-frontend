@@ -2,4 +2,13 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="transparent">#00000000</color>
+
+    <color name="text_primary">#5B9CF6</color>
+
+    <color name="deactive">#6F757E</color>
+
+    <color name="background_color">#111318</color>
+    <color name="roadstudy_line">#6F757E</color>
 </resources>
