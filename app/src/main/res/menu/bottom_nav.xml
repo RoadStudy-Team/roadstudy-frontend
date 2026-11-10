@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/navigation_today"
+        android:icon="@drawable/ic_today"
+        android:title="오늘" />
+    <item
+        android:id="@+id/navigation_mydata"
+        android:icon="@drawable/ic_mydata"
+        android:title="내 자료" />
+    <item
+        android:id="@+id/navigation_growth"
+        android:icon="@drawable/ic_growth"
+        android:title="성장 리포트" />
+    <item
+        android:id="@+id/navigation_setting"
+        android:icon="@drawable/ic_setting"
+        android:title="설정" />
+</menu>
