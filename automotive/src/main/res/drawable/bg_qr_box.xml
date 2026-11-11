@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- QR 코드 뒤의 하얀 둥근 상자 (QR 은 흰 바탕이어야 스캔된다) -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+    <solid android:color="#F5F8FB" />
+    <corners android:radius="40dp" />
+</shape>

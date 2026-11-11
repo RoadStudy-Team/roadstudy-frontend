@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    벡터 아이콘. 숫자로 선을 그리는 그림이라 어떤 크기로 키워도 깨지지 않는다.
+    viewportWidth/Height 는 그림판의 크기(24x24 칸)이고, pathData 가 그 칸 위에 그리는 선이다.
+    M = 펜을 옮김, L = 직선, C = 곡선, A = 호, H/V = 가로/세로선, Z = 닫기
+    로고: 마름모 안에 세로 막대 두 개
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:pathData="M12,2.5 L21.5,12 L12,21.5 L2.5,12 Z"
+        android:strokeColor="@color/rs_accent"
+        android:strokeWidth="1.6"
+        android:strokeLineJoin="round" />
+    <path
+        android:pathData="M9.8,8.6 V15.4 M14.2,8.6 V15.4"
+        android:strokeColor="@color/rs_accent"
+        android:strokeWidth="1.8"
+        android:strokeLineCap="round" />
+</vector>

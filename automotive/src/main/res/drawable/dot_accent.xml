@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 경로선의 출발·도착 점 (파란색) -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="oval">
+    <solid android:color="@color/rs_accent" />
+    <size android:width="30dp" android:height="30dp" />
+</shape>
