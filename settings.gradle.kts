@@ -25,4 +25,5 @@ dependencyResolutionManagement {
 rootProject.name = "roadstudy-frontend"
 include(":mobile")
 include(":shared")
+include(":automotive")
  
