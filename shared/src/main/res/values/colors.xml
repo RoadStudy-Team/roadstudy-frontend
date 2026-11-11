@@ -24,4 +24,8 @@
     <color name="rs_accent_soft">#1F2D44</color>
     <color name="rs_safe">#3FB37F</color>
     <color name="rs_caution">#E0B252</color>
+    <color name="rs_wrong">#E5636B</color>
+    <!-- 정오답 칸의 배경. 각각 초록, 빨강을 어둡게 한 색 -->
+    <color name="rs_safe_soft">#16302A</color>
+    <color name="rs_wrong_soft">#3A1F22</color>
 </resources>
