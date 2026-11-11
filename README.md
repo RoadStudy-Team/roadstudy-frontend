@@ -1,5 +1,5 @@
 # RoadStudy Frontend
-*
+자차 출퇴근 직장인이 올린 공부 자료를 출퇴근길 오디오 학습으로 바꿔주고, 운전이 쉬운 순간에만 말을 거는 자기계발 학습 코치 앱 **로드스터디(RoadStudy)** 입니다.
 
 ## 🚀 Tech Stack
 
@@ -180,11 +180,66 @@ ex) [FEAT/#30] 홈 뷰 구현, [ADD/#1] 폰트 파일 추가
 ex) [FEAT/#6] 로그인 뷰 구현
 
 
+## 📦 모듈 구조
+
+| 모듈 | 내용 |
+| --- | --- |
+| `automotive` | 차량 앱 (가로형). Pleos Connect에서 실행하며, Pleos SDK는 이 모듈에서만 사용 |
+| `mobile` | 휴대폰 앱 (세로형). 홈, 내 자료, 성장 리포트, 설정 |
+| `shared` | 두 앱이 함께 쓰는 데이터 모델과 색상 값 (앱이 아닌 라이브러리) |
+
+- 앱은 `automotive`, `mobile` 두 개가 나오고, `shared`는 두 앱이 가져다 씁니다.
+- 패키지: `com.roadstudy.automotive`, `com.roadstudy.mobile`, `com.roadstudy.shared`
+
+### 의존 관계
+
+```mermaid
+flowchart LR
+    A["automotive<br/>차량 앱 · 가로형"]
+    M["mobile<br/>휴대폰 앱 · 세로형"]
+    S["shared<br/>모델 · 색상"]
+    B[("백엔드 (예정)")]
+
+    A --> S
+    M --> S
+    A -. 세션 결과 · 학습 데이터 .-> B
+    M -. 자료 업로드 · 리포트 .-> B
+```
+
+- 실선은 코드 의존입니다. `automotive`와 `mobile`은 서로를 참조하지 않고, 둘 다 `shared`만 참조합니다.
+- 점선은 통신입니다. 두 앱은 직접 통신하지 않고 백엔드하고만 통신합니다. 백엔드 연결은 아직 구현 전입니다.
+
+### 폴더 구조
+
+```
+roadstudy-frontend
+├── automotive                          차량 앱
+│   └── src/main/java/com/roadstudy/automotive
+│       └── session                     학습 모드 판단, 세션 진행 로직 (단위 테스트 포함)
+├── mobile                              휴대폰 앱
+│   └── src/main/java/com/roadstudy/mobile
+│       ├── main                        MainActivity, 하단 탭
+│       └── today · mydata · growth · setting    탭별 화면(Fragment)
+└── shared                              공용 라이브러리
+    └── src/main
+        ├── java/com/roadstudy/shared/model      StudySection, Concept 등 데이터 모델
+        └── res/values/colors.xml                색상 값
+```
+
 ## ⚙️Android Studio 환경 설정
 버전 : Rabbit 2
 
-targetSDK : 35
+AGP : 9.5.1
 
-minSDK : 26
+compileSDK / targetSDK : 37
 
-테스트 환경 : Emulator(Pixel 8a)
+minSDK : 28 (전 모듈 공통, Pleos Connect 차량 보안 요건)
+
+### 테스트 환경
+
+| 모듈 | 실행 환경 |
+| --- | --- |
+| `mobile` | 일반 휴대폰 에뮬레이터 (Phone, API 28 이상) |
+| `automotive` | Pleos Connect Emulator v2.1.0 (API 34) + Virtual Console. **휴대폰 에뮬레이터 사용 금지** |
+
+Pleos Connect Emulator 설치: https://document.pleos.ai/docs/connect/guide/getting-started/application-development/setup-connect-sdk-emulator

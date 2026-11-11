@@ -23,5 +23,7 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "roadstudy-frontend"
-include(":app")
+include(":mobile")
+include(":shared")
+include(":automotive")
  
