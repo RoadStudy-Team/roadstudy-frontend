@@ -1,5 +1,5 @@
 # RoadStudy Frontend
-*
+자차 출퇴근 직장인이 올린 공부 자료를 출퇴근길 오디오 학습으로 바꿔주고, 운전이 쉬운 순간에만 말을 거는 자기계발 학습 코치 앱 **로드스터디(RoadStudy)** 입니다.
 
 ## 🚀 Tech Stack
 
@@ -180,11 +180,31 @@ ex) [FEAT/#30] 홈 뷰 구현, [ADD/#1] 폰트 파일 추가
 ex) [FEAT/#6] 로그인 뷰 구현
 
 
+## 📦 모듈 구조
+
+| 모듈 | 내용 |
+| --- | --- |
+| `automotive` | 차량 앱 (가로형). Pleos Connect에서 실행하며, Pleos SDK는 이 모듈에서만 사용 |
+| `mobile` | 휴대폰 앱 (세로형). 홈, 내 자료, 성장 리포트, 설정 |
+| `shared` | 두 앱이 함께 쓰는 데이터 모델과 색상 값 (앱이 아닌 라이브러리) |
+
+- 앱은 `automotive`, `mobile` 두 개가 나오고, `shared`는 두 앱이 가져다 씁니다.
+- 패키지: `com.roadstudy.automotive`, `com.roadstudy.mobile`, `com.roadstudy.shared`
+
 ## ⚙️Android Studio 환경 설정
 버전 : Rabbit 2
 
-targetSDK : 35
+AGP : 9.5.1
 
-minSDK : 26
+compileSDK / targetSDK : 37
 
-테스트 환경 : Emulator(Pixel 8a)
+minSDK : 28 (전 모듈 공통, Pleos Connect 차량 보안 요건)
+
+### 테스트 환경
+
+| 모듈 | 실행 환경 |
+| --- | --- |
+| `mobile` | 일반 휴대폰 에뮬레이터 (Phone, API 28 이상) |
+| `automotive` | Pleos Connect Emulator v2.1.0 (API 34) + Virtual Console. **휴대폰 에뮬레이터 사용 금지** |
+
+Pleos Connect Emulator 설치: https://document.pleos.ai/docs/connect/guide/getting-started/application-development/setup-connect-sdk-emulator
