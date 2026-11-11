@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
@@ -13,6 +12,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.roadstudy.automotive.R
 import com.roadstudy.automotive.databinding.FragmentHomeBinding
 import com.roadstudy.automotive.session.TripType
+import com.roadstudy.automotive.ui.driving.DrivingFragment
 
 /**
  * 홈 화면. [HomeViewModel] 의 [HomeUiState] 를 그리고, 사용자 입력(섹션 선택, 시작 버튼)을 ViewModel 에 넘긴다.
@@ -89,8 +89,11 @@ class HomeFragment : Fragment() {
         if (state.isEmpty) {
             viewModel.startSampleExperience()
         } else {
-            // TODO: 주행 중 화면이 생기면 여기서 세션을 시작한다
-            Toast.makeText(requireContext(), R.string.toast_driving_screen_todo, Toast.LENGTH_SHORT).show()
+            val sectionId = state.sections.firstOrNull { it.selected }?.sectionId
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.container, DrivingFragment.newInstance(sectionId))
+                .addToBackStack(null)
+                .commit()
         }
     }
 
