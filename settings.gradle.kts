@@ -23,5 +23,5 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "roadstudy-frontend"
-include(":app")
+include(":mobile")
  
