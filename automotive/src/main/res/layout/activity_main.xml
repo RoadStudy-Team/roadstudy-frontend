@@ -2,7 +2,6 @@
 <!--
     앱의 바깥 틀. 비어 있는 FrameLayout 하나뿐이고,
     MainActivity 가 이 안에 화면(HomeFragment)을 끼워 넣는다.
-    React 로 치면 <div id="root"></div> 와 같다.
 -->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/container"
