@@ -8,7 +8,9 @@ data class StudySection(
     val sectionId: String,
     val title: String,
     val type: MaterialType,
-    val concepts: List<Concept>
+    val concepts: List<Concept>,
+    /** 업로드한 원본 파일 이름 (홈 화면에 표시). 없을 수도 있어서 기본값은 null */
+    val sourceFileName: String? = null
 )
 
 enum class MaterialType { CERTIFICATE, ENGLISH, WORK, ETC }
