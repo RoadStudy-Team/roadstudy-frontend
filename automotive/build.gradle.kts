@@ -24,5 +24,8 @@ android {
 
 dependencies {
     implementation(project(":shared"))
+    // Pleos SDK는 automotive 모듈에서만 사용한다
+    implementation(libs.pleos.vehicle)
+    implementation(libs.pleos.navihelper)
     testImplementation(libs.junit)
 }
