@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 퀴즈 진행 표시: 지금 푸는 페이지의 길쭉한 알약 -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+    <solid android:color="@color/rs_accent" />
+    <corners android:radius="8dp" />
+    <size android:width="64dp" android:height="16dp" />
+</shape>
