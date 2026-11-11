@@ -191,6 +191,41 @@ ex) [FEAT/#6] 로그인 뷰 구현
 - 앱은 `automotive`, `mobile` 두 개가 나오고, `shared`는 두 앱이 가져다 씁니다.
 - 패키지: `com.roadstudy.automotive`, `com.roadstudy.mobile`, `com.roadstudy.shared`
 
+### 의존 관계
+
+```mermaid
+flowchart LR
+    A["automotive<br/>차량 앱 · 가로형"]
+    M["mobile<br/>휴대폰 앱 · 세로형"]
+    S["shared<br/>모델 · 색상"]
+    B[("백엔드 (예정)")]
+
+    A --> S
+    M --> S
+    A -. 세션 결과 · 학습 데이터 .-> B
+    M -. 자료 업로드 · 리포트 .-> B
+```
+
+- 실선은 코드 의존입니다. `automotive`와 `mobile`은 서로를 참조하지 않고, 둘 다 `shared`만 참조합니다.
+- 점선은 통신입니다. 두 앱은 직접 통신하지 않고 백엔드하고만 통신합니다. 백엔드 연결은 아직 구현 전입니다.
+
+### 폴더 구조
+
+```
+roadstudy-frontend
+├── automotive                          차량 앱
+│   └── src/main/java/com/roadstudy/automotive
+│       └── session                     학습 모드 판단, 세션 진행 로직 (단위 테스트 포함)
+├── mobile                              휴대폰 앱
+│   └── src/main/java/com/roadstudy/mobile
+│       ├── main                        MainActivity, 하단 탭
+│       └── today · mydata · growth · setting    탭별 화면(Fragment)
+└── shared                              공용 라이브러리
+    └── src/main
+        ├── java/com/roadstudy/shared/model      StudySection, Concept 등 데이터 모델
+        └── res/values/colors.xml                색상 값
+```
+
 ## ⚙️Android Studio 환경 설정
 버전 : Rabbit 2
 
