@@ -1,4 +1,4 @@
-package com.example.roadstudy_frontend
+package com.roadstudy.mobile
 
 import org.junit.Test
 

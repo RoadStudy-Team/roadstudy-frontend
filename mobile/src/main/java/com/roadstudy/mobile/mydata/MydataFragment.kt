@@ -1,15 +1,15 @@
-package com.example.roadstudy_frontend.setting
+package com.roadstudy.mobile.mydata
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.example.roadstudy_frontend.databinding.FragmentSettingBinding
+import com.roadstudy.mobile.databinding.FragmentMydataBinding
 
-class SettingFragment : Fragment() {
+class MydataFragment : Fragment() {
 
-    private var _binding: FragmentSettingBinding? = null
+    private var _binding: FragmentMydataBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -17,7 +17,7 @@ class SettingFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentSettingBinding.inflate(inflater, container, false)
+        _binding = FragmentMydataBinding.inflate(inflater, container, false)
         return binding.root
     }
 

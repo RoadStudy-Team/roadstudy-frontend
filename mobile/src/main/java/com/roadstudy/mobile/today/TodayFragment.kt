@@ -1,11 +1,11 @@
-package com.example.roadstudy_frontend.today
+package com.roadstudy.mobile.today
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.example.roadstudy_frontend.databinding.FragmentTodayBinding
+import com.roadstudy.mobile.databinding.FragmentTodayBinding
 
 class TodayFragment : Fragment() {
 

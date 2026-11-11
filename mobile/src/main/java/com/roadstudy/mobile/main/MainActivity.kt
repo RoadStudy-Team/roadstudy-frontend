@@ -1,14 +1,14 @@
-package com.example.roadstudy_frontend.main
+package com.roadstudy.mobile.main
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import com.example.roadstudy_frontend.R
-import com.example.roadstudy_frontend.databinding.ActivityMainBinding
-import com.example.roadstudy_frontend.growth.GrowthFragment
-import com.example.roadstudy_frontend.mydata.MydataFragment
-import com.example.roadstudy_frontend.setting.SettingFragment
-import com.example.roadstudy_frontend.today.TodayFragment
+import com.roadstudy.mobile.R
+import com.roadstudy.mobile.databinding.ActivityMainBinding
+import com.roadstudy.mobile.growth.GrowthFragment
+import com.roadstudy.mobile.mydata.MydataFragment
+import com.roadstudy.mobile.setting.SettingFragment
+import com.roadstudy.mobile.today.TodayFragment
 
 class MainActivity : AppCompatActivity() {
 

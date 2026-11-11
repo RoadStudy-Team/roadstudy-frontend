@@ -3,14 +3,14 @@ plugins {
 }
 
 android {
-    namespace = "com.example.roadstudy_frontend"
+    namespace = "com.roadstudy.mobile"
     compileSdk {
         version = release(37)
     }
 
     defaultConfig {
-        applicationId = "com.example.roadstudy_frontend"
-        minSdk = 24
+        applicationId = "com.roadstudy.mobile"
+        minSdk = 28
         targetSdk = 37
         versionCode = 1
         versionName = "1.0"

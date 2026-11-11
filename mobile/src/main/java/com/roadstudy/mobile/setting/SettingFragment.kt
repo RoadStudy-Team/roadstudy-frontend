@@ -1,15 +1,15 @@
-package com.example.roadstudy_frontend.growth
+package com.roadstudy.mobile.setting
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.example.roadstudy_frontend.databinding.FragmentGrowthBinding
+import com.roadstudy.mobile.databinding.FragmentSettingBinding
 
-class GrowthFragment : Fragment() {
+class SettingFragment : Fragment() {
 
-    private var _binding: FragmentGrowthBinding? = null
+    private var _binding: FragmentSettingBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -17,7 +17,7 @@ class GrowthFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentGrowthBinding.inflate(inflater, container, false)
+        _binding = FragmentSettingBinding.inflate(inflater, container, false)
         return binding.root
     }
 

@@ -1,15 +1,15 @@
-package com.example.roadstudy_frontend.mydata
+package com.roadstudy.mobile.growth
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.example.roadstudy_frontend.databinding.FragmentMydataBinding
+import com.roadstudy.mobile.databinding.FragmentGrowthBinding
 
-class MydataFragment : Fragment() {
+class GrowthFragment : Fragment() {
 
-    private var _binding: FragmentMydataBinding? = null
+    private var _binding: FragmentGrowthBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -17,7 +17,7 @@ class MydataFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentMydataBinding.inflate(inflater, container, false)
+        _binding = FragmentGrowthBinding.inflate(inflater, container, false)
         return binding.root
     }
 
