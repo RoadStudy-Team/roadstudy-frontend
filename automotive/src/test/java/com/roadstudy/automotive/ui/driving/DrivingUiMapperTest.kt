@@ -87,6 +87,13 @@ class DrivingUiMapperTest {
     }
 
     @Test
+    fun `주차 상태만 도착으로 표시된다`() {
+        assertEquals(true, map(session(LearningMode.PARKED, ModeReason.PARKED)).arrived)
+        assertEquals(false, map(session()).arrived)
+        assertEquals(false, map(session(LearningMode.FOCUS, ModeReason.UPCOMING_TURN)).arrived)
+    }
+
+    @Test
     fun `경로 정보와 개념 진행이 화면 값으로 바뀐다`() {
         val state = map(session())
 

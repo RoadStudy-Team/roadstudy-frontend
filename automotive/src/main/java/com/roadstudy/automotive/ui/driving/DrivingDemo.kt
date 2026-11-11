@@ -1,6 +1,5 @@
 package com.roadstudy.automotive.ui.driving
 
-import com.roadstudy.automotive.session.AudioPort
 import com.roadstudy.automotive.session.DrivingContext
 import com.roadstudy.automotive.session.Gear
 import com.roadstudy.automotive.session.NaviSignals
@@ -24,7 +23,10 @@ enum class DrivingScenario {
     NIGHT,
 
     /** 07: 회전 300m 전이라 일시정지 */
-    TURN_AHEAD;
+    TURN_AHEAD,
+
+    /** 도착해서 P단으로 바뀐 상황. 주차 후 복습 화면(08)으로 넘어간다 */
+    ARRIVED;
 
     fun next(): DrivingScenario = entries[(ordinal + 1) % entries.size]
 
@@ -87,16 +89,10 @@ class DrivingDemo(
                 controller.onContextChanged(context(VehicleSignals(gear = Gear.DRIVE, lowBeamOn = true)))
             DrivingScenario.TURN_AHEAD ->
                 controller.onContextChanged(context(VehicleSignals(gear = Gear.DRIVE), turnMeters = 300))
+            DrivingScenario.ARRIVED ->
+                controller.onContextChanged(context(VehicleSignals(gear = Gear.PARK)))
         }
         return controller.uiState
-    }
-
-    /** 소리를 내지 않는 오디오. 데모에서는 화면만 확인한다 */
-    private object SilentAudioPort : AudioPort {
-        override fun play(url: String) = Unit
-        override fun pause() = Unit
-        override fun resume() = Unit
-        override fun stop() = Unit
     }
 
     private companion object {

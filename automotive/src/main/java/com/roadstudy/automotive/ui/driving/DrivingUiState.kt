@@ -43,5 +43,7 @@ data class DrivingUiState(
     val etaMinutes: Int?,
     val conceptIndex: Int,
     val conceptTotal: Int,
-    val sectionTitle: String
+    val sectionTitle: String,
+    /** 도착해서 주차(P단)가 된 상태. 주차 후 복습 화면으로 넘어가야 한다 */
+    val arrived: Boolean = false
 )

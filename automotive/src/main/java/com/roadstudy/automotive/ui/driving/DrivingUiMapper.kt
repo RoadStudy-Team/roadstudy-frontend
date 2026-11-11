@@ -41,7 +41,8 @@ class DrivingUiMapper {
             etaMinutes = session.remainingSec?.let { HomeUiMapper.ceilMinutes(it) },
             conceptIndex = session.conceptIndex,
             conceptTotal = session.conceptTotal,
-            sectionTitle = sectionTitle
+            sectionTitle = sectionTitle,
+            arrived = session.mode == LearningMode.PARKED
         )
     }
 }
