@@ -11,10 +11,12 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.roadstudy.automotive.R
+import com.roadstudy.automotive.session.VehicleSignals
 import com.roadstudy.shared.R as SharedR
 import com.roadstudy.automotive.databinding.FragmentDrivingBinding
 import com.roadstudy.automotive.ui.home.FakeHomeDataSource
 import com.roadstudy.automotive.ui.parked.ParkedFragment
+import com.roadstudy.automotive.vehicle.VehicleSignalHub
 
 /**
  * 주행 중 화면. [DrivingViewModel] 의 [DrivingUiState] 를 그린다.
@@ -39,15 +41,17 @@ class DrivingFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // 개발용: `am start ... --es driving_scenario night` 로 시작 상황을 고른다 (safe, thinking, night, turn_ahead, arrived)
-        val scenario = DrivingScenario.fromKey(requireActivity().intent.getStringExtra(EXTRA_SCENARIO))
+        // 기본은 실제 차량 신호를 따른다. 개발용으로 `am start ... --es driving_scenario night` 를 주면
+        // 그 가짜 상황으로 시작한다 (safe, thinking, night, turn_ahead, arrived)
+        val scenario = requireActivity().intent.getStringExtra(EXTRA_SCENARIO)?.let { DrivingScenario.fromKey(it) }
         val sectionId = requireArguments().getString(ARG_SECTION_ID)
         viewModel = ViewModelProvider(this, driveViewModelFactory(sectionId, scenario))[DrivingViewModel::class.java]
 
-        // 개발용: 화면을 누르면 다음 주행 상황으로 바뀐다. 실제 운행에서는 터치 입력을 받지 않는다.
-        // TODO: Pleos 신호 연동 후 제거
+        // 개발용: 화면을 누르면 가짜 상황이 차례로 바뀐다(실제 신호는 무시). 실제 운행에서는 터치 입력을 받지 않는다.
+        // TODO: 신호 연동이 안정되면 제거
         binding.rootDriving.setOnClickListener { viewModel.nextScenario() }
 
+        VehicleSignalHub.signals.observe(viewLifecycleOwner) { signals -> viewModel.onVehicleSignals(signals) }
         viewModel.uiState.observe(viewLifecycleOwner) { state ->
             render(state)
             // 도착(P단)하면 주차 후 복습 화면으로 넘어간다. 뒤로 돌아왔을 때 다시 넘어가지 않도록 한 번만 처리한다
@@ -114,13 +118,13 @@ class DrivingFragment : Fragment() {
         _binding = null
     }
 
-    private fun driveViewModelFactory(sectionId: String?, scenario: DrivingScenario) =
+    private fun driveViewModelFactory(sectionId: String?, scenario: DrivingScenario?) =
         object : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
                 // TODO: Pleos SDK 연동 시 가짜 입력 대신 실제 내비 경로와 저장된 진도를 쓴다
                 val demo = DrivingDemo(FakeHomeDataSource.fromIntent(requireActivity().intent).load(), sectionId)
-                return DrivingViewModel(demo, scenario) as T
+                return DrivingViewModel(demo, scenario, VehicleSignalHub.signals.value ?: VehicleSignals()) as T
             }
         }
 

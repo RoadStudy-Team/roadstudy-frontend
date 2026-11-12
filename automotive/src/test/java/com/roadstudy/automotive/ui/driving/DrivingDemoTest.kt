@@ -1,7 +1,10 @@
 package com.roadstudy.automotive.ui.driving
 
+import com.roadstudy.automotive.session.Gear
 import com.roadstudy.automotive.session.LearningMode
 import com.roadstudy.automotive.session.ModeReason
+import com.roadstudy.automotive.session.VehicleSignals
+import com.roadstudy.automotive.session.WiperLevel
 import com.roadstudy.automotive.session.Step
 import com.roadstudy.automotive.ui.home.FakeHomeDataSource
 import com.roadstudy.shared.model.SampleStudySections
@@ -58,6 +61,60 @@ class DrivingDemoTest {
         assertEquals(LearningMode.PARKED, state.mode)
         assertEquals(ModeReason.PARKED, state.reason)
         assertTrue(state.finished)
+    }
+
+    // ----- 실제 차량 신호 (라이브) -----
+
+    private fun live(
+        vehicle: VehicleSignals,
+        hasDriven: Boolean = true
+    ) = demo.runLive(vehicle, hasDriven)
+
+    @Test
+    fun `실제 신호가 주행이고 이상이 없으면 안전 구간이다`() {
+        val state = live(VehicleSignals(gear = Gear.DRIVE))
+
+        assertEquals(LearningMode.NORMAL, state.mode)
+        assertEquals(ModeReason.SAFE, state.reason)
+    }
+
+    @Test
+    fun `와이퍼 강은 집중, 약은 주의로 이어진다`() {
+        val heavy = live(VehicleSignals(gear = Gear.DRIVE, wiperLevel = WiperLevel.HIGH))
+        val light = live(VehicleSignals(gear = Gear.DRIVE, wiperLevel = WiperLevel.LOW))
+
+        assertEquals(LearningMode.FOCUS, heavy.mode)
+        assertEquals(ModeReason.HEAVY_RAIN, heavy.reason)
+        assertEquals(LearningMode.CAUTION, light.mode)
+        assertEquals(ModeReason.LIGHT_RAIN, light.reason)
+    }
+
+    @Test
+    fun `하향등은 야간 주의, 안개등은 집중으로 이어진다`() {
+        val night = live(VehicleSignals(gear = Gear.DRIVE, lowBeamOn = true))
+        val fog = live(VehicleSignals(gear = Gear.DRIVE, fogLightOn = true))
+
+        assertEquals(ModeReason.NIGHT, night.reason)
+        assertEquals(LearningMode.CAUTION, night.mode)
+        assertEquals(ModeReason.FOG, fog.reason)
+        assertEquals(LearningMode.FOCUS, fog.mode)
+    }
+
+    @Test
+    fun `주행한 뒤 P단이 되면 도착이다`() {
+        val state = live(VehicleSignals(gear = Gear.PARK), hasDriven = true)
+
+        assertEquals(LearningMode.PARKED, state.mode)
+        assertTrue(state.finished)
+    }
+
+    @Test
+    fun `아직 주행한 적이 없으면 P단이어도 도착으로 보지 않는다`() {
+        // 시작 버튼으로 들어왔지만 아직 출발 전인 상황
+        val state = live(VehicleSignals(gear = Gear.PARK), hasDriven = false)
+
+        assertEquals(LearningMode.NORMAL, state.mode)
+        assertFalse(state.finished)
     }
 
     @Test
