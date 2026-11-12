@@ -1,6 +1,7 @@
 package com.roadstudy.mobile.main
 
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.roadstudy.mobile.R
@@ -54,5 +55,9 @@ class MainActivity : AppCompatActivity() {
         supportFragmentManager.beginTransaction()
             .replace(R.id.main_frm, fragment)
             .commit()
+    }
+
+    fun setBottomNavigationVisibility(isVisible: Boolean) {
+        binding.mainBnv.visibility = if (isVisible) View.VISIBLE else View.GONE
     }
 }
