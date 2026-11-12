@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    확인 퀴즈 질문 화면 (디자인 도안 09_quiz_question). 한 화면에 한 문제씩, 총 3페이지로 푼다.
+    정차(P단) 중이라 터치 입력을 받는다. 크기 기준은 fragment_home.xml 상단 설명을 참고한다.
+-->
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingStart="56dp"
+    android:paddingTop="48dp"
+    android:paddingEnd="56dp"
+    android:paddingBottom="40dp">
+
+    <!-- ===== 상단: 진행 표시와 건너뛰기 ===== -->
+    <TextView
+        android:id="@+id/tvQuizTitle"
+        style="@style/Rs.Text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="40sp"
+        app:layout_constraintBottom_toBottomOf="@id/btnSkip"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/btnSkip" />
+
+    <!-- 진행 점: 지금 페이지는 알약, 나머지는 작은 점. 문제 수가 3개보다 적으면 남는 점은 숨긴다 -->
+    <LinearLayout
+        android:id="@+id/progressDots"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="@id/tvQuizTitle"
+        app:layout_constraintStart_toEndOf="@id/tvQuizTitle"
+        app:layout_constraintTop_toTopOf="@id/tvQuizTitle">
+
+        <View
+            android:id="@+id/dot1"
+            android:layout_width="16dp"
+            android:layout_height="16dp" />
+
+        <View
+            android:id="@+id/dot2"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_marginStart="12dp" />
+
+        <View
+            android:id="@+id/dot3"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_marginStart="12dp" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/btnSkip"
+        style="@style/Rs.Text"
+        android:layout_width="wrap_content"
+        android:layout_height="84dp"
+        android:background="@drawable/bg_choice"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center"
+        android:paddingStart="44dp"
+        android:paddingEnd="44dp"
+        android:text="@string/quiz_skip"
+        android:textSize="32sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvQuizSection"
+        style="@style/Rs.Text.Sub.Bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="32dp"
+        android:textSize="32sp"
+        app:layout_constraintBottom_toBottomOf="@id/btnSkip"
+        app:layout_constraintEnd_toStartOf="@id/btnSkip"
+        app:layout_constraintTop_toTopOf="@id/btnSkip" />
+
+    <View
+        android:id="@+id/topDivider"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginTop="32dp"
+        android:background="@color/rs_border"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnSkip" />
+
+    <!-- ===== 가운데: 문제, 단서, 선택지 4개 (남는 세로 공간의 가운데) ===== -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@id/bottomDivider"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/topDivider">
+
+        <TextView
+            android:id="@+id/tvQuestion"
+            style="@style/Rs.Text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="58sp" />
+
+        <TextView
+            android:id="@+id/tvHint"
+            style="@style/Rs.Text.Sub"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:textSize="34sp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerChoices"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="-8dp"
+            android:layout_marginTop="36dp"
+            android:layout_marginEnd="-8dp"
+            android:clipToPadding="false" />
+    </LinearLayout>
+
+    <!-- ===== 하단: 다음 문제 ===== -->
+    <View
+        android:id="@+id/bottomDivider"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginBottom="28dp"
+        android:background="@color/rs_border"
+        app:layout_constraintBottom_toTopOf="@id/btnNext"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/btnNext"
+        android:layout_width="wrap_content"
+        android:layout_height="104dp"
+        android:background="@drawable/bg_button_primary"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingStart="72dp"
+        android:paddingEnd="64dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <TextView
+            android:id="@+id/tvNext"
+            style="@style/Rs.Text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textSize="36sp" />
+
+        <ImageView
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginStart="16dp"
+            android:importantForAccessibility="no"
+            android:src="@drawable/ic_chevron_right" />
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

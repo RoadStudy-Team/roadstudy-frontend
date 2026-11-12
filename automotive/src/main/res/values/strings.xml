@@ -75,7 +75,22 @@
     <string name="parked_again_notice">%1$s %2$d개가 나와요</string>
     <string name="parked_quiz">확인 퀴즈 %1$d문제 풀기</string>
     <string name="parked_close">닫기</string>
-    <string name="toast_quiz_todo">퀴즈 화면은 다음 작업에서 만들어요</string>
+
+    <!-- 확인 퀴즈 화면 -->
+    <string name="quiz_title">오늘의 확인 퀴즈 · %1$d / %2$d</string>
+    <string name="quiz_skip">건너뛰기</string>
+    <string name="quiz_next">다음 문제</string>
+    <string name="quiz_show_result">결과 보기</string>
+    <string name="quiz_feedback_correct">정답이에요</string>
+    <string name="quiz_feedback_wrong">아쉬워요 · 정답은 %1$s</string>
+
+    <!-- 확인 퀴즈 결과 화면 -->
+    <string name="quiz_result_label">TODAY\'S QUIZ</string>
+    <string name="quiz_result_headline">%1$d문제 중 %2$d문제 맞혔어요</string>
+    <string name="quiz_result_weekly">이번 주 확인 퀴즈 정답률</string>
+    <string name="quiz_result_percent">%1$d%%</string>
+    <string name="quiz_result_report">휴대폰 리포트에서 보기</string>
+    <string name="toast_report_todo">휴대폰 리포트 연결은 다음 작업에서 만들어요</string>
 
     <!-- 주행 중 화면 -->
     <string name="driving_info">%1$s까지 %2$skm · %3$d분 · 개념 %4$d/%5$d</string>
