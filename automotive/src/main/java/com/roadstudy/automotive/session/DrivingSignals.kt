@@ -21,8 +21,15 @@ data class NaviSignals(
     val remainingMeters: Int? = null,
     val distanceToNextTurnMeters: Int? = null,
     val inCautionZone: Boolean = false,
-    val lastRerouteAtMillis: Long? = null
-)
+    val lastRerouteAtMillis: Long? = null,
+    /** 내비가 안내 중인 목적지 이름. 경로가 없으면 null */
+    val destinationName: String? = null,
+    /** 내비가 목적지 도착을 알렸는지 */
+    val arrived: Boolean = false
+) {
+    /** 내비가 경로를 안내 중인지(남은 거리를 알고 있는지) */
+    val hasRoute: Boolean get() = remainingMeters != null
+}
 
 data class DrivingContext(
     val vehicle: VehicleSignals,
