@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    자주 쓰는 글자 모양. 사용: <TextView style="@style/Rs.Text.Sub" ... />
+    이름의 점(Rs.Text.Sub)은 앞부분(Rs.Text)을 부모로 삼는다는 뜻이다.
+    글자 크기는 차량 최소 기준(28sp) 이상으로 쓴다.
+-->
+<resources>
+    <!-- 점 표기 스타일(Rs.Text)의 부모. 정의할 내용이 없어 비워 둔다 -->
+    <style name="Rs" />
+
+    <!-- 기본: 밝은 글자 -->
+    <style name="Rs.Text">
+        <item name="android:textColor">@color/rs_text_main</item>
+        <!-- 글자 위아래 여백을 없애 도안과 간격을 맞추기 쉽게 한다 -->
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
+    <!-- 보조: 회색 글자 -->
+    <style name="Rs.Text.Sub">
+        <item name="android:textColor">@color/rs_text_sub</item>
+    </style>
+
+    <!-- 회색 + 굵은 글자 -->
+    <style name="Rs.Text.Sub.Bold">
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <!-- 굵은 글자 -->
+    <style name="Rs.Text.Bold">
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <!-- 포인트 색 라벨 (MY STUDY 같은 영문 소제목) -->
+    <style name="Rs.Text.Label">
+        <item name="android:textColor">@color/rs_accent</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:letterSpacing">0.15</item>
+    </style>
+</resources>

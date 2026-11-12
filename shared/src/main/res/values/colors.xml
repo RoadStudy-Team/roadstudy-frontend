@@ -11,4 +11,17 @@
 
     <color name="background_color">#111318</color>
     <color name="roadstudy_line">#6F757E</color>
+
+    <!--
+        디자인 시스템 (Premium Monochrome 다크). 차량 앱이 사용하는 이름.
+        위의 기존 이름(text_primary 등)은 mobile 이 쓰고 있어서 그대로 두고, 새 이름은 rs_ 로 시작한다.
+    -->
+    <color name="rs_card">#1C1F26</color>
+    <color name="rs_border">#2D333D</color>
+    <color name="rs_text_main">#F3F4F6</color>
+    <color name="rs_text_sub">#8A9099</color>
+    <color name="rs_accent">#5B9CF6</color>
+    <color name="rs_accent_soft">#1F2D44</color>
+    <color name="rs_safe">#3FB37F</color>
+    <color name="rs_caution">#E0B252</color>
 </resources>

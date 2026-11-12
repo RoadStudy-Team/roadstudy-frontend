@@ -1,0 +1,577 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    홈 화면 (디자인 도안 01_home, 02_home_empty)
+
+    화면 크기 기준:
+    Pleos 에뮬레이터는 2560x1440 이지만 앱이 쓸 수 있는 창은 왼쪽 차량 패널과 위아래 시스템 바를 뺀
+    약 1682x1210dp(Connect-S 가로, 1:1 분할)다. 이 크기에 맞춰 dp 를 정했다.
+    도안은 2560x1440 전체 화면 기준이라 그대로 옮기면 잘려서 간격과 큰 글자를 도안보다 줄였다.
+    글자는 sp 로 적고, 가장 작은 글자도 차량 최소 기준인 28sp 를 지킨다.
+-->
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingStart="40dp"
+    android:paddingEnd="40dp">
+
+    <!-- 화면을 세로로 가르는 기준선. 왼쪽 카드의 끝(37.5%)과 오른쪽 내용의 시작(39.8%) -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideLeftEnd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.375" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideRightStart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.398" />
+
+    <!-- ===== 상단 바 ===== -->
+    <ImageView
+        android:id="@+id/ivLogo"
+        android:layout_width="76dp"
+        android:layout_height="76dp"
+        android:layout_marginTop="26dp"
+        android:contentDescription="@string/app_name"
+        android:src="@drawable/ic_logo"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvBrand"
+        style="@style/Rs.Text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:text="@string/brand"
+        android:textSize="40sp"
+        app:layout_constraintBottom_toBottomOf="@id/ivLogo"
+        app:layout_constraintStart_toEndOf="@id/ivLogo"
+        app:layout_constraintTop_toTopOf="@id/ivLogo" />
+
+    <!-- 가운데 상태 알약: ● 정차 중 | 출발 준비 완료 -->
+    <LinearLayout
+        android:id="@+id/pillStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="72dp"
+        android:layout_marginTop="28dp"
+        android:background="@drawable/bg_pill"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="32dp"
+        android:paddingEnd="32dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <View
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:background="@drawable/dot_green" />
+
+        <TextView
+            style="@style/Rs.Text.Bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="14dp"
+            android:text="@string/status_parked"
+            android:textSize="30sp" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="34dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:background="@color/rs_border" />
+
+        <TextView
+            style="@style/Rs.Text.Sub"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/status_ready"
+            android:textSize="30sp" />
+    </LinearLayout>
+
+    <!-- 시계는 Pleos 상태 바에 이미 있어서 앱 안에는 넣지 않는다 (도안에는 있었지만 겹쳐서 뺐다) -->
+
+    <View
+        android:id="@+id/topDivider"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginTop="128dp"
+        android:background="@color/rs_border"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- ===== 하단 구분선 (화면 아래에서 170dp 위) ===== -->
+    <View
+        android:id="@+id/bottomDivider"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginBottom="170dp"
+        android:background="@color/rs_border"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <!-- ===== 왼쪽: 오늘의 경로 카드 ===== -->
+    <LinearLayout
+        android:id="@+id/cardRoute"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="34dp"
+        android:layout_marginBottom="30dp"
+        android:background="@drawable/bg_card"
+        android:orientation="vertical"
+        android:padding="44dp"
+        app:layout_constraintBottom_toTopOf="@id/bottomDivider"
+        app:layout_constraintEnd_toStartOf="@id/guideLeftEnd"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/topDivider">
+
+        <!-- 제목 줄: [아이콘 상자] 오늘의 경로 -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="72dp"
+                android:layout_height="72dp"
+                android:background="@drawable/bg_icon_box"
+                android:importantForAccessibility="no"
+                android:padding="18dp"
+                android:src="@drawable/ic_route" />
+
+            <TextView
+                style="@style/Rs.Text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="18dp"
+                android:text="@string/route_title"
+                android:textSize="34sp" />
+        </LinearLayout>
+
+        <!-- 경로 정보 묶음. 제목과 학습 분량 상자 사이의 세로 가운데에 놓는다 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
+
+        <!-- 회사까지 -->
+        <TextView
+            android:id="@+id/tvTo"
+            style="@style/Rs.Text.Sub.Bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="40sp" />
+
+        <!-- 18.4 km · 약 38 분 : 크기가 다른 글자를 같은 글자 밑선에 맞춘다(baselineAligned) -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:baselineAligned="true"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tvDistance"
+                style="@style/Rs.Text.Bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="88sp" />
+
+            <TextView
+                style="@style/Rs.Text.Bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:text="@string/unit_km"
+                android:textSize="38sp" />
+
+            <TextView
+                style="@style/Rs.Text.Sub"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="14dp"
+                android:text="@string/about"
+                android:textSize="34sp" />
+
+            <TextView
+                android:id="@+id/tvEta"
+                style="@style/Rs.Text.Bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:textSize="88sp" />
+
+            <TextView
+                style="@style/Rs.Text.Bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:text="@string/unit_minute"
+                android:textSize="38sp" />
+        </LinearLayout>
+
+        <!-- 도착 예정 08:52   정체 구간 1곳 -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:importantForAccessibility="no"
+                android:src="@drawable/ic_clock" />
+
+            <TextView
+                style="@style/Rs.Text.Sub"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:text="@string/arrival_label"
+                android:textSize="28sp" />
+
+            <TextView
+                android:id="@+id/tvArrival"
+                style="@style/Rs.Text.Bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:textSize="28sp" />
+
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginStart="32dp"
+                android:importantForAccessibility="no"
+                android:src="@drawable/ic_traffic" />
+
+            <TextView
+                style="@style/Rs.Text.Sub"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:text="@string/congestion_label"
+                android:textSize="28sp" />
+
+            <TextView
+                android:id="@+id/tvCongestion"
+                style="@style/Rs.Text.Bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:textSize="28sp" />
+        </LinearLayout>
+
+        <!--
+            경로선: 현재 위치 ● ───── ● ───── ● 도착
+            가운데 노란 점(dotCongestion)은 정체 구간이 있을 때만 보인다 (HomeFragment 가 켜고 끈다).
+            TODO: 지금은 점이 항상 가운데에 있다. 내비 연동 후 실제 정체 위치와 현재 위치를 반영한다.
+        -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="56dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <View
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/dot_accent" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="6dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_route_line" />
+
+            <View
+                android:id="@+id/dotCongestion"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/dot_caution" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="6dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_route_line" />
+
+            <View
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/dot_accent" />
+        </LinearLayout>
+
+        <!-- 선 아래 글자: 현재 위치 ...... 도착 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/Rs.Text.Sub"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/route_now"
+                android:textSize="28sp" />
+
+            <TextView
+                style="@style/Rs.Text.Sub"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/route_arrive"
+                android:textSize="28sp" />
+        </LinearLayout>
+        </LinearLayout>
+
+        <!-- 오늘의 학습 분량 상자 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_inner_card"
+            android:gravity="center_vertical"
+            android:minHeight="168dp"
+            android:orientation="horizontal"
+            android:paddingStart="28dp"
+            android:paddingEnd="28dp">
+
+            <ImageView
+                android:layout_width="84dp"
+                android:layout_height="84dp"
+                android:background="@drawable/bg_circle_soft"
+                android:importantForAccessibility="no"
+                android:padding="22dp"
+                android:src="@drawable/ic_concepts" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="22dp"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/Rs.Text.Sub"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/learning_title"
+                    android:textSize="28sp" />
+
+                <TextView
+                    android:id="@+id/tvLearning"
+                    style="@style/Rs.Text.Bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:textSize="40sp" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- ===== 오른쪽: 내 스터디 섹션 (자료가 있을 때) ===== -->
+    <TextView
+        android:id="@+id/tvMyStudyLabel"
+        style="@style/Rs.Text.Label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="@string/my_study_label"
+        android:textSize="28sp"
+        app:layout_constraintStart_toStartOf="@id/guideRightStart"
+        app:layout_constraintTop_toTopOf="@id/cardRoute" />
+
+    <TextView
+        android:id="@+id/tvMyStudyTitle"
+        style="@style/Rs.Text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:text="@string/my_study_title"
+        android:textSize="40sp"
+        app:layout_constraintStart_toStartOf="@id/guideRightStart"
+        app:layout_constraintTop_toBottomOf="@id/tvMyStudyLabel" />
+
+    <!--
+        섹션 카드 목록 (카드 모양: item_section_card.xml, 채우기: SectionCardAdapter).
+        카드마다 14dp 바깥 여백이 있어서 목록을 -14dp 로 당겨 제목·왼쪽 선과 맞춘다.
+        카드는 왼쪽 경로 카드 바닥까지 늘어난다.
+    -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerSections"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="-14dp"
+        android:layout_marginTop="14dp"
+        android:layout_marginEnd="-14dp"
+        android:layout_marginBottom="-14dp"
+        android:clipToPadding="false"
+        app:layout_constraintBottom_toBottomOf="@id/cardRoute"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@id/guideRightStart"
+        app:layout_constraintTop_toBottomOf="@id/tvMyStudyTitle"
+        app:layout_constraintVertical_bias="0" />
+
+    <!-- 자료가 있을 때만 보이는 요소 묶음 -->
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/groupSections"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="tvMyStudyLabel,tvMyStudyTitle,recyclerSections" />
+
+    <!-- ===== 오른쪽: 자료가 없을 때 (HomeFragment 가 켜고 끈다) ===== -->
+    <LinearLayout
+        android:id="@+id/cardEmpty"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/bg_card"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="64dp"
+        android:paddingEnd="64dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/cardRoute"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@id/guideRightStart"
+        app:layout_constraintTop_toTopOf="@id/cardRoute">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/Rs.Text.Label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/my_study_label"
+                android:textSize="28sp" />
+
+            <TextView
+                style="@style/Rs.Text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:lineSpacingMultiplier="1.15"
+                android:text="@string/empty_title"
+                android:textSize="52sp" />
+
+            <TextView
+                style="@style/Rs.Text.Sub"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="28dp"
+                android:lineSpacingMultiplier="1.3"
+                android:text="@string/empty_description"
+                android:textSize="28sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="288dp"
+                android:layout_height="288dp"
+                android:background="@drawable/bg_qr_box"
+                android:importantForAccessibility="no"
+                android:padding="36dp"
+                android:src="@drawable/ic_qr_placeholder" />
+
+            <TextView
+                style="@style/Rs.Text.Sub"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="@string/empty_qr_caption"
+                android:textSize="28sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- ===== 하단: 안내 문구 + 시작 버튼 ===== -->
+    <!-- 버튼 높이 120dp: 터치 최소 크기(76dp) 이상 -->
+    <LinearLayout
+        android:id="@+id/ctaButton"
+        android:layout_width="wrap_content"
+        android:layout_height="120dp"
+        android:layout_marginBottom="25dp"
+        android:background="@drawable/bg_button_primary"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center"
+        android:minWidth="620dp"
+        android:orientation="horizontal"
+        android:paddingStart="44dp"
+        android:paddingEnd="44dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:layout_width="68dp"
+            android:layout_height="68dp"
+            android:background="@drawable/bg_circle_white"
+            android:importantForAccessibility="no"
+            android:padding="18dp"
+            android:src="@drawable/ic_play" />
+
+        <TextView
+            android:id="@+id/tvCta"
+            style="@style/Rs.Text.Bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="22dp"
+            android:textColor="@color/white"
+            android:textSize="38sp" />
+
+        <ImageView
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginStart="26dp"
+            android:importantForAccessibility="no"
+            android:src="@drawable/ic_chevron_right" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/noticeRow"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="28dp"
+        android:gravity="center_vertical|end"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="@id/ctaButton"
+        app:layout_constraintEnd_toStartOf="@id/ctaButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/ctaButton">
+
+        <ImageView
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:importantForAccessibility="no"
+            android:src="@drawable/ic_shield_check" />
+
+        <TextView
+            style="@style/Rs.Text.Sub"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="14dp"
+            android:text="@string/notice_driving"
+            android:textSize="28sp" />
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

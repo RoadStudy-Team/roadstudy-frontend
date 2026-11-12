@@ -1,3 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    화면 문구는 코드에 직접 쓰지 않고 여기에 모은다.
+    %1$s, %2$d 는 값이 들어갈 자리이고, % 글자는 %% 로 쓴다.
+-->
 <resources>
     <string name="app_name">로드스터디</string>
+
+    <!-- 상단 바 -->
+    <string name="brand">RoadStudy</string>
+    <string name="status_parked">정차 중</string>
+    <string name="status_ready">출발 준비 완료</string>
+
+    <!-- 오늘의 경로 카드 -->
+    <string name="route_title">오늘의 경로</string>
+    <string name="to_destination">%1$s까지</string>
+    <string name="unit_km">km</string>
+    <string name="about">약</string>
+    <string name="unit_minute">분</string>
+    <string name="arrival_label">도착 예정</string>
+    <string name="congestion_label">정체 구간</string>
+    <string name="congestion_value">%1$d곳</string>
+    <string name="learning_title">오늘의 학습 분량</string>
+    <string name="learning_value">%1$d분 · 개념 %2$d개</string>
+    <string name="learning_empty">자료 없음</string>
+    <string name="no_value">-</string>
+    <string name="route_now">현재 위치</string>
+    <string name="route_arrive">도착</string>
+
+    <!-- 내 스터디 섹션 -->
+    <string name="my_study_label">MY STUDY</string>
+    <string name="my_study_title">내 스터디 섹션</string>
+    <string name="selected">선택됨</string>
+    <string name="concept_count">개념 %1$d개</string>
+    <string name="progress_label">진도율</string>
+    <string name="progress_percent">%1$d%%</string>
+    <string name="review_list_label">다시 들을 개념</string>
+    <string name="review_item">· %1$s</string>
+    <string name="review_label">오늘 복습</string>
+    <string name="review_count">%1$d개</string>
+    <string name="type_certificate">자격증</string>
+    <string name="type_english">영어</string>
+    <string name="type_work">업무</string>
+    <string name="type_etc">기타</string>
+
+    <!-- 자료가 없을 때 -->
+    <string name="empty_title">첫 자료를 올려\n주세요</string>
+    <string name="empty_description">휴대폰 로드스터디 앱에서\n공부 노트를 올리면\n출퇴근 복습 개념으로 바뀌어요</string>
+    <string name="empty_qr_caption">휴대폰 앱 연결</string>
+
+    <!-- 하단 -->
+    <string name="notice_driving">주행 중에는 소리와 핸들 버튼으로만 진행돼요</string>
+    <string name="cta_to_work">출근 세션 시작</string>
+    <string name="cta_to_home">퇴근 세션 시작</string>
+    <string name="cta_other">세션 시작</string>
+    <string name="cta_sample">샘플 자료로 체험하기</string>
+    <string name="toast_driving_screen_todo">주행 중 화면은 다음 작업에서 만들어요</string>
 </resources>

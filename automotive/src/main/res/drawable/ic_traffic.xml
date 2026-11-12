@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 신호등 아이콘 (정체 구간) -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:pathData="M9,2.5 H15 A2,2 0 0 1 17,4.5 V19.5 A2,2 0 0 1 15,21.5 H9 A2,2 0 0 1 7,19.5 V4.5 A2,2 0 0 1 9,2.5 Z"
+        android:strokeColor="@color/rs_text_sub"
+        android:strokeWidth="1.6"
+        android:strokeLineJoin="round" />
+    <path
+        android:pathData="M13.2,7.5 A1.2,1.2 0 1,1 10.8,7.5 A1.2,1.2 0 1,1 13.2,7.5 Z M13.2,12 A1.2,1.2 0 1,1 10.8,12 A1.2,1.2 0 1,1 13.2,12 Z M13.2,16.5 A1.2,1.2 0 1,1 10.8,16.5 A1.2,1.2 0 1,1 13.2,16.5 Z"
+        android:fillColor="@color/rs_text_sub" />
+</vector>

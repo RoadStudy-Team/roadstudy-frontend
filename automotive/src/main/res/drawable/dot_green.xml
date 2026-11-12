@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 상태 알약 앞의 초록 점 -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="oval">
+    <solid android:color="@color/rs_safe" />
+    <size android:width="22dp" android:height="22dp" />
+</shape>

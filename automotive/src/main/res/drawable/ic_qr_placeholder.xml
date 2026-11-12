@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    QR 코드 자리 표시용 그림. 진짜 QR 이 아니라서 스캔되지 않는다.
+    TODO: 휴대폰 앱 연결 주소가 정해지면 진짜 QR 로 바꾼다.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="21dp"
+    android:height="21dp"
+    android:viewportWidth="21"
+    android:viewportHeight="21">
+    <!-- 모서리 찾기 무늬 3개 -->
+
+    <path
+        android:fillColor="#101216"
+        android:fillType="evenOdd"
+        android:pathData="M0,0 h7 v7 h-7 Z M1,1 v5 h5 v-5 Z
+                          M14,0 h7 v7 h-7 Z M15,1 v5 h5 v-5 Z
+                          M0,14 h7 v7 h-7 Z M1,15 v5 h5 v-5 Z" />
+    <path
+        android:fillColor="#101216"
+        android:pathData="M2,2 h3 v3 h-3 Z M16,2 h3 v3 h-3 Z M2,16 h3 v3 h-3 Z" />
+    <!-- 데이터 칸(무작위처럼 보이게 흩뿌림) -->
+    <path
+        android:fillColor="#101216"
+        android:pathData="M9,0 h2 v2 h-2 Z M11,2 h2 v2 h-2 Z M9,4 h1 v3 h-1 Z M8,8 h2 v2 h-2 Z
+                          M12,8 h3 v2 h-3 Z M16,9 h2 v2 h-2 Z M19,8 h2 v2 h-2 Z M9,11 h3 v2 h-3 Z
+                          M14,11 h2 v3 h-2 Z M18,12 h3 v2 h-3 Z M8,14 h2 v3 h-2 Z M11,15 h2 v2 h-2 Z
+                          M15,16 h3 v2 h-3 Z M19,16 h2 v2 h-2 Z M9,18 h3 v3 h-3 Z M13,19 h2 v2 h-2 Z
+                          M17,19 h2 v2 h-2 Z M0,8 h2 v2 h-2 Z M3,9 h3 v1 h-3 Z M0,11 h4 v2 h-4 Z
+                          M5,11 h2 v2 h-2 Z" />
+</vector>
