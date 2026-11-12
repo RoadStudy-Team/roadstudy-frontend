@@ -57,6 +57,16 @@ class TripTypeDetector(private val nearbyMeters: Double = NEARBY_METERS) {
         return TripType.OTHER
     }
 
+    /**
+     * 내비가 안내 중인 목적지가 내비 즐겨찾기의 회사·집 근처인지로 출근/퇴근/기타 이동을 나눈다.
+     * 등록하지 않은 쪽은 비교하지 않는다.
+     */
+    fun classifyDestination(places: CommutePlaces, destination: GeoPoint): TripType = when {
+        places.work?.let { isNear(destination, it.point) } == true -> TripType.TO_WORK
+        places.home?.let { isNear(destination, it.point) } == true -> TripType.TO_HOME
+        else -> TripType.OTHER
+    }
+
     private fun isNear(a: GeoPoint, b: GeoPoint): Boolean = distanceMeters(a, b) <= nearbyMeters
 
     companion object {
