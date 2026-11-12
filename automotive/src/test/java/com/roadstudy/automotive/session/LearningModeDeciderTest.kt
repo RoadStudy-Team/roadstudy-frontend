@@ -2,6 +2,7 @@ package com.roadstudy.automotive.session
 
 import com.roadstudy.automotive.session.TestFixtures.driving
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
 import org.junit.Test
 
 class LearningModeDeciderTest {
@@ -37,4 +38,17 @@ class LearningModeDeciderTest {
 
     @Test fun turnBeatsNight() =
         assertEquals(LearningMode.FOCUS, decider.decide(driving(lowBeam = true, turnMeters = 100)).mode)
+
+    @Test fun rerouteQuietRemainingCountsDownToCooldownEnd() {
+        val cooldown = LearningModeDecider.REROUTE_COOLDOWN_MILLIS
+        assertEquals(cooldown, LearningModeDecider.rerouteQuietRemainingMillis(1_000L, 1_000L))
+        assertEquals(cooldown - 10_000L, LearningModeDecider.rerouteQuietRemainingMillis(1_000L, 11_000L))
+    }
+
+    @Test fun rerouteQuietRemainingIsNullWhenNoRerouteOrAlreadyOver() {
+        val cooldown = LearningModeDecider.REROUTE_COOLDOWN_MILLIS
+        assertNull(LearningModeDecider.rerouteQuietRemainingMillis(null, 5_000L))
+        assertNull(LearningModeDecider.rerouteQuietRemainingMillis(0L, cooldown))
+        assertNull(LearningModeDecider.rerouteQuietRemainingMillis(0L, cooldown + 1))
+    }
 }

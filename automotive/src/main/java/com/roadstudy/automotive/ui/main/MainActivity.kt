@@ -4,6 +4,8 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.roadstudy.automotive.R
 import com.roadstudy.automotive.databinding.ActivityMainBinding
+import com.roadstudy.automotive.navi.NaviSignalHub
+import com.roadstudy.automotive.navi.NaviSignalSource
 import com.roadstudy.automotive.ui.home.HomeFragment
 import com.roadstudy.automotive.vehicle.VehicleSignalHub
 import com.roadstudy.automotive.vehicle.VehicleSignalSource
@@ -17,6 +19,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private var vehicleSignals: VehicleSignalSource? = null
+    private var naviSignals: NaviSignalSource? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,11 +40,16 @@ class MainActivity : AppCompatActivity() {
         // 받은 신호는 허브로 보내고, 화면들이 구독한다. 변화는 로그(태그 RoadStudyVehicle)로도 남는다
         vehicleSignals = VehicleSignalSource(applicationContext, onChanged = VehicleSignalHub::update)
             .also { it.start() }
+        // 내비 이벤트(남은 거리·시간, 회전, 주의 구간, 도착)도 같은 방식으로 받는다 (로그 태그 RoadStudyNavi)
+        naviSignals = NaviSignalSource(applicationContext, onChanged = NaviSignalHub::update)
+            .also { it.start() }
     }
 
     override fun onStop() {
         vehicleSignals?.stop()
         vehicleSignals = null
+        naviSignals?.stop()
+        naviSignals = null
         super.onStop()
     }
 }

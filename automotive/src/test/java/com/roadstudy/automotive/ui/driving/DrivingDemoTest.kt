@@ -3,6 +3,7 @@ package com.roadstudy.automotive.ui.driving
 import com.roadstudy.automotive.session.Gear
 import com.roadstudy.automotive.session.LearningMode
 import com.roadstudy.automotive.session.ModeReason
+import com.roadstudy.automotive.session.NaviSignals
 import com.roadstudy.automotive.session.VehicleSignals
 import com.roadstudy.automotive.session.WiperLevel
 import com.roadstudy.automotive.session.Step
@@ -67,8 +68,82 @@ class DrivingDemoTest {
 
     private fun live(
         vehicle: VehicleSignals,
-        hasDriven: Boolean = true
-    ) = demo.runLive(vehicle, hasDriven)
+        hasDriven: Boolean = true,
+        navi: NaviSignals = NaviSignals()
+    ) = demo.runLive(vehicle, navi, hasDriven, nowMillis = 0L)
+
+    @Test
+    fun `내비 경로가 있으면 남은 거리와 시간은 내비 값이다`() {
+        val state = live(
+            VehicleSignals(gear = Gear.DRIVE),
+            navi = NaviSignals(remainingSec = 600, remainingMeters = 4_200)
+        )
+
+        assertEquals(4_200, state.remainingMeters)
+        assertEquals(600, state.remainingSec)
+    }
+
+    @Test
+    fun `내비 경로가 없으면 가짜 경로의 남은 거리와 시간을 쓴다`() {
+        val state = live(VehicleSignals(gear = Gear.DRIVE))
+
+        assertTrue(state.remainingMeters != null)
+        assertTrue(state.remainingSec != null)
+    }
+
+    @Test
+    fun `내비의 회전 직전 신호는 집중 모드로 이어진다`() {
+        val state = live(
+            VehicleSignals(gear = Gear.DRIVE),
+            navi = NaviSignals(remainingSec = 600, remainingMeters = 4_200, distanceToNextTurnMeters = 250)
+        )
+
+        assertEquals(LearningMode.FOCUS, state.mode)
+        assertEquals(ModeReason.UPCOMING_TURN, state.reason)
+    }
+
+    @Test
+    fun `내비 경로가 없으면 남아 있는 회전과 주의 구간 신호는 무시한다`() {
+        val state = live(
+            VehicleSignals(gear = Gear.DRIVE),
+            navi = NaviSignals(distanceToNextTurnMeters = 100, inCautionZone = true)
+        )
+
+        assertEquals(LearningMode.NORMAL, state.mode)
+        assertEquals(ModeReason.SAFE, state.reason)
+    }
+
+    @Test
+    fun `내비의 주의 구간 신호는 집중 모드로 이어진다`() {
+        val state = live(
+            VehicleSignals(gear = Gear.DRIVE),
+            navi = NaviSignals(remainingSec = 600, remainingMeters = 4_200, inCautionZone = true)
+        )
+
+        assertEquals(ModeReason.CAUTION_ZONE, state.reason)
+    }
+
+    @Test
+    fun `목적지에서 먼 곳의 P단은 도착이 아니라 잠시 정차다`() {
+        val state = live(
+            VehicleSignals(gear = Gear.PARK),
+            navi = NaviSignals(remainingSec = 600, remainingMeters = 4_200)
+        )
+
+        assertFalse(state.finished)
+        assertEquals(LearningMode.NORMAL, state.mode)
+    }
+
+    @Test
+    fun `목적지 근처의 P단은 도착이다`() {
+        val state = live(
+            VehicleSignals(gear = Gear.PARK),
+            navi = NaviSignals(remainingSec = 30, remainingMeters = 120)
+        )
+
+        assertEquals(LearningMode.PARKED, state.mode)
+        assertTrue(state.finished)
+    }
 
     @Test
     fun `실제 신호가 주행이고 이상이 없으면 안전 구간이다`() {

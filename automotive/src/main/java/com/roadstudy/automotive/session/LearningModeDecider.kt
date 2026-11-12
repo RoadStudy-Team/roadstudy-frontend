@@ -57,5 +57,19 @@ class LearningModeDecider(
     companion object {
         const val TURN_QUIET_DISTANCE_METERS = 300
         const val REROUTE_COOLDOWN_MILLIS = 30_000L
+
+        /**
+         * 재탐색 직후의 집중 모드가 끝날 때까지 남은 시간(ms). 이미 끝났거나 재탐색이 없었으면 null.
+         * 화면은 새 신호가 올 때만 다시 계산하므로, 이 시간 뒤에 한 번 더 계산해서 집중 모드를 푼다.
+         */
+        fun rerouteQuietRemainingMillis(
+            lastRerouteAtMillis: Long?,
+            nowMillis: Long,
+            cooldownMillis: Long = REROUTE_COOLDOWN_MILLIS
+        ): Long? {
+            if (lastRerouteAtMillis == null) return null
+            val remaining = lastRerouteAtMillis + cooldownMillis - nowMillis
+            return if (remaining > 0) remaining else null
+        }
     }
 }
