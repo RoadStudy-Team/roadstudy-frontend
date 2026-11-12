@@ -16,6 +16,10 @@ android {
         versionName = "1.0"
     }
 
+    buildFeatures {
+        viewBinding = true
+    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
@@ -24,5 +28,18 @@ android {
 
 dependencies {
     implementation(project(":shared"))
+
+    // UI (mobile 과 같은 버전)
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.activity.ktx)
+    implementation(libs.androidx.constraintlayout)
+    implementation(libs.material)
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
+    implementation(libs.androidx.lifecycle.livedata.ktx)
+
+    // Pleos SDK는 automotive 모듈에서만 사용한다
+    implementation(libs.pleos.vehicle)
+    implementation(libs.pleos.navihelper)
     testImplementation(libs.junit)
 }

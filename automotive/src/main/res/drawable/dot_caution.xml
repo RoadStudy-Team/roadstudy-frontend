@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 경로선 위의 정체 구간 표시 점 (노란색) -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="oval">
+    <solid android:color="@color/rs_caution" />
+    <size android:width="30dp" android:height="30dp" />
+</shape>

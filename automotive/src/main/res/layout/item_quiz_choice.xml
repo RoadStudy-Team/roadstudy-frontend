@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    퀴즈 선택지 한 칸. 값은 QuizChoiceAdapter 가 채운다.
+    고른 선택지는 파란 테두리와 오른쪽의 파란 원(체크 아이콘 자리)으로 표시한다.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="220dp"
+    android:layout_margin="8dp"
+    android:background="@drawable/bg_choice"
+    android:clickable="true"
+    android:focusable="true"
+    android:gravity="center"
+    android:orientation="horizontal"
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp">
+
+    <TextView
+        android:id="@+id/tvChoice"
+        style="@style/Rs.Text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:maxLines="2"
+        android:textSize="40sp" />
+
+    <View
+        android:id="@+id/checkMark"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:layout_marginStart="16dp"
+        android:background="@drawable/dot_accent" />
+</LinearLayout>

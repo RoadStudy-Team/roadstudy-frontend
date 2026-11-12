@@ -11,7 +11,9 @@ data class SessionUiState(
     val currentTitle: String?,
     val remainingMeters: Int?,
     val remainingSec: Int?,
-    val finished: Boolean
+    val finished: Boolean,
+    /** 현재 개념의 진행 단계. 화면이 "질문 · 떠올려보세요" 같은 문구를 고를 때 쓴다 */
+    val step: Step = Step.EXPLAIN
 )
 
 /**
@@ -49,7 +51,8 @@ class SessionController(
             currentTitle = plan.items.getOrNull(index)?.concept?.title,
             remainingMeters = lastNavi.remainingMeters,
             remainingSec = lastNavi.remainingSec,
-            finished = finished
+            finished = finished,
+            step = step
         )
 
     /** 차량·내비 상태가 바뀔 때마다 호출 (vehicle / navi 패키지에서) */

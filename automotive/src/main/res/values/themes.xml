@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    앱 테마. 차량 앱은 낮밤 구분 없이 항상 어두운 테마를 쓰므로 values-night 는 만들지 않는다.
+-->
+<resources>
+    <style name="Theme.RoadStudy.Automotive" parent="Theme.Material3.Dark.NoActionBar">
+        <!-- 창 전체 배경색 -->
+        <item name="android:windowBackground">@color/background_color</item>
+        <item name="android:statusBarColor">@color/background_color</item>
+        <item name="android:navigationBarColor">@color/background_color</item>
+        <!-- 포인트 색 (버튼, 선택 표시 등) -->
+        <item name="colorPrimary">@color/rs_accent</item>
+    </style>
+</resources>
