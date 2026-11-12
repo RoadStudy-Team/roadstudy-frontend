@@ -11,6 +11,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.roadstudy.automotive.R
 import com.roadstudy.automotive.databinding.FragmentHomeBinding
+import com.roadstudy.automotive.navi.NaviSignalHub
+import com.roadstudy.automotive.session.NaviSignals
 import com.roadstudy.automotive.session.TripType
 import com.roadstudy.automotive.ui.driving.DrivingFragment
 import com.roadstudy.automotive.ui.othertrip.OtherTripFragment
@@ -51,6 +53,7 @@ class HomeFragment : Fragment() {
         binding.ctaButton.setOnClickListener { onCtaClick() }
 
         viewModel.uiState.observe(viewLifecycleOwner) { state -> render(state) }
+        NaviSignalHub.signals.observe(viewLifecycleOwner) { signals -> viewModel.onNaviSignals(signals) }
         startWhenDriveSelected()
     }
 
@@ -134,8 +137,11 @@ class HomeFragment : Fragment() {
     private fun homeViewModelFactory(startEmpty: Boolean) = object : ViewModelProvider.Factory {
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>): T =
-            // TODO: Pleos SDK 연동 시 FakeHomeDataSource 를 실제 구현으로 교체한다
-            HomeViewModel(FakeHomeDataSource.fromIntent(requireActivity().intent, startEmpty)) as T
+            // TODO: 저장소 연동 시 FakeHomeDataSource 를 실제 구현으로 교체한다 (내비 경로는 NaviSignalHub 값이 있으면 그것을 쓴다)
+            HomeViewModel(
+                FakeHomeDataSource.fromIntent(requireActivity().intent, startEmpty),
+                initialNavi = NaviSignalHub.signals.value ?: NaviSignals()
+            ) as T
     }
 
     companion object {

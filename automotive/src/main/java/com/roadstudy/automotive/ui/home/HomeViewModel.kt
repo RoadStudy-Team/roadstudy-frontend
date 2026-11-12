@@ -3,6 +3,7 @@ package com.roadstudy.automotive.ui.home
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.roadstudy.automotive.session.NaviSignals
 import java.time.LocalTime
 
 /**
@@ -12,13 +13,22 @@ import java.time.LocalTime
 class HomeViewModel(
     private val dataSource: HomeDataSource,
     private val mapper: HomeUiMapper = HomeUiMapper(),
-    private val clock: () -> LocalTime = { LocalTime.now() }
+    private val clock: () -> LocalTime = { LocalTime.now() },
+    initialNavi: NaviSignals = NaviSignals()
 ) : ViewModel() {
 
     private var input: HomeInput = dataSource.load()
+    private var navi: NaviSignals = initialNavi
 
     private val _uiState = MutableLiveData(buildState())
     val uiState: LiveData<HomeUiState> = _uiState
+
+    /** 내비 경로가 바뀌었을 때. 안내 중이면 오늘의 경로와 학습 분량이 그 경로로 바뀐다 */
+    fun onNaviSignals(signals: NaviSignals) {
+        if (signals == navi) return
+        navi = signals
+        _uiState.value = buildState()
+    }
 
     fun selectSection(sectionId: String) {
         input = input.copy(selectedSectionId = sectionId)
@@ -31,5 +41,5 @@ class HomeViewModel(
         _uiState.value = buildState()
     }
 
-    private fun buildState(): HomeUiState = mapper.map(input, clock())
+    private fun buildState(): HomeUiState = mapper.map(input.withNavi(navi), clock())
 }
