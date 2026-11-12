@@ -119,7 +119,7 @@ class DrivingFragment : Fragment() {
             @Suppress("UNCHECKED_CAST")
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
                 // TODO: Pleos SDK 연동 시 가짜 입력 대신 실제 내비 경로와 저장된 진도를 쓴다
-                val demo = DrivingDemo(FakeHomeDataSource().load(), sectionId)
+                val demo = DrivingDemo(FakeHomeDataSource.fromIntent(requireActivity().intent).load(), sectionId)
                 return DrivingViewModel(demo, scenario) as T
             }
         }
