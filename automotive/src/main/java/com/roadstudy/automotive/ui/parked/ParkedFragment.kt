@@ -108,7 +108,7 @@ class ParkedFragment : Fragment() {
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             // TODO: Pleos SDK 연동과 저장소 후에는 실제 주행 결과와 저장된 진도를 쓴다
-            val start = ParkedDemo(FakeHomeDataSource().load(), sectionId).start()
+            val start = ParkedDemo(FakeHomeDataSource.fromIntent(requireActivity().intent).load(), sectionId).start()
             return ParkedViewModel(start) as T
         }
     }

@@ -13,6 +13,7 @@ import com.roadstudy.automotive.R
 import com.roadstudy.automotive.databinding.FragmentHomeBinding
 import com.roadstudy.automotive.session.TripType
 import com.roadstudy.automotive.ui.driving.DrivingFragment
+import com.roadstudy.automotive.ui.othertrip.OtherTripFragment
 
 /**
  * 홈 화면. [HomeViewModel] 의 [HomeUiState] 를 그리고, 사용자 입력(섹션 선택, 시작 버튼)을 ViewModel 에 넘긴다.
@@ -90,8 +91,14 @@ class HomeFragment : Fragment() {
             viewModel.startSampleExperience()
         } else {
             val sectionId = state.sections.firstOrNull { it.selected }?.sectionId
+            // 출근도 퇴근도 아닌 이동은 시작 전에 학습할지 한 번 묻는다
+            val next = if (state.tripType == TripType.OTHER) {
+                OtherTripFragment.newInstance(sectionId)
+            } else {
+                DrivingFragment.newInstance(sectionId)
+            }
             parentFragmentManager.beginTransaction()
-                .replace(R.id.container, DrivingFragment.newInstance(sectionId))
+                .replace(R.id.container, next)
                 .addToBackStack(null)
                 .commit()
         }
@@ -106,7 +113,7 @@ class HomeFragment : Fragment() {
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>): T =
             // TODO: Pleos SDK 연동 시 FakeHomeDataSource 를 실제 구현으로 교체한다
-            HomeViewModel(FakeHomeDataSource(startEmpty)) as T
+            HomeViewModel(FakeHomeDataSource.fromIntent(requireActivity().intent, startEmpty)) as T
     }
 
     companion object {
