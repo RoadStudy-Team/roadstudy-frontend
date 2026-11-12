@@ -11,15 +11,18 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.roadstudy.automotive.R
+import com.roadstudy.automotive.databinding.FragmentDrivingBinding
+import com.roadstudy.automotive.navi.CommuteHub
 import com.roadstudy.automotive.navi.NaviSignalHub
+import com.roadstudy.automotive.session.CommuteInfo
+import com.roadstudy.automotive.session.CommuteTarget
 import com.roadstudy.automotive.session.NaviSignals
 import com.roadstudy.automotive.session.VehicleSignals
-import com.roadstudy.shared.R as SharedR
-import com.roadstudy.automotive.databinding.FragmentDrivingBinding
 import com.roadstudy.automotive.ui.home.FakeHomeDataSource
-import com.roadstudy.automotive.ui.home.withNavi
+import com.roadstudy.automotive.ui.home.withRoute
 import com.roadstudy.automotive.ui.parked.ParkedFragment
 import com.roadstudy.automotive.vehicle.VehicleSignalHub
+import com.roadstudy.shared.R as SharedR
 
 /**
  * 주행 중 화면. [DrivingViewModel] 의 [DrivingUiState] 를 그린다.
@@ -48,7 +51,11 @@ class DrivingFragment : Fragment() {
         // 그 가짜 상황으로 시작한다 (safe, thinking, night, turn_ahead, arrived)
         val scenario = requireActivity().intent.getStringExtra(EXTRA_SCENARIO)?.let { DrivingScenario.fromKey(it) }
         val sectionId = requireArguments().getString(ARG_SECTION_ID)
-        viewModel = ViewModelProvider(this, driveViewModelFactory(sectionId, scenario))[DrivingViewModel::class.java]
+        val commuteTarget = requireArguments().getString(ARG_COMMUTE_TARGET)?.let { CommuteTarget.valueOf(it) }
+        viewModel = ViewModelProvider(
+            this,
+            driveViewModelFactory(sectionId, commuteTarget, scenario)
+        )[DrivingViewModel::class.java]
 
         // 개발용: 화면을 누르면 가짜 상황이 차례로 바뀐다(실제 신호는 무시). 실제 운행에서는 터치 입력을 받지 않는다.
         // TODO: 신호 연동이 안정되면 제거
@@ -122,14 +129,15 @@ class DrivingFragment : Fragment() {
         _binding = null
     }
 
-    private fun driveViewModelFactory(sectionId: String?, scenario: DrivingScenario?) =
+    private fun driveViewModelFactory(sectionId: String?, commuteTarget: CommuteTarget?, scenario: DrivingScenario?) =
         object : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
                 // TODO: 저장된 진도 연동 시 가짜 입력 대신 실제 진도를 쓴다 (내비 경로는 NaviSignalHub 값이 있으면 그것을 쓴다)
                 // 홈과 같은 경로로 학습 계획(개념 수)을 세워서, 홈에서 본 분량과 주행 화면의 "개념 n/N"이 맞게 한다
                 val navi = NaviSignalHub.signals.value ?: NaviSignals()
-                val input = FakeHomeDataSource.fromIntent(requireActivity().intent).load().withNavi(navi)
+                val input = FakeHomeDataSource.fromIntent(requireActivity().intent).load()
+                    .withRoute(navi, CommuteHub.info.value ?: CommuteInfo(), commuteTarget)
                 return DrivingViewModel(
                     DrivingDemo(input, sectionId),
                     scenario,
@@ -142,9 +150,14 @@ class DrivingFragment : Fragment() {
     companion object {
         const val EXTRA_SCENARIO = "driving_scenario"
         private const val ARG_SECTION_ID = "section_id"
+        private const val ARG_COMMUTE_TARGET = "commute_target"
 
-        fun newInstance(sectionId: String?) = DrivingFragment().apply {
-            arguments = Bundle().apply { putString(ARG_SECTION_ID, sectionId) }
+        /** [commuteTarget]: 홈 경로 카드에서 고른 회사/집. 경로 안내 전이면 그쪽 미리보기로 학습 계획을 세운다 */
+        fun newInstance(sectionId: String?, commuteTarget: CommuteTarget? = null) = DrivingFragment().apply {
+            arguments = Bundle().apply {
+                putString(ARG_SECTION_ID, sectionId)
+                putString(ARG_COMMUTE_TARGET, commuteTarget?.name)
+            }
         }
     }
 }

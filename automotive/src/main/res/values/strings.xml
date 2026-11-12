@@ -14,6 +14,9 @@
     <!-- 오늘의 경로 카드 -->
     <string name="route_title">오늘의 경로</string>
     <string name="to_destination">%1$s까지</string>
+    <string name="commute_work">회사</string>
+    <string name="commute_home">집</string>
+    <string name="to_destination_none">내비에 집·회사를 등록하거나 목적지를 정해 주세요</string>
     <string name="unit_km">km</string>
     <string name="about">약</string>
     <string name="unit_minute">분</string>
