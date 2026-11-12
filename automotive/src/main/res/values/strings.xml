@@ -54,5 +54,10 @@
     <string name="cta_to_home">퇴근 세션 시작</string>
     <string name="cta_other">세션 시작</string>
     <string name="cta_sample">샘플 자료로 체험하기</string>
-    <string name="toast_driving_screen_todo">주행 중 화면은 다음 작업에서 만들어요</string>
+
+    <!-- 주행 중 화면 -->
+    <string name="driving_info">%1$s까지 %2$skm · %3$d분 · 개념 %4$d/%5$d</string>
+    <string name="driving_info_no_route">개념 %1$d/%2$d</string>
+    <string name="driving_hint_steering">◀ 다시 들려줘    ▶ 알아요</string>
+    <string name="driving_hint_auto_resume">조건이 풀리면 자동으로 이어져요</string>
 </resources>
