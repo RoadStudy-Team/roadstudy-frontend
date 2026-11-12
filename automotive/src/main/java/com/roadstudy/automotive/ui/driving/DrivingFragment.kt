@@ -14,6 +14,7 @@ import com.roadstudy.automotive.R
 import com.roadstudy.shared.R as SharedR
 import com.roadstudy.automotive.databinding.FragmentDrivingBinding
 import com.roadstudy.automotive.ui.home.FakeHomeDataSource
+import com.roadstudy.automotive.ui.parked.ParkedFragment
 
 /**
  * 주행 중 화면. [DrivingViewModel] 의 [DrivingUiState] 를 그린다.
@@ -38,7 +39,7 @@ class DrivingFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // 개발용: `am start ... --es driving_scenario night` 로 시작 상황을 고른다 (safe, thinking, night, turn_ahead)
+        // 개발용: `am start ... --es driving_scenario night` 로 시작 상황을 고른다 (safe, thinking, night, turn_ahead, arrived)
         val scenario = DrivingScenario.fromKey(requireActivity().intent.getStringExtra(EXTRA_SCENARIO))
         val sectionId = requireArguments().getString(ARG_SECTION_ID)
         viewModel = ViewModelProvider(this, driveViewModelFactory(sectionId, scenario))[DrivingViewModel::class.java]
@@ -47,7 +48,18 @@ class DrivingFragment : Fragment() {
         // TODO: Pleos 신호 연동 후 제거
         binding.rootDriving.setOnClickListener { viewModel.nextScenario() }
 
-        viewModel.uiState.observe(viewLifecycleOwner) { state -> render(state) }
+        viewModel.uiState.observe(viewLifecycleOwner) { state ->
+            render(state)
+            // 도착(P단)하면 주차 후 복습 화면으로 넘어간다. 뒤로 돌아왔을 때 다시 넘어가지 않도록 한 번만 처리한다
+            if (state.arrived && viewModel.consumeArrival()) openParkedReview(sectionId)
+        }
+    }
+
+    private fun openParkedReview(sectionId: String?) {
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.container, ParkedFragment.newInstance(sectionId))
+            .addToBackStack(null)
+            .commit()
     }
 
     private fun render(state: DrivingUiState) {

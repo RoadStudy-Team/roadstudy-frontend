@@ -7,6 +7,7 @@ import com.roadstudy.automotive.ui.home.FakeHomeDataSource
 import com.roadstudy.shared.model.SampleStudySections
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class DrivingDemoTest {
@@ -51,6 +52,15 @@ class DrivingDemoTest {
     }
 
     @Test
+    fun `도착 상황은 주차 모드이고 세션이 끝난 상태다`() {
+        val state = demo.run(DrivingScenario.ARRIVED)
+
+        assertEquals(LearningMode.PARKED, state.mode)
+        assertEquals(ModeReason.PARKED, state.reason)
+        assertTrue(state.finished)
+    }
+
+    @Test
     fun `같은 상황은 몇 번을 돌려도 같은 결과다`() {
         assertEquals(demo.run(DrivingScenario.NIGHT), demo.run(DrivingScenario.NIGHT))
     }
@@ -58,7 +68,8 @@ class DrivingDemoTest {
     @Test
     fun `상황은 순서대로 돌고 마지막 다음은 처음이다`() {
         assertEquals(DrivingScenario.THINKING, DrivingScenario.SAFE.next())
-        assertEquals(DrivingScenario.SAFE, DrivingScenario.TURN_AHEAD.next())
+        assertEquals(DrivingScenario.ARRIVED, DrivingScenario.TURN_AHEAD.next())
+        assertEquals(DrivingScenario.SAFE, DrivingScenario.ARRIVED.next())
     }
 
     @Test
