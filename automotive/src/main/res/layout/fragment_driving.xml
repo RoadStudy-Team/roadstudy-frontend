@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    주행 중 화면
+    운전자는 소리와 핸들 버튼으로만 쓰므로 질문 문장, 목록, 터치 버튼을 두지 않는다.
+    화면에는 상태 한 줄, 가운데 파형(또는 일시정지), 아래 작은 정보만 있다.
+    크기 기준은 fragment_home.xml 상단 설명을 참고한다.
+-->
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rootDriving"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingStart="56dp"
+    android:paddingEnd="56dp"
+    android:paddingBottom="56dp">
+
+    <!-- 상단 상태 한 줄: ● 안전 구간 · 학습 중 -->
+    <LinearLayout
+        android:id="@+id/statusRow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="120dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <View
+            android:id="@+id/dotStatus"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:background="@drawable/dot_status" />
+
+        <TextView
+            android:id="@+id/tvStatus"
+            style="@style/Rs.Text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="18dp"
+            android:textSize="40sp" />
+    </LinearLayout>
+
+    <!-- 가운데: (아이콘 자리) + 파형 또는 일시정지 원 -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@id/bottomRow"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/statusRow">
+
+        <!-- 야간·빗길 아이콘 자리 (아이콘 확정 전까지 빈 박스) -->
+        <ImageView
+            android:id="@+id/ivCaution"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_marginBottom="32dp"
+            android:importantForAccessibility="no"
+            android:src="@drawable/ic_placeholder" />
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <com.roadstudy.automotive.ui.driving.WaveformView
+                android:id="@+id/waveform"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center" />
+
+            <!-- 일시정지 원. 안의 아이콘 자리는 빈 박스 -->
+            <FrameLayout
+                android:id="@+id/pauseCircle"
+                android:layout_width="172dp"
+                android:layout_height="172dp"
+                android:layout_gravity="center"
+                android:background="@drawable/bg_circle_pause">
+
+                <ImageView
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:layout_gravity="center"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/ic_placeholder" />
+            </FrameLayout>
+        </FrameLayout>
+    </LinearLayout>
+
+    <!-- 하단: 왼쪽 경로 정보 / 가운데 섹션 이름 / 오른쪽 안내 -->
+    <TextView
+        android:id="@+id/tvInfo"
+        style="@style/Rs.Text.Sub"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/tvSection"
+        style="@style/Rs.Text.Sub"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/tvHint"
+        style="@style/Rs.Text.Sub"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- 위 세 글자의 높이를 맞추기 위한 기준 (bottomRow) -->
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/bottomRow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="top"
+        app:constraint_referenced_ids="tvInfo,tvSection,tvHint" />
+</androidx.constraintlayout.widget.ConstraintLayout>

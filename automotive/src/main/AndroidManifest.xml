@@ -2,22 +2,49 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!--
-        TODO: Pleos 문서로 확인한 뒤 추가할 것
-        - 주행 중 사용 가능 앱(DO, 주의분산 최적화) 선언 문법
-        - 가로 방향 고정, 차량 앱 선언
-        - 사용하는 Vehicle / NaviHelper 권한 (pleos.car.permission.*)
+        Vehicle SDK 권한 (모두 protection level normal 이라 실행 중 허용 팝업은 없다).
+        - CAR_DRIVE   : 기어 선택 상태
+        - CAR_LIGHTS  : 전조등, 안개등 상태
+        - CAR_WINDOWS : 와이퍼 상태와 스위치
+        TODO: 내비 연동 시 NaviHelper 권한(pleos.car.permission.NAVI_ROUTE)을 추가한다.
     -->
+    <uses-permission android:name="pleos.car.permission.CAR_DRIVE" />
+    <uses-permission android:name="pleos.car.permission.CAR_LIGHTS" />
+    <uses-permission android:name="pleos.car.permission.CAR_WINDOWS" />
 
     <application
         android:allowBackup="false"
         android:appCategory="audio"
         android:label="@string/app_name"
-        android:supportsRtl="true">
+        android:supportsRtl="true"
+        android:theme="@style/Theme.RoadStudy.Automotive">
 
         <!-- 차량 런처 노출용 (Pleos Music/Audio 앱 가이드) -->
         <meta-data
             android:name="androidx.car.app.launchable"
             android:value="true" />
+
+        <!--
+            TODO: Pleos 창 정책상 가로·세로 모두 지원해야 한다. 지금은 도안이 가로 기준이라 landscape 로 고정했다.
+        -->
+        <activity
+            android:name=".ui.main.MainActivity"
+            android:exported="true"
+            android:screenOrientation="landscape">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+            <!--
+                주행 중 사용 가능(Driver Distraction Optimized) 선언. 선언하지 않으면 주행 중 앱 사용 가능 여부가
+                상황에 따라 달라진다. 플랫폼은 선언만 검사하고 실제 준수 여부는 심사에서 본다.
+                그래서 주행 중 화면에는 질문 문장, 목록, 터치 버튼을 두지 않는다.
+            -->
+            <meta-data
+                android:name="distractionOptimized"
+                android:value="true" />
+        </activity>
     </application>
 
 </manifest>

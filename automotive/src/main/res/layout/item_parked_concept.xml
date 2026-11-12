@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    오늘 학습한 중요한 개념 카드 한 장. 값은 ParkedConceptAdapter 가 채운다.
+    아래의 두 버튼 중 하나를 고르면 파란 테두리로 표시된다.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="560dp"
+    android:layout_margin="8dp"
+    android:background="@drawable/bg_card"
+    android:orientation="vertical"
+    android:padding="32dp">
+
+    <!-- 남는 위쪽 공간: 개념 이름과 핵심 한 줄을 세로 가운데로 모은다 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvConceptTitle"
+            style="@style/Rs.Text.Bold"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:textSize="48sp" />
+
+        <TextView
+            android:id="@+id/tvConceptSummary"
+            style="@style/Rs.Text.Sub"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:ellipsize="end"
+            android:maxLines="3"
+            android:textSize="38sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="96dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/btnRelisten"
+            style="@style/Rs.Text.Bold"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="8dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_choice"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:maxLines="1"
+            android:textSize="30sp" />
+
+        <TextView
+            android:id="@+id/btnKnow"
+            style="@style/Rs.Text.Bold"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="8dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_choice"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:maxLines="1"
+            android:text="@string/parked_choice_know"
+            android:textSize="30sp" />
+    </LinearLayout>
+</LinearLayout>

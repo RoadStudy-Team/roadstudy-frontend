@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    다른 이동 안내 화면 (디자인 도안 03_other_trip_prompt).
+    출퇴근이 아닌 이동에서 출발 전에 "이번 이동도 학습할까요?"를 한 번 묻는다. 정차(P단) 중이라 터치 입력을 받는다.
+-->
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingStart="40dp"
+    android:paddingEnd="40dp"
+    android:paddingBottom="48dp">
+
+    <!-- ===== 상단 바 ===== -->
+    <ImageView
+        android:id="@+id/ivLogo"
+        android:layout_width="76dp"
+        android:layout_height="76dp"
+        android:layout_marginTop="26dp"
+        android:contentDescription="@string/app_name"
+        android:src="@drawable/ic_logo"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvBrand"
+        style="@style/Rs.Text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:text="@string/brand"
+        android:textSize="40sp"
+        app:layout_constraintBottom_toBottomOf="@id/ivLogo"
+        app:layout_constraintStart_toEndOf="@id/ivLogo"
+        app:layout_constraintTop_toTopOf="@id/ivLogo" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="72dp"
+        android:layout_marginTop="28dp"
+        android:background="@drawable/bg_pill"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="32dp"
+        android:paddingEnd="32dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <View
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:background="@drawable/dot_green" />
+
+        <TextView
+            style="@style/Rs.Text.Bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="14dp"
+            android:text="@string/other_status"
+            android:textSize="30sp" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/topDivider"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginTop="128dp"
+        android:background="@color/rs_border"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- ===== 질문 카드 ===== -->
+    <LinearLayout
+        android:id="@+id/cardPrompt"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/bg_card"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:padding="72dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHeight_percent="0.72"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/topDivider"
+        app:layout_constraintVertical_bias="0.35">
+
+        <!-- 목적지 · 강남 OO빌딩 · 24.6km · 약 46분 (더미) -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:importantForAccessibility="no"
+                android:src="@drawable/ic_route" />
+
+            <TextView
+                android:id="@+id/tvDestination"
+                style="@style/Rs.Text.Sub.Bold"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textSize="38sp" />
+        </LinearLayout>
+
+        <TextView
+            style="@style/Rs.Text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="48dp"
+            android:text="@string/other_question"
+            android:textSize="84sp" />
+
+        <!-- 최대 30분 · 개념 4개 · DB 정규화 정리 (더미) -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="44dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:importantForAccessibility="no"
+                android:src="@drawable/ic_clock" />
+
+            <TextView
+                android:id="@+id/tvMaxMinutes"
+                style="@style/Rs.Text.Sub.Bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:textSize="40sp" />
+
+            <TextView
+                style="@style/Rs.Text.Sub"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="24dp"
+                android:text="@string/dot_separator"
+                android:textSize="40sp" />
+
+            <ImageView
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:importantForAccessibility="no"
+                android:src="@drawable/ic_concepts" />
+
+            <TextView
+                android:id="@+id/tvConceptCount"
+                style="@style/Rs.Text.Sub.Bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:textSize="40sp" />
+
+            <TextView
+                style="@style/Rs.Text.Sub"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="24dp"
+                android:text="@string/dot_separator"
+                android:textSize="40sp" />
+
+            <!-- 섹션 아이콘 자리 (아이콘 확정 전까지 빈 박스!) -->
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:importantForAccessibility="no"
+                android:src="@drawable/ic_placeholder" />
+
+            <TextView
+                android:id="@+id/tvSection"
+                style="@style/Rs.Text.Sub.Bold"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textSize="40sp" />
+        </LinearLayout>
+
+        <!-- 버튼: 학습하기 | 이번엔 쉬기 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="136dp"
+            android:layout_marginTop="64dp"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/btnStudy"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="3"
+                android:background="@drawable/bg_button_primary"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/Rs.Text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/other_study"
+                    android:textColor="@color/white"
+                    android:textSize="46sp" />
+
+                <ImageView
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_marginStart="16dp"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/ic_chevron_right" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/btnRest"
+                style="@style/Rs.Text"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="24dp"
+                android:layout_weight="2"
+                android:background="@drawable/bg_choice"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:text="@string/other_rest"
+                android:textSize="46sp" />
+        </LinearLayout>
+
+        <!-- 이 장소는 다음부터 묻지 않기 (체크 상자 + 글자 전체가 클릭 되게!) -->
+        <LinearLayout
+            android:id="@+id/rowDontAsk"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="44dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <FrameLayout
+                android:id="@+id/checkBox"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:background="@drawable/bg_choice">
+
+                <!-- 체크 표시 자리 (체크 시 파란 원) -->
+                <View
+                    android:id="@+id/checkInner"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/dot_accent" />
+            </FrameLayout>
+
+            <TextView
+                style="@style/Rs.Text.Sub"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:text="@string/other_dont_ask"
+                android:textSize="38sp" />
+        </LinearLayout>
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

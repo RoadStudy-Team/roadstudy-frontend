@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 작은 라벨(자격증, 선택됨): 연한 파랑 배경 -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+    <solid android:color="@color/rs_accent_soft" />
+    <corners android:radius="14dp" />
+</shape>
