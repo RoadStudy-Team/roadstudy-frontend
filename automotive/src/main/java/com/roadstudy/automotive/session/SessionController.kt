@@ -27,6 +27,7 @@ data class SessionUiState(
  * - PARKED : 정지. UI 는 주차 후 정리 화면으로 전환
  *
  * 핸들 버튼: 다음(▶) = 알아요, 이전(◀) = 다시 들려줘, 재생/일시정지 = [pauseByUser] / [resumeByUser]
+ * 다음·이전은 기록만 하지 않고 바로 반응한다(눌렸는지 귀로 알 수 있게): 알아요 → 다음 개념, 다시 들려줘 → 설명부터 다시.
  */
 class SessionController(
     private val plan: SessionPlan,
@@ -44,6 +45,9 @@ class SessionController(
     private var lastNavi = NaviSignals()
     private var finished = false
     private var userPaused = false
+
+    /** 멈춰 있는 동안 버튼으로 위치를 옮겼다. 다시 재생할 때 이어 듣기가 아니라 새 위치에서 처음부터 읽는다 */
+    private var restartStep = false
 
     val uiState: SessionUiState
         get() = SessionUiState(
@@ -81,7 +85,7 @@ class SessionController(
                 when {
                     userPaused -> Unit
                     index < 0 -> moveToNextItem(context.nowMillis)
-                    pausedByFocus -> resumeAfterFocus(context.nowMillis)
+                    restartStep || pausedByFocus -> continuePlayback(context.nowMillis)
                     previous == LearningMode.PARKED -> playCurrentStep(context.nowMillis)
                 }
             }
@@ -134,19 +138,49 @@ class SessionController(
         when {
             !canPlay -> Unit
             index < 0 -> moveToNextItem(nowMillis)
-            pausedByFocus -> resumeAfterFocus(nowMillis)
+            else -> continuePlayback(nowMillis)
         }
     }
 
-    fun onSteeringNext() = recordSelfCheck(SelfCheck.KNOW)
+    /** 운전대 다음(▶): 알아요로 기록하고 바로 다음 개념으로 넘어간다 */
+    fun onSteeringNext(nowMillis: Long) = jumpBySelfCheck(SelfCheck.KNOW, nowMillis)
 
-    fun onSteeringPrevious() = recordSelfCheck(SelfCheck.RELISTEN)
+    /** 운전대 이전(◀): 다시 들려줘로 기록하고 지금 개념을 설명부터 다시 읽는다 */
+    fun onSteeringPrevious(nowMillis: Long) = jumpBySelfCheck(SelfCheck.RELISTEN, nowMillis)
 
-    private fun recordSelfCheck(check: SelfCheck) {
+    /**
+     * 집중 모드·주차 중에는 무시한다(운전에 집중해야 하는 순간).
+     * 사용자가 멈춰 둔 상태라면 기록과 위치 이동만 하고, 소리는 다시 재생할 때 새 위치에서 나온다.
+     */
+    private fun jumpBySelfCheck(check: SelfCheck, nowMillis: Long) {
         val item = plan.items.getOrNull(index) ?: return
+        if (finished) return
         if (decision.mode == LearningMode.FOCUS || decision.mode == LearningMode.PARKED) return
-        if (step == Step.EXPLAIN) return
         progress.record(item.concept.id, check)
+        if (playing) audio.stop()
+        playing = false
+        thinkStartedAt = null
+        pausedByFocus = false
+        when (check) {
+            SelfCheck.KNOW -> if (!advance()) return
+            SelfCheck.RELISTEN -> step = Step.EXPLAIN
+        }
+        if (userPaused) {
+            restartStep = true
+            return
+        }
+        playCurrentStep(nowMillis)
+    }
+
+    /** 멈췄던 학습을 다시 시작한다. 버튼으로 위치를 옮겼다면 그 위치에서 처음부터, 아니면 멈춘 곳에서 이어서 */
+    private fun continuePlayback(nowMillis: Long) {
+        if (restartStep) {
+            restartStep = false
+            pausedByFocus = false
+            playCurrentStep(nowMillis)
+        } else if (pausedByFocus) {
+            resumeAfterFocus(nowMillis)
+        }
     }
 
     private fun resumeAfterFocus(nowMillis: Long) {
@@ -159,6 +193,11 @@ class SessionController(
     }
 
     private fun moveToNextItem(nowMillis: Long) {
+        if (advance()) playCurrentStep(nowMillis)
+    }
+
+    /** 다음 개념의 설명 단계로 옮긴다(주의 모드면 새 개념은 건너뜀). 더 없으면 끝내고 false */
+    private fun advance(): Boolean {
         var next = index + 1
         if (decision.mode == LearningMode.CAUTION) {
             while (next < plan.items.size && plan.items[next].kind == PlanItemKind.NEW) next++
@@ -167,11 +206,11 @@ class SessionController(
             index = plan.items.size
             finished = true
             audio.stop()
-            return
+            return false
         }
         index = next
         step = Step.EXPLAIN
-        playCurrentStep(nowMillis)
+        return true
     }
 
     private fun playCurrentStep(nowMillis: Long) {
