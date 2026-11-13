@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.roadstudy.automotive.R
+import com.roadstudy.automotive.playback.LearningHub
 import com.roadstudy.automotive.databinding.FragmentParkedBinding
 import com.roadstudy.automotive.session.TripType
 import com.roadstudy.automotive.ui.home.FakeHomeDataSource
@@ -107,8 +108,11 @@ class ParkedFragment : Fragment() {
     private fun parkedViewModelFactory(sectionId: String?) = object : ViewModelProvider.Factory {
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            // TODO: Pleos SDK 연동과 저장소 후에는 실제 주행 결과와 저장된 진도를 쓴다
-            val start = ParkedDemo(FakeHomeDataSource.fromIntent(requireActivity().intent).load(), sectionId).start()
+            // 방금 도착한 세션의 실제 결과가 있으면 그걸 쓰고, 없으면(가짜 상황 등) 데모 세션을 돌린다
+            // TODO: 저장소(Room) 후에는 저장된 진도와 연속 학습일을 쓴다
+            val input = FakeHomeDataSource.fromIntent(requireActivity().intent).load()
+            val result = LearningHub.lastResult?.takeIf { it.sectionId == sectionId }
+            val start = result?.let { ParkedDemo.fromSession(input, it) } ?: ParkedDemo(input, sectionId).start()
             return ParkedViewModel(start) as T
         }
     }

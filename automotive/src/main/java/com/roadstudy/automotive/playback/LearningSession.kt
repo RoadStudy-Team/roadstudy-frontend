@@ -17,6 +17,8 @@ import com.roadstudy.automotive.session.ProgressTracker
 import com.roadstudy.automotive.session.RouteEndTracker
 import com.roadstudy.automotive.session.SessionController
 import com.roadstudy.automotive.session.SessionPlan
+import com.roadstudy.automotive.session.SessionResult
+import com.roadstudy.automotive.session.TripType
 import com.roadstudy.automotive.session.SessionUiState
 import com.roadstudy.automotive.session.VehicleSignals
 import com.roadstudy.automotive.vehicle.VehicleSignalHub
@@ -32,7 +34,9 @@ data class SessionRequest(
     val fallbackMeters: Int?,
     val fallbackSec: Int?,
     /** 개발·시연용: 내비의 회전·주의 구간·재탐색으로 멈추지 않는다 ([LiveDrivingContext] 참고) */
-    val ignoreNaviFocus: Boolean = false
+    val ignoreNaviFocus: Boolean = false,
+    /** 출근·퇴근·기타. 주차 후 복습 화면의 제목에 쓴다 */
+    val tripType: TripType = TripType.TO_WORK
 )
 
 /**
@@ -69,6 +73,7 @@ class LearningSession(
     private val routeEnd = RouteEndTracker()
     private var lastState: SessionUiState? = null
     private var running = false
+    private var startedAtMillis = 0L
     private var arrivalNotified = false
 
     /** 내비 음성 안내 등으로 잠깐 멈춘 경우. 포커스를 되찾으면 이어서 재생한다 */
@@ -110,6 +115,7 @@ class LearningSession(
     fun start() {
         if (running) return
         running = true
+        startedAtMillis = clock()
         val focus = audioManager.requestAudioFocus(focusRequest)
         keepAlive.start()
         Log.d(TAG, "세션 시작: ${request.sectionTitle}, 개념 ${request.plan.items.size}개, 오디오 포커스 $focus" +
@@ -130,6 +136,15 @@ class LearningSession(
         keepAlive.stop()
         audio.release()
         Log.d(TAG, "세션 끝")
+    }
+
+    /** 도착으로 끝났으면 실제 결과를 돌려준다. 아직 진행 중이거나 중간에 멈췄으면 null */
+    fun result(): SessionResult? {
+        val state = controller.uiState
+        if (!state.finished || state.mode != LearningMode.PARKED) return null
+        return SessionResult.of(
+            request.plan, state, request.progress, request.sectionId, request.tripType, clock() - startedAtMillis
+        )
     }
 
     /** 운전대 재생/일시정지 */

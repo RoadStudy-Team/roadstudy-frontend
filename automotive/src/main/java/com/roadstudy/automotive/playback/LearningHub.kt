@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.roadstudy.automotive.session.SessionResult
 import com.roadstudy.automotive.session.SessionUiState
 
 /**
@@ -28,6 +29,10 @@ object LearningHub {
     var session: LearningSession? = null
         private set
 
+    /** 마지막으로 도착해서 끝난 세션의 결과. 주차 후 복습 화면이 쓴다 */
+    var lastResult: SessionResult? = null
+        private set
+
     /** 상태가 바뀌면 미디어 서비스가 플레이어 상태를 다시 계산하도록 부른다 */
     var onChanged: (() -> Unit)? = null
 
@@ -36,6 +41,7 @@ object LearningHub {
         val current = session
         if (current != null && current.request.sectionId == request.sectionId && !current.state.finished) return
         stop()
+        lastResult = null
         val app = context.applicationContext
         SignalSources.acquire(app, USER)
         val created = LearningSession(
@@ -59,6 +65,7 @@ object LearningHub {
     fun stop() {
         val current = session ?: return
         session = null
+        current.result()?.let { lastResult = it }
         current.stop()
         SignalSources.release(USER)
         _state.value = null

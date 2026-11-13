@@ -165,7 +165,8 @@ class DrivingFragment : Fragment() {
         progress = newProgress(),
         fallbackMeters = fallbackMeters,
         fallbackSec = fallbackSec,
-        ignoreNaviFocus = requireActivity().intent.getBooleanExtra(EXTRA_IGNORE_NAVI_FOCUS, false)
+        ignoreNaviFocus = requireActivity().intent.getBooleanExtra(EXTRA_IGNORE_NAVI_FOCUS, false),
+        tripType = tripType
     )
 
     private fun driveViewModelFactory(demo: DrivingDemo, scenario: DrivingScenario?) =
