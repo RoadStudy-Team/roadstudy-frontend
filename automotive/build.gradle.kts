@@ -41,5 +41,8 @@ dependencies {
     // Pleos SDK는 automotive 모듈에서만 사용한다
     implementation(libs.pleos.vehicle)
     implementation(libs.pleos.navihelper)
+    implementation(libs.pleos.texttospeech)
+    implementation(libs.androidx.media3.session)
+    implementation(libs.androidx.media3.common)
     testImplementation(libs.junit)
 }
