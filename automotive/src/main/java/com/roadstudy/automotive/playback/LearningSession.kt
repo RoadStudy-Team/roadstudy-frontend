@@ -14,6 +14,7 @@ import com.roadstudy.automotive.session.LearningMode
 import com.roadstudy.automotive.session.LiveDrivingContext
 import com.roadstudy.automotive.session.NaviSignals
 import com.roadstudy.automotive.session.ProgressTracker
+import com.roadstudy.automotive.session.RouteEndTracker
 import com.roadstudy.automotive.session.SessionController
 import com.roadstudy.automotive.session.SessionPlan
 import com.roadstudy.automotive.session.SessionUiState
@@ -63,6 +64,9 @@ class LearningSession(
     private var vehicle = VehicleSignalHub.signals.value ?: VehicleSignals()
     private var navi = NaviSignalHub.signals.value ?: NaviSignals()
     private var hasDriven = vehicle.gear == Gear.DRIVE
+
+    /** 세션 중에 내비 안내가 끝났는지 (P단에서 끝나면 도착) */
+    private val routeEnd = RouteEndTracker()
     private var lastState: SessionUiState? = null
     private var running = false
     private var arrivalNotified = false
@@ -158,7 +162,8 @@ class LearningSession(
         if (!running) return
         controller.onContextChanged(
             LiveDrivingContext.build(
-                vehicle, navi, hasDriven, request.fallbackMeters, request.fallbackSec, clock(), request.ignoreNaviFocus
+                vehicle, navi, hasDriven, request.fallbackMeters, request.fallbackSec, clock(), request.ignoreNaviFocus,
+                routeEnded = routeEnd.update(navi)
             )
         )
         publish()
