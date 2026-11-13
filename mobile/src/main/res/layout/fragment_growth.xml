@@ -23,6 +23,7 @@
             android:layout_height="wrap_content"
             android:paddingBottom="24dp">
 
+            <!-- 제목 -->
             <TextView
                 android:id="@+id/tvTitle"
                 android:layout_width="wrap_content"
@@ -36,6 +37,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
+            <!-- 세그먼트 탭 -->
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/layoutSegment"
                 android:layout_width="wrap_content"
@@ -104,6 +106,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@id/layoutSegment" />
 
+            <!-- 상단 아이콘 -->
             <ImageView
                 android:id="@+id/ivPulse"
                 android:layout_width="wrap_content"
@@ -114,6 +117,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/layoutSegment" />
 
+            <!-- 큰 숫자 -->
             <TextView
                 android:id="@+id/tvBigNumber"
                 android:layout_width="wrap_content"
@@ -150,7 +154,8 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tvBigNumber" />
 
--            <TextView
+            <!-- 최근/최장 칩 -->
+            <TextView
                 android:id="@+id/chipRecent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -183,6 +188,7 @@
                 app:layout_constraintStart_toEndOf="@id/chipRecent"
                 app:layout_constraintTop_toTopOf="@id/chipRecent" />
 
+            <!-- 통계 3열 -->
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/colStat1"
                 android:layout_width="0dp"
@@ -348,6 +354,7 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
+            <!-- 카드 1: 나의 기록 -->
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/cardRecord"
                 android:layout_width="0dp"
@@ -389,6 +396,7 @@
                         android:orientation="vertical"
                         app:layout_constraintGuide_percent="0.5" />
 
+                    <!-- 1행 라벨 -->
                     <TextView
                         android:id="@+id/tvLabel1"
                         android:layout_width="0dp"
@@ -416,6 +424,7 @@
                         app:layout_constraintStart_toStartOf="@id/guideRecordCenter"
                         app:layout_constraintTop_toTopOf="@id/tvLabel1" />
 
+                    <!-- 1행 값 -->
                     <TextView
                         android:id="@+id/tvValue1"
                         android:layout_width="wrap_content"
@@ -489,6 +498,7 @@
                         app:layout_constraintStart_toStartOf="@id/guideRecordCenter"
                         app:layout_constraintTop_toTopOf="@id/tvLabel3" />
 
+                    <!-- 2행 값 -->
                     <TextView
                         android:id="@+id/tvValue3"
                         android:layout_width="wrap_content"
@@ -531,6 +541,7 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
 
+            <!-- 카드 2: 자료별 진도 -->
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/cardProgress"
                 android:layout_width="0dp"
@@ -654,6 +665,7 @@
                         app:layout_constraintTop_toTopOf="@id/pbSubject1" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
+                <!-- 항목 2 -->
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/rowSubject2"
                     android:layout_width="0dp"
@@ -849,6 +861,7 @@
                         app:layout_constraintTop_toTopOf="@id/pbSubject3" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
+                <!-- 항목 4 -->
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/rowSubject4"
                     android:layout_width="0dp"
@@ -946,7 +959,6 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <!-- 카드 3: 집중한 순간 -->
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/cardFocus"
                 android:layout_width="0dp"
@@ -954,41 +966,54 @@
                 android:layout_marginHorizontal="20dp"
                 android:layout_marginTop="16dp"
                 android:background="@drawable/bg_card"
-                android:padding="16dp"
+                android:padding="20dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/cardProgress">
+
+                <ImageView
+                    android:id="@+id/ivFocusIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_icon_dark"
+                    android:padding="12dp"
+                    android:src="@drawable/ic_shield_check"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     android:id="@+id/tvFocusTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
                     android:text="운전에 집중한 순간"
-                    android:textColor="#FFFFFF"
-                    android:textSize="15sp"
+                    android:textColor="#ECEEF0"
+                    android:textSize="18sp"
                     android:textStyle="bold"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintBottom_toBottomOf="@id/ivFocusIcon"
+                    app:layout_constraintStart_toEndOf="@id/ivFocusIcon"
+                    app:layout_constraintTop_toTopOf="@id/ivFocusIcon" />
 
                 <TextView
                     android:id="@+id/tvFocusNumber"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
+                    android:layout_marginTop="24dp"
                     android:text="312"
-                    android:textColor="#FFFFFF"
-                    android:textSize="32sp"
+                    android:textColor="#F3F4F6"
+                    android:textSize="27sp"
                     android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tvFocusTitle" />
+                    app:layout_constraintTop_toBottomOf="@id/ivFocusIcon" />
 
                 <TextView
                     android:id="@+id/tvFocusUnit"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="분"
-                    android:textColor="#9AA0AA"
-                    android:textSize="13sp"
+                    android:layout_marginStart="5dp"
+                    android:text="회"
+                    android:textColor="#9298A1"
+                    android:textSize="11sp"
                     app:layout_constraintBaseline_toBaselineOf="@id/tvFocusNumber"
                     app:layout_constraintStart_toEndOf="@id/tvFocusNumber" />
 
@@ -996,10 +1021,10 @@
                     android:id="@+id/tvFocusDesc"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="12dp"
-                    android:text="오디오 학습으로 운전 중에도 학습을 이어갔어요"
-                    android:textColor="#C8CCD4"
-                    android:textSize="12sp"
+                    android:layout_marginStart="16dp"
+                    android:text="회전·합류·보호구역 앞에서 학습을 잠시 멈췄어요"
+                    android:textColor="#979DA6"
+                    android:textSize="11sp"
                     app:layout_constraintBottom_toBottomOf="@id/tvFocusNumber"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/tvFocusUnit"
@@ -1009,24 +1034,25 @@
                     android:id="@+id/tvFocusNote"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:text="오늘 하루 이동 중 학습 시간을 합산한 결과예요"
-                    android:textColor="#6B717C"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/bg_line_top"
+                    android:paddingTop="16dp"
+                    android:text="빛길·야간에는 가벼운 복습만 진행했어요 · 27회"
+                    android:textColor="#747B85"
                     android:textSize="11sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tvFocusNumber" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <!-- 카드 4: 이정표 -->
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/cardMilestone"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="20dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="18dp"
                 android:background="@drawable/bg_card"
-                android:padding="16dp"
+                android:padding="20dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/cardFocus">
@@ -1036,111 +1062,201 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="이정표"
-                    android:textColor="#FFFFFF"
-                    android:textSize="15sp"
+                    android:textColor="#ECEEF0"
+                    android:textSize="18sp"
                     android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <!-- 이정표 1 -->
-                <TextView
+                <ImageView
                     android:id="@+id/dot1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="●"
-                    android:textColor="#5B8DEF"
-                    android:textSize="12sp"
-                    app:layout_constraintBottom_toBottomOf="@id/tvMs1"
+                    android:src="@drawable/bg_dot_filled"
+                    app:layout_constraintBottom_toBottomOf="@id/tvMsDate1"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/tvMs1" />
+                    app:layout_constraintTop_toTopOf="@id/tvMsDate1" />
 
                 <TextView
-                    android:id="@+id/tvMs1"
+                    android:id="@+id/tvMsDate1"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="12dp"
-                    android:layout_marginTop="16dp"
-                    android:text="2월 9일\n첫 출근길 학습"
-                    android:textColor="#FFFFFF"
-                    android:textSize="13sp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="20dp"
+                    android:text="2월 9일"
+                    android:textColor="#747B85"
+                    android:textSize="12sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/dot1"
                     app:layout_constraintTop_toBottomOf="@id/tvMilestoneTitle" />
 
-                <!-- 이정표 2 -->
                 <TextView
+                    android:id="@+id/tvMsTitle1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="첫 출근길 학습"
+                    android:textColor="#D8DBE0"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@id/tvMsDate1"
+                    app:layout_constraintTop_toBottomOf="@id/tvMsDate1" />
+
+                <!-- 이정표 2 -->
+                <ImageView
                     android:id="@+id/dot2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="●"
-                    android:textColor="#5B8DEF"
-                    android:textSize="12sp"
-                    app:layout_constraintBottom_toBottomOf="@id/tvMs2"
+                    android:src="@drawable/bg_dot_filled"
+                    app:layout_constraintBottom_toBottomOf="@id/tvMsDate2"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/tvMs2" />
+                    app:layout_constraintTop_toTopOf="@id/tvMsDate2" />
 
                 <TextView
-                    android:id="@+id/tvMs2"
+                    android:id="@+id/tvMsDate2"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="12dp"
-                    android:layout_marginTop="16dp"
-                    android:text="2월 12일\n누적 10시간 돌파"
-                    android:textColor="#FFFFFF"
-                    android:textSize="13sp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="28dp"
+                    android:text="2월 27일"
+                    android:textColor="#747B85"
+                    android:textSize="12sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/dot2"
-                    app:layout_constraintTop_toBottomOf="@id/tvMs1" />
+                    app:layout_constraintTop_toBottomOf="@id/tvMsTitle1" />
+
+                <TextView
+                    android:id="@+id/tvMsTitle2"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="누적 10시간 돌파"
+                    android:textColor="#D8DBE0"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@id/tvMsDate2"
+                    app:layout_constraintTop_toBottomOf="@id/tvMsDate2" />
 
                 <!-- 이정표 3 -->
-                <TextView
+                <ImageView
                     android:id="@+id/dot3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="●"
-                    android:textColor="#5B8DEF"
-                    android:textSize="12sp"
-                    app:layout_constraintBottom_toBottomOf="@id/tvMs3"
+                    android:src="@drawable/bg_dot_filled"
+                    app:layout_constraintBottom_toBottomOf="@id/tvMsDate3"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/tvMs3" />
+                    app:layout_constraintTop_toTopOf="@id/tvMsDate3" />
 
                 <TextView
-                    android:id="@+id/tvMs3"
+                    android:id="@+id/tvMsDate3"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="12dp"
-                    android:layout_marginTop="16dp"
-                    android:text="2월 20일\n첫 과목 완료 · SQL 기초 정리"
-                    android:textColor="#FFFFFF"
-                    android:textSize="13sp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="28dp"
+                    android:text="3월 6일"
+                    android:textColor="#747B85"
+                    android:textSize="12sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/dot3"
-                    app:layout_constraintTop_toBottomOf="@id/tvMs2" />
+                    app:layout_constraintTop_toBottomOf="@id/tvMsTitle2" />
 
-                <!-- 이정표 4 (미달성) -->
                 <TextView
+                    android:id="@+id/tvMsTitle3"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="첫 자료 완료 · SQL 기초 정리"
+                    android:textColor="#D8DBE0"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@id/tvMsDate3"
+                    app:layout_constraintTop_toBottomOf="@id/tvMsDate3" />
+
+                <!-- 이정표 4 -->
+                <ImageView
                     android:id="@+id/dot4"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="○"
-                    android:textColor="#6B717C"
-                    android:textSize="12sp"
-                    app:layout_constraintBottom_toBottomOf="@id/tvMs4"
+                    android:src="@drawable/bg_dot_empty"
+                    app:layout_constraintBottom_toBottomOf="@id/tvMsDate4"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/tvMs4" />
+                    app:layout_constraintTop_toTopOf="@id/tvMsDate4" />
 
                 <TextView
-                    android:id="@+id/tvMs4"
+                    android:id="@+id/tvMsDate4"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="12dp"
-                    android:layout_marginTop="16dp"
-                    android:text="다음\n누적 30시간"
-                    android:textColor="#6B717C"
-                    android:textSize="13sp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="28dp"
+                    android:text="다음"
+                    android:textColor="#747B85"
+                    android:textSize="12sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/dot4"
-                    app:layout_constraintTop_toBottomOf="@id/tvMs3" />
+                    app:layout_constraintTop_toBottomOf="@id/tvMsTitle3" />
+
+                <TextView
+                    android:id="@+id/tvMsTitle4"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="누적 30시간"
+                    android:textColor="#D8DBE0"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@id/tvMsDate4"
+                    app:layout_constraintTop_toBottomOf="@id/tvMsDate4" />
+
+                <TextView
+                    android:id="@+id/tvMsSub4"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="남은 9시간 30분"
+                    android:textColor="#8A9099"
+                    android:textSize="12sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@id/tvMsDate4"
+                    app:layout_constraintTop_toBottomOf="@id/tvMsTitle4" />
+
+                <!-- 연결선 -->
+                <TextView
+                    android:id="@+id/lineMs1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:background="#303640"
+                    android:minWidth="2dp"
+                    app:layout_constraintBottom_toTopOf="@id/dot2"
+                    app:layout_constraintEnd_toEndOf="@id/dot1"
+                    app:layout_constraintStart_toStartOf="@id/dot1"
+                    app:layout_constraintTop_toBottomOf="@id/dot1" />
+
+                <TextView
+                    android:id="@+id/lineMs2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:background="#303640"
+                    android:minWidth="2dp"
+                    app:layout_constraintBottom_toTopOf="@id/dot3"
+                    app:layout_constraintEnd_toEndOf="@id/dot2"
+                    app:layout_constraintStart_toStartOf="@id/dot2"
+                    app:layout_constraintTop_toBottomOf="@id/dot2" />
+
+                <TextView
+                    android:id="@+id/lineMs3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:background="#303640"
+                    android:minWidth="2dp"
+                    app:layout_constraintBottom_toTopOf="@id/dot4"
+                    app:layout_constraintEnd_toEndOf="@id/dot3"
+                    app:layout_constraintStart_toStartOf="@id/dot3"
+                    app:layout_constraintTop_toBottomOf="@id/dot3" />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
