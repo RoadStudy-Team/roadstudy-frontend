@@ -131,15 +131,17 @@ class LearningSession(
         publish()
     }
 
-    /** 운전대 다음(▶): 알아요 */
+    /** 운전대 다음(▶): 알아요 → 다음 개념 */
     fun onNext() {
-        controller.onSteeringNext()
+        Log.d(TAG, "운전대 다음(알아요): ${controller.uiState.step}")
+        controller.onSteeringNext(clock())
         publish()
     }
 
-    /** 운전대 이전(◀): 다시 들려줘 */
+    /** 운전대 이전(◀): 다시 들려줘 → 설명부터 다시 */
     fun onPrevious() {
-        controller.onSteeringPrevious()
+        Log.d(TAG, "운전대 이전(다시 들려줘): ${controller.uiState.step}")
+        controller.onSteeringPrevious(clock())
         publish()
     }
 
