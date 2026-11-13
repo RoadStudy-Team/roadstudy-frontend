@@ -135,14 +135,14 @@ class DrivingDemoTest {
     }
 
     @Test
-    fun `목적지에서 먼 곳의 P단은 도착이 아니라 잠시 정차다`() {
+    fun `MVP 에서는 목적지에서 멀어도 주행한 뒤 P단이면 도착이다`() {
         val state = live(
             VehicleSignals(gear = Gear.PARK),
             navi = NaviSignals(remainingSec = 600, remainingMeters = 4_200)
         )
 
-        assertFalse(state.finished)
-        assertEquals(LearningMode.NORMAL, state.mode)
+        assertEquals(LearningMode.PARKED, state.mode)
+        assertTrue(state.finished)
     }
 
     @Test

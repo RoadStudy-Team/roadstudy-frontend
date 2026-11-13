@@ -46,7 +46,9 @@ object LearningHub {
                 onChanged?.invoke()
             },
             onLevel = { _level.value = it },
-            onFocusLost = ::stop
+            onFocusLost = ::stop,
+            // 도착하면 내비 안내도 끝낸다 (MVP: 주행한 뒤 P단 = 도착)
+            onArrived = SignalSources::cancelRouteIfGuiding
         )
         session = created
         created.start()

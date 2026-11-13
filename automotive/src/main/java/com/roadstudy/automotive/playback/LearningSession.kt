@@ -10,6 +10,7 @@ import android.util.Log
 import androidx.lifecycle.Observer
 import com.roadstudy.automotive.navi.NaviSignalHub
 import com.roadstudy.automotive.session.Gear
+import com.roadstudy.automotive.session.LearningMode
 import com.roadstudy.automotive.session.LiveDrivingContext
 import com.roadstudy.automotive.session.NaviSignals
 import com.roadstudy.automotive.session.ProgressTracker
@@ -49,6 +50,8 @@ class LearningSession(
     private val onState: (SessionUiState) -> Unit,
     private val onLevel: (Double) -> Unit,
     private val onFocusLost: () -> Unit,
+    /** 도착(주행한 뒤 P단)으로 세션이 끝났을 때 한 번 부른다 */
+    private val onArrived: () -> Unit = {},
     private val clock: () -> Long = System::currentTimeMillis
 ) {
     private val main = Handler(Looper.getMainLooper())
@@ -62,6 +65,7 @@ class LearningSession(
     private var hasDriven = vehicle.gear == Gear.DRIVE
     private var lastState: SessionUiState? = null
     private var running = false
+    private var arrivalNotified = false
 
     /** 내비 음성 안내 등으로 잠깐 멈춘 경우. 포커스를 되찾으면 이어서 재생한다 */
     private var pausedByTransientLoss = false
@@ -167,6 +171,12 @@ class LearningSession(
             Log.d(TAG, "상태 ${state.mode}(${state.reason}) 개념 ${state.conceptIndex}/${state.conceptTotal} ${state.step}")
         }
         lastState = state
+        // 화면이 상태를 받고 세션을 정리(stop)할 수 있어서, 도착 처리를 먼저 한다
+        if (state.finished && state.mode == LearningMode.PARKED && !arrivalNotified) {
+            arrivalNotified = true
+            Log.d(TAG, "도착")
+            onArrived()
+        }
         onState(state)
     }
 
