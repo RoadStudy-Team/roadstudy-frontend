@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
 import com.roadstudy.mobile.databinding.ItemChapterBinding
 import com.roadstudy.mobile.mydata.data.ChapterItem
+import kotlin.math.roundToInt
 
 class ChapterAdapter(private val items: List<ChapterItem>) :
     RecyclerView.Adapter<ChapterAdapter.ChapterViewHolder>() {
@@ -28,6 +29,11 @@ class ChapterAdapter(private val items: List<ChapterItem>) :
         val item = items[position]
         val context = holder.itemView.context
         val cardView = holder.binding.root as? MaterialCardView
+
+        // strokeWidth는 dp가 아니라 px 단위이므로 dp -> px 변환이 필요해요
+        val density = context.resources.displayMetrics.density
+        val strokeNormal = (1f * density).roundToInt()
+        val strokeExpanded = (1.5f * density).roundToInt()
 
         holder.binding.apply {
             tvChapterNumber.text = item.number
@@ -65,23 +71,27 @@ class ChapterAdapter(private val items: List<ChapterItem>) :
             if (item.isExpanded) {
                 layoutExpandedContent.visibility = View.VISIBLE
                 cardView?.strokeColor = Color.parseColor("#5B9CF6")
-                cardView?.strokeWidth = 2
+                cardView?.strokeWidth = strokeExpanded
             } else {
                 layoutExpandedContent.visibility = View.GONE
-                cardView?.strokeColor = Color.parseColor("#2A3039")
-                cardView?.strokeWidth = 1
+                cardView?.strokeColor = Color.parseColor("#2A2E37")
+                cardView?.strokeWidth = strokeNormal
             }
 
             // 3. 카드 전체 클릭 시 확장/축소 토글 (수정 중이 아닐 때만)
             root.setOnClickListener {
+                val pos = holder.bindingAdapterPosition
+                if (pos == RecyclerView.NO_POSITION) return@setOnClickListener
                 if (!item.isEditing) {
                     item.isExpanded = !item.isExpanded
-                    notifyItemChanged(position)
+                    notifyItemChanged(pos)
                 }
             }
 
             // 4. 연필 아이콘 클릭 시 수정 모드 진입/해제 토글
             btnEditChapter.setOnClickListener {
+                val pos = holder.bindingAdapterPosition
+                if (pos == RecyclerView.NO_POSITION) return@setOnClickListener
                 if (item.isEditing) {
                     item.title = etChapterTitle.text.toString()
                     item.description = etChapterDesc.text.toString()
@@ -92,27 +102,26 @@ class ChapterAdapter(private val items: List<ChapterItem>) :
                 } else {
                     item.isEditing = true
                 }
-                notifyItemChanged(position)
+                notifyItemChanged(pos)
             }
 
             // 5. 하단 확장 영역 안의 '저장' 버튼 클릭 시: 수정 내용 반영 + 카드 접힘 + 수정 모드 종료
             btnSave.setOnClickListener {
-                // 입력창에 적힌 내용이 있다면 데이터에 최종 반영
+                val pos = holder.bindingAdapterPosition
+                if (pos == RecyclerView.NO_POSITION) return@setOnClickListener
+
                 if (item.isEditing) {
                     item.title = etChapterTitle.text.toString()
                     item.description = etChapterDesc.text.toString()
                 }
 
-                // 상태 초기화 (수정 모드 끄기 + 카드 접기)
                 item.isEditing = false
                 item.isExpanded = false
 
-                // 키보드 숨기기
                 val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 imm.hideSoftInputFromWindow(etChapterTitle.windowToken, 0)
 
-                // 화면 갱신
-                notifyItemChanged(position)
+                notifyItemChanged(pos)
             }
         }
     }

@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.roadstudy.mobile.R
@@ -87,8 +88,33 @@ class MydataStorageFragment : Fragment() {
 
         val recyclerView = binding.recyclerViewMyData
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        recyclerView.adapter = MydataAdapter(dummyList) // 어댑터 클래스 생성 후 주석 해제하여 사용
+        // ⋮ 버튼(btnCardMore)을 누르면 (버튼 View, 해당 카드 데이터)가 전달돼요
+        recyclerView.adapter = MydataAdapter(dummyList) { anchor, item ->
+            showCardMenu(anchor, item)
+        }
         recyclerView.isNestedScrollingEnabled = false // NestedScrollView 안에서 스크롤 꼬임 방지
+    }
+
+    private fun showCardMenu(anchor: View, item: MydataItem) {
+        CardMenuPopup(
+            context = requireContext(),
+            onSetToday = {
+                // TODO: 오늘 세션으로 설정
+//                Toast.makeText(requireContext(), "오늘 세션으로 설정", Toast.LENGTH_SHORT).show()
+            },
+            onRename = {
+                // TODO: 이름 변경 (다이얼로그 또는 인라인 수정)
+//                Toast.makeText(requireContext(), "이름 변경", Toast.LENGTH_SHORT).show()
+            },
+            onAddMaterial = {
+                // TODO: 자료 추가로 올리기 화면으로 이동
+//                Toast.makeText(requireContext(), "자료 추가로 올리기", Toast.LENGTH_SHORT).show()
+            },
+            onDelete = {
+                // TODO: 삭제 확인 다이얼로그 후 삭제
+//                Toast.makeText(requireContext(), "삭제", Toast.LENGTH_SHORT).show()
+            }
+        ).show(anchor)
     }
 
     override fun onDestroyView() {

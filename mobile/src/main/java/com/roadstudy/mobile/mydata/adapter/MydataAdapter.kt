@@ -7,8 +7,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.roadstudy.mobile.databinding.ItemMydataCardBinding
 import com.roadstudy.mobile.mydata.data.MydataItem // ⭐ MydataItem으로 임포트 확인
 
-class MydataAdapter(private val items: List<MydataItem>) :
-    RecyclerView.Adapter<MydataAdapter.MyDataViewHolder>() {
+class MydataAdapter(
+    private val items: List<MydataItem>,
+    private val onMoreClick: (View, MydataItem) -> Unit // ⋮ 버튼 클릭: (버튼 View, 카드 데이터)
+) : RecyclerView.Adapter<MydataAdapter.MyDataViewHolder>() {
 
     inner class MyDataViewHolder(val binding: ItemMydataCardBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -23,6 +25,11 @@ class MydataAdapter(private val items: List<MydataItem>) :
                 binding.tvBadge.visibility = View.VISIBLE
             } else {
                 binding.tvBadge.visibility = View.GONE
+            }
+
+            // ⋮ 버튼 클릭 시 팝업 메뉴 표시를 요청
+            binding.btnCardMore.setOnClickListener { anchor ->
+                onMoreClick(anchor, item)
             }
         }
     }

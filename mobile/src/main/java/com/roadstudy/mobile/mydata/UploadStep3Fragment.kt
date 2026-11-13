@@ -1,9 +1,14 @@
 package com.roadstudy.mobile.mydata
 
+import android.content.Context
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.roadstudy.mobile.R
@@ -16,6 +21,9 @@ class UploadStep3Fragment : Fragment() {
 
     private var _binding: FragmentUploadStep3Binding? = null
     private val binding get() = _binding!!
+
+    // 스터디 세션 이름 수정 모드 여부
+    private var isEditingStudyTitle = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -40,8 +48,63 @@ class UploadStep3Fragment : Fragment() {
                 .commit()
         }
 
+        // 스터디 세션 이름 수정 세팅
+        setupStudyTitleEdit()
+
         // 가상 데이터 및 리사이클러뷰 세팅 실행
         setupRecyclerView()
+    }
+
+    private fun setupStudyTitleEdit() {
+        // 연필 아이콘 클릭: 수정 모드 진입 / 저장 토글
+        binding.btnEditStudyTitle.setOnClickListener {
+            if (isEditingStudyTitle) finishStudyTitleEdit() else startStudyTitleEdit()
+        }
+
+        // 키보드의 '완료' 버튼으로도 저장
+        binding.etStudyTitle.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                finishStudyTitleEdit()
+                true
+            } else {
+                false
+            }
+        }
+    }
+
+    private fun startStudyTitleEdit() {
+        isEditingStudyTitle = true
+
+        binding.etStudyTitle.setText(binding.tvStudyTitle.text)
+        binding.tvStudyTitle.visibility = View.GONE
+        binding.etStudyTitle.visibility = View.VISIBLE
+
+        // 수정 중임을 표시하기 위해 아이콘 색을 파랗게
+        binding.btnEditStudyTitle.imageTintList = ColorStateList.valueOf(Color.parseColor("#5B9CF6"))
+
+        binding.etStudyTitle.requestFocus()
+        binding.etStudyTitle.setSelection(binding.etStudyTitle.text.length)
+
+        val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.showSoftInput(binding.etStudyTitle, InputMethodManager.SHOW_IMPLICIT)
+    }
+
+    private fun finishStudyTitleEdit() {
+        isEditingStudyTitle = false
+
+        // 빈 값이면 기존 이름 유지
+        val newTitle = binding.etStudyTitle.text.toString().trim()
+        if (newTitle.isNotEmpty()) {
+            binding.tvStudyTitle.text = newTitle
+        }
+
+        binding.etStudyTitle.visibility = View.GONE
+        binding.tvStudyTitle.visibility = View.VISIBLE
+        binding.btnEditStudyTitle.imageTintList = ColorStateList.valueOf(Color.parseColor("#7D848E"))
+
+        binding.etStudyTitle.clearFocus()
+        val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(binding.etStudyTitle.windowToken, 0)
     }
 
     private fun setupRecyclerView() {
