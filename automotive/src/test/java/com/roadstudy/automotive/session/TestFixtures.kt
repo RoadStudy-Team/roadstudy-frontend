@@ -54,7 +54,7 @@ object TestFixtures {
 
 class FakeAudio : AudioPort {
     val calls = mutableListOf<String>()
-    override fun play(url: String) { calls += "play:$url" }
+    override fun play(clip: AudioClip) { calls += "play:${clip.url}" }
     override fun pause() { calls += "pause" }
     override fun resume() { calls += "resume" }
     override fun stop() { calls += "stop" }

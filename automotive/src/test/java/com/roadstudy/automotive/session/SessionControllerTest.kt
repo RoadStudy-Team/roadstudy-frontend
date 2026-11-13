@@ -72,6 +72,66 @@ class SessionControllerTest {
         assertTrue(controller.uiState.finished)
     }
 
+    @Test fun userPauseStopsAudioAndKeepsPausedWhenDrivingIsSafe() {
+        val audio = FakeAudio()
+        val controller = SessionController(plan, ProgressTracker(), audio)
+
+        controller.onContextChanged(driving(now = 0))
+        controller.pauseByUser()
+        controller.onContextChanged(driving(now = 1_000))
+        assertTrue(controller.uiState.userPaused)
+        controller.resumeByUser(2_000)
+
+        assertEquals(listOf("play:n1/explain.mp3", "pause", "resume"), audio.calls)
+        assertEquals(false, controller.uiState.userPaused)
+    }
+
+    @Test fun userResumeDuringFocusWaitsUntilFocusEnds() {
+        val audio = FakeAudio()
+        val controller = SessionController(plan, ProgressTracker(), audio)
+
+        controller.onContextChanged(driving(now = 0))
+        controller.pauseByUser()
+        controller.onContextChanged(driving(turnMeters = 200, now = 500))
+        controller.resumeByUser(600)
+        assertEquals(listOf("play:n1/explain.mp3", "pause"), audio.calls)
+
+        controller.onContextChanged(driving(turnMeters = 1_500, now = 9_000))
+        assertEquals(listOf("play:n1/explain.mp3", "pause", "resume"), audio.calls)
+    }
+
+    @Test fun thinkTimeDoesNotRunWhilePausedByUser() {
+        val audio = FakeAudio()
+        val controller = SessionController(plan, ProgressTracker(), audio)
+
+        controller.onContextChanged(driving(now = 0))
+        controller.onAudioFinished(1_000)
+        controller.onAudioFinished(2_000)
+        controller.pauseByUser()
+        controller.tick(10_000)
+        assertTrue(audio.calls.none { it.endsWith("answer.mp3") })
+
+        controller.resumeByUser(11_000)
+        controller.tick(15_100)
+        assertTrue(audio.calls.last().endsWith("n1/answer.mp3"))
+    }
+
+    @Test fun clipCarriesConceptTextForSpeech() {
+        val clips = mutableListOf<AudioClip>()
+        val audio = object : AudioPort {
+            override fun play(clip: AudioClip) { clips += clip }
+            override fun pause() = Unit
+            override fun resume() = Unit
+            override fun stop() = Unit
+        }
+        val controller = SessionController(plan, ProgressTracker(), audio)
+
+        controller.onContextChanged(driving(now = 0))
+        controller.onAudioFinished(1_000)
+
+        assertEquals(listOf(concept("n1").explanation, concept("n1").question), clips.map { it.text })
+    }
+
     @Test fun steeringPreviousQueuesConceptForNextSession() {
         val progress = ProgressTracker()
         val controller = SessionController(plan, progress, FakeAudio())

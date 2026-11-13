@@ -13,7 +13,9 @@ data class SessionUiState(
     val remainingSec: Int?,
     val finished: Boolean,
     /** 현재 개념의 진행 단계. 화면이 "질문 · 떠올려보세요" 같은 문구를 고를 때 쓴다 */
-    val step: Step = Step.EXPLAIN
+    val step: Step = Step.EXPLAIN,
+    /** 사용자가 일시정지했는지 (운전대 재생/일시정지 버튼) */
+    val userPaused: Boolean = false
 )
 
 /**
@@ -24,7 +26,7 @@ data class SessionUiState(
  * - FOCUS  : 즉시 일시정지, 조건이 풀리면 이어서 재생
  * - PARKED : 정지. UI 는 주차 후 정리 화면으로 전환
  *
- * 핸들 버튼: 다음(▶) = 알아요, 이전(◀) = 다시 들려줘
+ * 핸들 버튼: 다음(▶) = 알아요, 이전(◀) = 다시 들려줘, 재생/일시정지 = [pauseByUser] / [resumeByUser]
  */
 class SessionController(
     private val plan: SessionPlan,
@@ -41,6 +43,7 @@ class SessionController(
     private var thinkStartedAt: Long? = null
     private var lastNavi = NaviSignals()
     private var finished = false
+    private var userPaused = false
 
     val uiState: SessionUiState
         get() = SessionUiState(
@@ -52,7 +55,8 @@ class SessionController(
             remainingMeters = lastNavi.remainingMeters,
             remainingSec = lastNavi.remainingSec,
             finished = finished,
-            step = step
+            step = step,
+            userPaused = userPaused
         )
 
     /** 차량·내비 상태가 바뀔 때마다 호출 (vehicle / navi 패키지에서) */
@@ -75,6 +79,7 @@ class SessionController(
             }
             LearningMode.NORMAL, LearningMode.CAUTION -> {
                 when {
+                    userPaused -> Unit
                     index < 0 -> moveToNextItem(context.nowMillis)
                     pausedByFocus -> resumeAfterFocus(context.nowMillis)
                     previous == LearningMode.PARKED -> playCurrentStep(context.nowMillis)
@@ -103,11 +108,33 @@ class SessionController(
     /** 주기적으로 호출 (예: 0.5초마다). 떠올리기 시간이 지나면 정답을 들려준다 */
     fun tick(nowMillis: Long) {
         val startedAt = thinkStartedAt ?: return
-        if (finished || decision.mode == LearningMode.FOCUS || decision.mode == LearningMode.PARKED) return
+        if (finished || userPaused || decision.mode == LearningMode.FOCUS || decision.mode == LearningMode.PARKED) return
         if (step == Step.THINK && nowMillis - startedAt >= thinkMillis) {
             thinkStartedAt = null
             step = Step.ANSWER
             playCurrentStep(nowMillis)
+        }
+    }
+
+    /** 사용자가 일시정지했을 때. 주행 상황이 안전해져도 [resumeByUser] 전까지는 이어서 재생하지 않는다 */
+    fun pauseByUser() {
+        if (finished || userPaused) return
+        userPaused = true
+        if (playing) audio.pause()
+        playing = false
+        if (index >= 0) pausedByFocus = true
+    }
+
+    /** 사용자가 다시 재생했을 때. 집중 모드처럼 아직 멈춰야 하는 상황이면 그 상황이 풀릴 때 이어진다 */
+    fun resumeByUser(nowMillis: Long) {
+        if (!userPaused) return
+        userPaused = false
+        if (finished) return
+        val canPlay = decision.mode == LearningMode.NORMAL || decision.mode == LearningMode.CAUTION
+        when {
+            !canPlay -> Unit
+            index < 0 -> moveToNextItem(nowMillis)
+            pausedByFocus -> resumeAfterFocus(nowMillis)
         }
     }
 
@@ -150,9 +177,9 @@ class SessionController(
     private fun playCurrentStep(nowMillis: Long) {
         val concept = plan.items.getOrNull(index)?.concept ?: return
         when (step) {
-            Step.EXPLAIN -> audio.play(concept.explanationAudioUrl)
-            Step.QUESTION -> audio.play(concept.questionAudioUrl)
-            Step.ANSWER -> audio.play(concept.answerAudioUrl)
+            Step.EXPLAIN -> audio.play(AudioClip(concept.explanation, concept.explanationAudioUrl))
+            Step.QUESTION -> audio.play(AudioClip(concept.question, concept.questionAudioUrl))
+            Step.ANSWER -> audio.play(AudioClip(concept.answer, concept.answerAudioUrl))
             Step.THINK -> { thinkStartedAt = nowMillis; return }
         }
         playing = true
