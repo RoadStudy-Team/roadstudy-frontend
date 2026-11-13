@@ -14,10 +14,11 @@ import com.roadstudy.automotive.R
 import com.roadstudy.automotive.databinding.FragmentDrivingBinding
 import com.roadstudy.automotive.navi.CommuteHub
 import com.roadstudy.automotive.navi.NaviSignalHub
+import com.roadstudy.automotive.playback.LearningHub
+import com.roadstudy.automotive.playback.SessionRequest
 import com.roadstudy.automotive.session.CommuteInfo
 import com.roadstudy.automotive.session.CommuteTarget
 import com.roadstudy.automotive.session.NaviSignals
-import com.roadstudy.automotive.session.VehicleSignals
 import com.roadstudy.automotive.ui.home.FakeHomeDataSource
 import com.roadstudy.automotive.ui.home.withRoute
 import com.roadstudy.automotive.ui.parked.ParkedFragment
@@ -34,6 +35,9 @@ class DrivingFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var viewModel: DrivingViewModel
+
+    /** 이 화면에서 세션을 한 번만 시작한다. 복습 화면에서 뒤로 돌아와 화면이 다시 그려질 때 새 세션을 시작하지 않게 한다 */
+    private var sessionRequested = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -52,15 +56,22 @@ class DrivingFragment : Fragment() {
         val scenario = requireActivity().intent.getStringExtra(EXTRA_SCENARIO)?.let { DrivingScenario.fromKey(it) }
         val sectionId = requireArguments().getString(ARG_SECTION_ID)
         val commuteTarget = requireArguments().getString(ARG_COMMUTE_TARGET)?.let { CommuteTarget.valueOf(it) }
-        viewModel = ViewModelProvider(
-            this,
-            driveViewModelFactory(sectionId, commuteTarget, scenario)
-        )[DrivingViewModel::class.java]
+        val demo = newDemo(sectionId, commuteTarget)
+        // 실제 신호로 진행하는 학습 세션을 시작한다. 이미 같은 섹션으로 진행 중이면(화면이 다시 만들어진 경우) 이어서 쓴다
+        if (scenario == null && !sessionRequested) {
+            sessionRequested = true
+            LearningHub.start(requireContext(), demo.toSessionRequest(sectionId))
+        }
+        viewModel = ViewModelProvider(this, driveViewModelFactory(demo, scenario))[DrivingViewModel::class.java]
 
-        // 개발용: 화면을 누르면 가짜 상황이 차례로 바뀐다(실제 신호는 무시). 실제 운행에서는 터치 입력을 받지 않는다.
-        // TODO: 신호 연동이 안정되면 제거
-        binding.rootDriving.setOnClickListener { viewModel.nextScenario() }
+        // 개발용: 화면을 누르면 가짜 상황이 차례로 바뀐다(실제 세션은 끝낸다). 실제 운행에서는 터치 입력을 받지 않는다.
+        // TODO: 제출 전 제거
+        binding.rootDriving.setOnClickListener {
+            if (viewModel.isLive) LearningHub.stop()
+            viewModel.nextScenario()
+        }
 
+        LearningHub.state.observe(viewLifecycleOwner) { state -> viewModel.onSessionState(state) }
         VehicleSignalHub.signals.observe(viewLifecycleOwner) { signals -> viewModel.onVehicleSignals(signals) }
         NaviSignalHub.signals.observe(viewLifecycleOwner) { signals -> viewModel.onNaviSignals(signals) }
         viewModel.uiState.observe(viewLifecycleOwner) { state ->
@@ -71,6 +82,8 @@ class DrivingFragment : Fragment() {
     }
 
     private fun openParkedReview(sectionId: String?) {
+        // 도착했으니 학습 세션(소리·미디어 서비스)을 끝낸다
+        LearningHub.stop()
         parentFragmentManager.beginTransaction()
             .replace(R.id.container, ParkedFragment.newInstance(sectionId))
             .addToBackStack(null)
@@ -129,26 +142,49 @@ class DrivingFragment : Fragment() {
         _binding = null
     }
 
-    private fun driveViewModelFactory(sectionId: String?, commuteTarget: CommuteTarget?, scenario: DrivingScenario?) =
+    /** 뒤로 가기로 주행 화면을 나가면(세션 중단) 학습 세션도 끝낸다. 내비가 앞으로 나와 가려진 것만으로는 끝내지 않는다 */
+    override fun onDestroy() {
+        if (isRemoving && !requireActivity().isChangingConfigurations) LearningHub.stop()
+        super.onDestroy()
+    }
+
+    /** 홈과 같은 경로로 학습 계획(개념 수)을 세워서, 홈에서 본 분량과 주행 화면의 "개념 n/N"이 맞게 한다 */
+    private fun newDemo(sectionId: String?, commuteTarget: CommuteTarget?): DrivingDemo {
+        // TODO: 저장된 진도 연동 시 가짜 입력 대신 실제 진도를 쓴다
+        val navi = NaviSignalHub.signals.value ?: NaviSignals()
+        val input = FakeHomeDataSource.fromIntent(requireActivity().intent).load()
+            .withRoute(navi, CommuteHub.info.value ?: CommuteInfo(), commuteTarget)
+        return DrivingDemo(input, sectionId)
+    }
+
+    private fun DrivingDemo.toSessionRequest(sectionId: String?) = SessionRequest(
+        sectionId = sectionId,
+        sectionTitle = sectionTitle,
+        destinationName = destinationName,
+        plan = sessionPlan,
+        progress = newProgress(),
+        fallbackMeters = fallbackMeters,
+        fallbackSec = fallbackSec,
+        ignoreNaviFocus = requireActivity().intent.getBooleanExtra(EXTRA_IGNORE_NAVI_FOCUS, false)
+    )
+
+    private fun driveViewModelFactory(demo: DrivingDemo, scenario: DrivingScenario?) =
         object : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
-            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                // TODO: 저장된 진도 연동 시 가짜 입력 대신 실제 진도를 쓴다 (내비 경로는 NaviSignalHub 값이 있으면 그것을 쓴다)
-                // 홈과 같은 경로로 학습 계획(개념 수)을 세워서, 홈에서 본 분량과 주행 화면의 "개념 n/N"이 맞게 한다
-                val navi = NaviSignalHub.signals.value ?: NaviSignals()
-                val input = FakeHomeDataSource.fromIntent(requireActivity().intent).load()
-                    .withRoute(navi, CommuteHub.info.value ?: CommuteInfo(), commuteTarget)
-                return DrivingViewModel(
-                    DrivingDemo(input, sectionId),
+            override fun <T : ViewModel> create(modelClass: Class<T>): T =
+                DrivingViewModel(
+                    demo,
                     scenario,
-                    VehicleSignalHub.signals.value ?: VehicleSignals(),
-                    navi
+                    LearningHub.state.value,
+                    NaviSignalHub.signals.value ?: NaviSignals()
                 ) as T
-            }
         }
 
     companion object {
         const val EXTRA_SCENARIO = "driving_scenario"
+
+        /** 개발·시연용: `--ez demo_ignore_navi_focus true` 로 실행하면 내비 회전·주의 구간·재탐색으로 학습을 멈추지 않는다 */
+        const val EXTRA_IGNORE_NAVI_FOCUS = "demo_ignore_navi_focus"
         private const val ARG_SECTION_ID = "section_id"
         private const val ARG_COMMUTE_TARGET = "commute_target"
 

@@ -2,8 +2,11 @@ package com.roadstudy.automotive.ui.driving
 
 import com.roadstudy.automotive.session.Gear
 import com.roadstudy.automotive.session.LearningMode
+import com.roadstudy.automotive.session.LiveDrivingContext
 import com.roadstudy.automotive.session.ModeReason
 import com.roadstudy.automotive.session.NaviSignals
+import com.roadstudy.automotive.session.SessionController
+import com.roadstudy.automotive.session.SessionUiState
 import com.roadstudy.automotive.session.VehicleSignals
 import com.roadstudy.automotive.session.WiperLevel
 import com.roadstudy.automotive.session.Step
@@ -64,13 +67,21 @@ class DrivingDemoTest {
         assertTrue(state.finished)
     }
 
-    // ----- 실제 차량 신호 (라이브) -----
+    // ----- 실제 차량 신호 (라이브): 학습 세션이 하는 것처럼 같은 계획과 LiveDrivingContext 로 진행한다 -----
 
     private fun live(
         vehicle: VehicleSignals,
         hasDriven: Boolean = true,
         navi: NaviSignals = NaviSignals()
-    ) = demo.runLive(vehicle, navi, hasDriven, nowMillis = 0L)
+    ): SessionUiState {
+        val controller = SessionController(demo.sessionPlan, demo.newProgress(), SilentAudioPort)
+        fun context(v: VehicleSignals, driven: Boolean) =
+            LiveDrivingContext.build(v, navi, driven, demo.fallbackMeters, demo.fallbackSec, nowMillis = 0L)
+        // 세션은 출발 상태로 첫 개념을 시작한 뒤 받은 신호를 적용한다
+        controller.onContextChanged(context(VehicleSignals(gear = Gear.DRIVE), driven = true))
+        controller.onContextChanged(context(vehicle, hasDriven))
+        return controller.uiState
+    }
 
     @Test
     fun `내비 경로가 있으면 남은 거리와 시간은 내비 값이다`() {

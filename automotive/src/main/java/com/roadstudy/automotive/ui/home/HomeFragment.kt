@@ -15,8 +15,10 @@ import com.roadstudy.automotive.R
 import com.roadstudy.automotive.databinding.FragmentHomeBinding
 import com.roadstudy.automotive.navi.CommuteHub
 import com.roadstudy.automotive.navi.NaviSignalHub
+import com.roadstudy.automotive.playback.SignalSources
 import com.roadstudy.automotive.session.CommuteInfo
 import com.roadstudy.automotive.session.CommuteTarget
+import com.roadstudy.automotive.session.CommuteTargetPicker
 import com.roadstudy.automotive.session.NaviSignals
 import com.roadstudy.automotive.session.TripType
 import com.roadstudy.automotive.ui.driving.DrivingFragment
@@ -164,6 +166,19 @@ class HomeFragment : Fragment() {
             .replace(R.id.container, next)
             .addToBackStack(null)
             .commit()
+        startNaviGuidance(state)
+    }
+
+    /**
+     * 내비 안내가 없고 회사·집 미리보기로 시작했으면 내비에 그곳으로 경로 안내를 요청한다.
+     * 내비 화면이 앞으로 나오고, 학습은 소리로 이어진다(미디어 서비스). 기타 이동은 학습할지 묻는 화면을 거치므로 요청하지 않는다.
+     */
+    private fun startNaviGuidance(state: HomeUiState) {
+        if (state.tripType == TripType.OTHER) return
+        val target = state.commuteToggle?.selected ?: return
+        val places = CommuteHub.info.value?.places ?: return
+        val place = CommuteTargetPicker.placeOf(places, target) ?: return
+        SignalSources.requestRoute(place)
     }
 
     override fun onDestroyView() {
