@@ -40,12 +40,12 @@ class FakeHomeDataSource(
             RouteSummary(remainingMeters = 18_400, etaSec = 38 * 60, congestionCount = 1)
         },
         sections = SampleStudySections.all,
-        // DB 정규화는 8개 중 5개를 알고 있고, 비즈니스 영어는 6개 중 4개를 알고 있다
-        statuses = listOf("c01", "c02", "c03", "c04", "c05", "e01", "e02", "e03", "e04")
+        // 프로세스와 스레드는 10개 중 5개를 알고 있고, 오픽 영어는 6개 중 4개를 알고 있다
+        statuses = listOf("p01", "p02", "p03", "p04", "p06", "e01", "e02", "e03", "e04")
             .associateWith { ConceptStatus.LEARNED },
-        // 다시 듣기로 표시해 둔 개념 (DB 정규화 3개, 비즈니스 영어 1개)
-        reviewQueue = listOf("c02", "c05", "c06", "e03"),
-        selectedSectionId = SampleStudySections.dbNormalization.sectionId
+        // 다시 듣기로 표시해 둔 개념 (프로세스와 스레드 3개, 오픽 영어 1개)
+        reviewQueue = listOf("p02", "p06", "p07", "e03"),
+        selectedSectionId = SampleStudySections.processThread.sectionId
     )
 
     companion object {

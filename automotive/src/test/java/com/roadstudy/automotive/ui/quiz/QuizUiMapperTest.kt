@@ -97,18 +97,19 @@ class QuizUiMapperTest {
 
     @Test
     fun `샘플 퀴즈는 개념 순서대로 나오고 없는 개념은 건너뛴다`() {
-        val questions = SampleQuizzes.forConcepts(listOf("c07", "x99", "c02", "c05"))
+        val questions = SampleQuizzes.forConcepts(listOf("p10", "x99", "p02", "p06"))
 
-        assertEquals(listOf("c07", "c02", "c05"), questions.map { it.conceptId })
+        assertEquals(listOf("p10", "p02", "p06"), questions.map { it.conceptId })
     }
 
     @Test
     fun `샘플 퀴즈는 모두 선택지 4개이고 정답이 선택지 안에 있다`() {
-        val ids = (1..7).map { "c0$it" } + (1..6).map { "e0$it" }
+        // p05 는 주차 화면 전용 개념이라 퀴즈가 없다
+        val ids = (1..10).map { "p%02d".format(it) } + (1..6).map { "e0$it" }
 
         val questions = SampleQuizzes.forConcepts(ids)
 
-        assertEquals(13, questions.size)
+        assertEquals(15, questions.size)
         assertTrue(questions.all { it.choices.size == 4 })
         assertTrue(questions.all { it.answerIndex in it.choices.indices })
         assertTrue(questions.all { q -> q.choices.toSet().size == 4 })

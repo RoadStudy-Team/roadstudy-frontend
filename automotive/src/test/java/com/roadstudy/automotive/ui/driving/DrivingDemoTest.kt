@@ -19,7 +19,7 @@ import org.junit.Test
 
 class DrivingDemoTest {
 
-    private val demo = DrivingDemo(FakeHomeDataSource().load(), SampleStudySections.dbNormalization.sectionId)
+    private val demo = DrivingDemo(FakeHomeDataSource().load(), SampleStudySections.processThread.sectionId)
 
     @Test
     fun `안전 상황은 첫 개념의 설명을 듣는 상태다`() {
@@ -29,8 +29,8 @@ class DrivingDemoTest {
         assertEquals(ModeReason.SAFE, state.reason)
         assertEquals(Step.EXPLAIN, state.step)
         assertEquals(1, state.conceptIndex)
-        // 샘플 경로 38분에 들을 수 있는 개념은 4개
-        assertEquals(4, state.conceptTotal)
+        // 샘플 경로 38분에 들을 수 있는 개념은 6개 (새 개념 3개 + 다시 듣기 3개)
+        assertEquals(6, state.conceptTotal)
     }
 
     @Test

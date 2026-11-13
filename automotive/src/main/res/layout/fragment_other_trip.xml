@@ -121,7 +121,7 @@
             android:text="@string/other_question"
             android:textSize="84sp" />
 
-        <!-- 최대 30분 · 개념 4개 · DB 정규화 정리 (더미) -->
+        <!-- 최대 30분 · 개념 4개 · 프로세스와 스레드 소개 (더미) -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
