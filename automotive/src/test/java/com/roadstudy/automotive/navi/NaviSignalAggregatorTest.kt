@@ -1,6 +1,7 @@
 package com.roadstudy.automotive.navi
 
 import ai.pleos.playground.navi.constants.NavigationStatus
+import com.roadstudy.automotive.session.GeoPoint
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
@@ -27,6 +28,15 @@ class NaviSignalAggregatorTest {
         assertEquals(4_200, signals.remainingMeters)
         assertEquals(600, signals.remainingSec)
         assertTrue(signals.hasRoute)
+    }
+
+    @Test
+    fun `목적지 좌표를 함께 담고, 경로가 끝나면 지운다`() {
+        aggregator.onDestination("회사", 4_200, 600, GeoPoint(37.5656, 126.9889))
+        assertEquals(GeoPoint(37.5656, 126.9889), aggregator.signals.destinationPoint)
+
+        aggregator.onRouteCancelled()
+        assertNull(aggregator.signals.destinationPoint)
     }
 
     @Test

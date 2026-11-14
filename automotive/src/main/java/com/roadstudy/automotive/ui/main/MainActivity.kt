@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.roadstudy.automotive.R
 import com.roadstudy.automotive.databinding.ActivityMainBinding
+import com.roadstudy.automotive.navi.CommuteHub
 import com.roadstudy.automotive.navi.NaviSignalHub
 import com.roadstudy.automotive.navi.NaviSignalSource
 import com.roadstudy.automotive.ui.home.HomeFragment
@@ -41,7 +42,11 @@ class MainActivity : AppCompatActivity() {
         vehicleSignals = VehicleSignalSource(applicationContext, onChanged = VehicleSignalHub::update)
             .also { it.start() }
         // 내비 이벤트(남은 거리·시간, 회전, 주의 구간, 도착)도 같은 방식으로 받는다 (로그 태그 RoadStudyNavi)
-        naviSignals = NaviSignalSource(applicationContext, onChanged = NaviSignalHub::update)
+        naviSignals = NaviSignalSource(
+            applicationContext,
+            onChanged = NaviSignalHub::update,
+            onCommute = CommuteHub::update
+        )
             .also { it.start() }
     }
 

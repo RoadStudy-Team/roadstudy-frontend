@@ -24,6 +24,8 @@ data class NaviSignals(
     val lastRerouteAtMillis: Long? = null,
     /** 내비가 안내 중인 목적지 이름. 경로가 없으면 null */
     val destinationName: String? = null,
+    /** 내비가 안내 중인 목적지 좌표. 출근/퇴근 판별에 쓴다. 경로가 없거나 내비가 좌표를 주지 않으면 null */
+    val destinationPoint: GeoPoint? = null,
     /** 내비가 목적지 도착을 알렸는지 */
     val arrived: Boolean = false
 ) {

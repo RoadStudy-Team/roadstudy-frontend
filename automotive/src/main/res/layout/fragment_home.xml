@@ -10,6 +10,7 @@
 -->
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingStart="40dp"
@@ -134,9 +135,9 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/topDivider">
 
-        <!-- 제목 줄: [아이콘 상자] 오늘의 경로 -->
+        <!-- 제목 줄: [아이콘 상자] 오늘의 경로 ......... [회사] [집] -->
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:orientation="horizontal">
@@ -156,6 +157,47 @@
                 android:layout_marginStart="18dp"
                 android:text="@string/route_title"
                 android:textSize="34sp" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <!--
+                회사/집 버튼: 경로 안내 전에 어느 쪽 경로를 미리 볼지 고른다. 내비 안내 중이거나 집·회사가 없으면 숨긴다.
+                TODO: 도안(01)에 없는 요소라 디자이너 확인 후 모양을 정한다
+            -->
+            <LinearLayout
+                android:id="@+id/groupCommuteToggle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <TextView
+                    android:id="@+id/btnCommuteWork"
+                    style="@style/Rs.Text.Bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="64dp"
+                    android:gravity="center"
+                    android:minWidth="104dp"
+                    android:paddingHorizontal="24dp"
+                    android:text="@string/commute_work"
+                    android:textSize="28sp" />
+
+                <TextView
+                    android:id="@+id/btnCommuteHome"
+                    style="@style/Rs.Text.Bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="64dp"
+                    android:layout_marginStart="12dp"
+                    android:gravity="center"
+                    android:minWidth="104dp"
+                    android:paddingHorizontal="24dp"
+                    android:text="@string/commute_home"
+                    android:textSize="28sp" />
+            </LinearLayout>
         </LinearLayout>
 
         <!-- 경로 정보 묶음. 제목과 학습 분량 상자 사이의 세로 가운데에 놓는다 -->

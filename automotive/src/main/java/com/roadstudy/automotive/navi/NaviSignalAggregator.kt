@@ -1,6 +1,7 @@
 package com.roadstudy.automotive.navi
 
 import ai.pleos.playground.navi.constants.NavigationStatus
+import com.roadstudy.automotive.session.GeoPoint
 import com.roadstudy.automotive.session.NaviSignals
 
 /**
@@ -12,8 +13,8 @@ class NaviSignalAggregator(private val clock: () -> Long = System::currentTimeMi
     var signals = NaviSignals()
         private set
 
-    /** 목적지 정보: 이름과 남은 거리(m), 남은 시간(초) */
-    fun onDestination(name: String, remainMeters: Int, remainSec: Int) {
+    /** 목적지 정보: 이름과 남은 거리(m), 남은 시간(초), 좌표(모르면 null) */
+    fun onDestination(name: String, remainMeters: Int, remainSec: Int, point: GeoPoint? = null) {
         // 경로가 없을 때 SDK 는 이름·거리·시간이 모두 빈 목적지를 보낸다. 이것을 경로로 보면 0m 남은 것으로 오해한다
         if (name.isBlank() && remainMeters == 0 && remainSec == 0) {
             signals = NaviSignals()
@@ -21,6 +22,7 @@ class NaviSignalAggregator(private val clock: () -> Long = System::currentTimeMi
         }
         signals = signals.copy(
             destinationName = name.ifBlank { null },
+            destinationPoint = point,
             remainingMeters = remainMeters,
             remainingSec = remainSec,
             arrived = false

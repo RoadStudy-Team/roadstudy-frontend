@@ -1,5 +1,6 @@
 package com.roadstudy.automotive.ui.home
 
+import com.roadstudy.automotive.session.CommuteTarget
 import com.roadstudy.automotive.session.TripType
 import com.roadstudy.shared.model.ConceptStatus
 import com.roadstudy.shared.model.MaterialType
@@ -50,6 +51,13 @@ data class SectionCardUi(
     }
 }
 
+/** 경로 카드의 회사/집 버튼. 등록하지 않은 쪽은 누를 수 없다 */
+data class CommuteToggleUi(
+    val selected: CommuteTarget,
+    val workEnabled: Boolean,
+    val homeEnabled: Boolean
+)
+
 /** 홈 화면 전체에 보여줄 값. 문장은 만들지 않고 숫자와 글자만 담는다 (문장은 strings.xml 이 만든다). */
 data class HomeUiState(
     val tripType: TripType,
@@ -64,7 +72,9 @@ data class HomeUiState(
     /** 오늘의 학습 분량 */
     val learningMinutes: Int,
     val learningConceptCount: Int,
-    val sections: List<SectionCardUi>
+    val sections: List<SectionCardUi>,
+    /** 경로 카드의 회사/집 버튼. null 이면 숨긴다 */
+    val commuteToggle: CommuteToggleUi? = null
 ) {
     /** 올린 자료가 하나도 없으면 빈 상태 화면을 보여준다 */
     val isEmpty: Boolean get() = sections.isEmpty()

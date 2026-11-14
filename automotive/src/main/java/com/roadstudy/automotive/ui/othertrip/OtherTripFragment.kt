@@ -11,8 +11,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.roadstudy.automotive.R
 import com.roadstudy.automotive.databinding.FragmentOtherTripBinding
+import com.roadstudy.automotive.navi.CommuteHub
+import com.roadstudy.automotive.navi.NaviSignalHub
+import com.roadstudy.automotive.session.CommuteInfo
+import com.roadstudy.automotive.session.NaviSignals
 import com.roadstudy.automotive.ui.driving.DrivingFragment
 import com.roadstudy.automotive.ui.home.FakeHomeDataSource
+import com.roadstudy.automotive.ui.home.withRoute
 
 /**
  * 다른 이동 안내 화면. 출퇴근이 아닌 이동에서 출발 전에 "이번 이동도 학습할까요?"를 묻는다.
@@ -85,7 +90,11 @@ class OtherTripFragment : Fragment() {
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             // TODO: Pleos SDK 연동 시 가짜 입력 대신 실제 내비 경로와 선택한 섹션을 쓴다
-            val input = FakeHomeDataSource.fromIntent(requireActivity().intent).load()
+            // 홈과 같은 목적지·경로를 보여 주도록 내비 값을 똑같이 반영한다
+            val input = FakeHomeDataSource.fromIntent(requireActivity().intent).load().withRoute(
+                NaviSignalHub.signals.value ?: NaviSignals(),
+                CommuteHub.info.value ?: CommuteInfo()
+            )
             return OtherTripViewModel(input, sectionId) as T
         }
     }
