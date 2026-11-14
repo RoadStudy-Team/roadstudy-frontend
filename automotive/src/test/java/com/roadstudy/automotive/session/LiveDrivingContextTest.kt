@@ -31,6 +31,16 @@ class LiveDrivingContextTest {
     }
 
     @Test
+    fun `주행 전이어도 P단에서 내비 안내가 끝났으면 그대로 P단이다`() {
+        val context = LiveDrivingContext.build(
+            VehicleSignals(gear = Gear.PARK), NaviSignals(), hasDriven = false,
+            fallbackMeters = 25_000, fallbackSec = 1_600, nowMillis = 0L, routeEnded = true
+        )
+
+        assertEquals(Gear.PARK, context.vehicle.gear)
+    }
+
+    @Test
     fun `주행한 뒤 목적지 근처의 P단은 그대로 P단이다`() {
         val nearDestination = NaviSignals(remainingMeters = 100, remainingSec = 30)
 

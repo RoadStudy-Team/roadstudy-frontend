@@ -19,7 +19,7 @@ import org.junit.Test
 
 class DrivingDemoTest {
 
-    private val demo = DrivingDemo(FakeHomeDataSource().load(), SampleStudySections.dbNormalization.sectionId)
+    private val demo = DrivingDemo(FakeHomeDataSource().load(), SampleStudySections.processThread.sectionId)
 
     @Test
     fun `안전 상황은 첫 개념의 설명을 듣는 상태다`() {
@@ -29,8 +29,8 @@ class DrivingDemoTest {
         assertEquals(ModeReason.SAFE, state.reason)
         assertEquals(Step.EXPLAIN, state.step)
         assertEquals(1, state.conceptIndex)
-        // 샘플 경로 38분에 들을 수 있는 개념은 4개
-        assertEquals(4, state.conceptTotal)
+        // 샘플 경로 38분에 들을 수 있는 개념은 6개 (새 개념 3개 + 다시 듣기 3개)
+        assertEquals(6, state.conceptTotal)
     }
 
     @Test
@@ -135,14 +135,14 @@ class DrivingDemoTest {
     }
 
     @Test
-    fun `목적지에서 먼 곳의 P단은 도착이 아니라 잠시 정차다`() {
+    fun `MVP 에서는 목적지에서 멀어도 주행한 뒤 P단이면 도착이다`() {
         val state = live(
             VehicleSignals(gear = Gear.PARK),
             navi = NaviSignals(remainingSec = 600, remainingMeters = 4_200)
         )
 
-        assertFalse(state.finished)
-        assertEquals(LearningMode.NORMAL, state.mode)
+        assertEquals(LearningMode.PARKED, state.mode)
+        assertTrue(state.finished)
     }
 
     @Test

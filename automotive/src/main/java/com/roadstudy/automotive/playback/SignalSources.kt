@@ -47,5 +47,11 @@ object SignalSources {
         navi?.requestRoute(place) ?: Log.w(TAG, "내비 연결 전이라 경로 안내를 요청하지 못함")
     }
 
+    /** 내비가 경로를 안내 중이면 안내를 끝낸다. 도착했을 때 부른다 */
+    fun cancelRouteIfGuiding() {
+        if (NaviSignalHub.signals.value?.hasRoute != true) return
+        navi?.cancelRoute() ?: Log.w(TAG, "내비 연결 전이라 경로 안내를 끝내지 못함")
+    }
+
     private const val TAG = "RoadStudySignals"
 }

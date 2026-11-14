@@ -7,6 +7,7 @@ import com.roadstudy.automotive.session.ProgressTracker
 import com.roadstudy.automotive.session.SessionController
 import com.roadstudy.automotive.session.SessionPlan
 import com.roadstudy.automotive.session.SessionPlanner
+import com.roadstudy.automotive.session.TripType
 import com.roadstudy.automotive.session.SessionUiState
 import com.roadstudy.automotive.session.VehicleSignals
 import com.roadstudy.automotive.ui.home.HomeInput
@@ -57,6 +58,7 @@ class DrivingDemo(
 
     val destinationName: String get() = input.destinationName
     val sectionTitle: String get() = section?.title.orEmpty()
+    val tripType: TripType get() = input.tripType
 
     /** 실제 신호로 진행하는 세션([com.roadstudy.automotive.playback.LearningSession])에 넘길 학습 계획과 진도 */
     val sessionPlan: SessionPlan get() = plan

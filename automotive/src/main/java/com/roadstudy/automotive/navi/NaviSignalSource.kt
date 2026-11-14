@@ -97,7 +97,14 @@ class NaviSignalSource(
 
         override fun onRouteCancelled() = update("경로 취소") { onRouteCancelled() }
 
-        override fun onNavigationStatus(status: NavigationStatus) = update("내비 상태 $status") { onStatus(status) }
+        override fun onNavigationStatus(status: NavigationStatus) {
+            update("내비 상태 $status") { onStatus(status) }
+            // 에뮬레이터 실측: 우리가 경로 안내를 시작하면 목적지(남은 거리·시간)가 저절로 오지 않아 "안내 없음"으로 보였다.
+            // 안내가 시작되면 목적지를 한 번 요청한다
+            if (status == NavigationStatus.ROUTE_DRIVE) {
+                main.post { if (running) guarded("목적지 요청") { navi.getDestinationInfo() } }
+            }
+        }
 
         override fun onBookmarkInfo(bookmarkInfoList: List<BookmarkInfo>) {
             main.post { if (running) onPlaces(CommuteMapper.toPlaces(bookmarkInfoList)) }
@@ -155,6 +162,12 @@ class NaviSignalSource(
                 poiSubId = place.poiSubId.orEmpty()
             )
         )
+    }
+
+    /** 진행 중인 경로 안내를 끝낸다 (권한 NAVI_ROUTE_SEARCH). 결과는 리스너의 onRouteCancelled 로 온다 */
+    fun cancelRoute() = guarded("경로 안내 종료") {
+        Log.d(TAG, "경로 안내 종료 요청")
+        navi.cancelRoute()
     }
 
     /** 이미 안내 중인 경로가 있으면 현재 값을 한 번 받아 온다 (결과는 리스너로 온다) */

@@ -7,6 +7,7 @@ import com.roadstudy.automotive.session.ProgressTracker
 import com.roadstudy.automotive.session.SessionController
 import com.roadstudy.automotive.session.SessionPlan
 import com.roadstudy.automotive.session.SessionPlanner
+import com.roadstudy.automotive.session.SessionResult
 import com.roadstudy.automotive.session.VehicleSignals
 import com.roadstudy.automotive.ui.driving.SilentAudioPort
 import com.roadstudy.automotive.ui.home.HomeInput
@@ -19,7 +20,8 @@ class ParkedStart(
 )
 
 /**
- * 실제 주행 없이 주차 후 복습 화면을 확인하기 위한 데모.
+ * 실제 주행 없이 주차 후 복습 화면을 확인하기 위한 데모 (실제 세션 결과가 없을 때, 예: 가짜 상황 `arrived`).
+ * 실제로 도착한 세션이 있으면 [fromSession] 으로 그 결과를 쓴다.
  * 가짜 신호로 계획한 개념을 모두 듣는 세션을 진짜 [SessionController] 로 끝까지 돌린 뒤 주차한다.
  * TODO: Pleos SDK 연동과 저장소(Room) 후에는 실제 주행 결과와 저장된 진도를 쓴다.
  */
@@ -77,10 +79,33 @@ class ParkedDemo(
         return ParkedStart(parkedInput, tracker)
     }
 
-    private companion object {
-        const val STEP_MILLIS = 10_000L
+    companion object {
+        private const val STEP_MILLIS = 10_000L
 
         /** 연속 학습일 저장소가 없어서 쓰는 임시 값 */
         const val DEMO_STREAK_DAYS = 12
+
+        /**
+         * 실제로 도착해서 끝난 세션의 결과로 주차 후 복습 화면의 입력을 만든다 (들은 개념, 걸린 시간, 바뀐 진도).
+         * 섹션 정보(제목, 파일 이름, 전체 개념)는 홈 입력에서 찾는다.
+         */
+        fun fromSession(input: HomeInput, result: SessionResult): ParkedStart {
+            val section = input.sections.firstOrNull { it.sectionId == result.sectionId } ?: input.sections.firstOrNull()
+            val tracker = ProgressTracker(result.statuses, result.reviewQueue)
+            val parkedInput = ParkedInput(
+                tripType = result.tripType,
+                tripMinutes = ParkedUiMapper.tripMinutes((result.elapsedMillis / 1_000).toInt()),
+                conceptTotal = result.heardConcepts.size,
+                sectionTitle = section?.title.orEmpty(),
+                fileName = section?.sourceFileName,
+                sectionConceptIds = section?.concepts?.map { it.id }?.toSet().orEmpty(),
+                heardConcepts = result.heardConcepts,
+                statuses = tracker.statuses(),
+                reviewQueue = tracker.reviewQueue(),
+                choices = emptyMap(),
+                streakDays = DEMO_STREAK_DAYS
+            )
+            return ParkedStart(parkedInput, tracker)
+        }
     }
 }

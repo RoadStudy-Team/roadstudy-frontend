@@ -15,13 +15,23 @@
     android:paddingStart="16dp"
     android:paddingEnd="16dp">
 
+    <!--
+        긴 선택지(영어 문장 등)가 칸 밖으로 넘치지 않게: 남은 너비만 쓰고(weight), 길면 글자를 줄이고(autoSize),
+        그래도 넘치면 말줄임표로 자른다.
+    -->
     <TextView
         android:id="@+id/tvChoice"
         style="@style/Rs.Text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:autoSizeMaxTextSize="40sp"
+        android:autoSizeMinTextSize="20sp"
+        android:autoSizeStepGranularity="2sp"
+        android:autoSizeTextType="uniform"
+        android:ellipsize="end"
         android:gravity="center"
-        android:maxLines="2"
+        android:maxLines="3"
         android:textSize="40sp" />
 
     <View
