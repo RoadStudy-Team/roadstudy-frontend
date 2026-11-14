@@ -83,7 +83,6 @@ class DrivingFragment : Fragment() {
     }
 
     private fun openParkedReview(sectionId: String?) {
-        // 도착했으니 학습 세션(소리·미디어 서비스)을 끝낸다
         LearningHub.stop()
         parentFragmentManager.beginTransaction()
             .replace(R.id.container, ParkedFragment.newInstance(sectionId))

@@ -7,7 +7,7 @@ import com.roadstudy.shared.model.SampleStudySections
 
 /**
  * 홈 화면의 입력([HomeInput])을 공급하는 곳.
- * TODO: 지금은 가짜 값을 주는 [FakeHomeDataSource] 뿐이다. Pleos SDK(내비, 기어)와 저장소(Room) 구현으로 교체한다.
+ * TODO: 지금은 가짜 값을 주는 [FakeHomeDataSource] 뿐이다(경로는 내비 값으로 덮어쓴다). 저장소(Room) 구현으로 교체한다.
  */
 interface HomeDataSource {
     fun load(): HomeInput

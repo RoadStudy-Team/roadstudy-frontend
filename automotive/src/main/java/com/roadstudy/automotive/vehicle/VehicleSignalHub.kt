@@ -7,7 +7,7 @@ import com.roadstudy.automotive.session.VehicleSignals
 
 /**
  * 앱 전체가 함께 쓰는 최신 차량 신호. [VehicleSignalSource] 가 값을 넣고, 화면들이 구독한다.
- * 신호 수신은 MainActivity 가 화면이 보이는 동안 한 번만 켜므로, 화면마다 SDK 에 연결하지 않는다.
+ * 신호 수신은 [com.roadstudy.automotive.playback.SignalSources] 가 한 곳에서 켜므로, 화면마다 SDK 에 연결하지 않는다.
  */
 object VehicleSignalHub {
 

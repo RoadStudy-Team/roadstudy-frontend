@@ -23,7 +23,6 @@ class ParkedStart(
  * 실제 주행 없이 주차 후 복습 화면을 확인하기 위한 데모 (실제 세션 결과가 없을 때, 예: 가짜 상황 `arrived`).
  * 실제로 도착한 세션이 있으면 [fromSession] 으로 그 결과를 쓴다.
  * 가짜 신호로 계획한 개념을 모두 듣는 세션을 진짜 [SessionController] 로 끝까지 돌린 뒤 주차한다.
- * TODO: Pleos SDK 연동과 저장소(Room) 후에는 실제 주행 결과와 저장된 진도를 쓴다.
  */
 class ParkedDemo(
     private val input: HomeInput,
