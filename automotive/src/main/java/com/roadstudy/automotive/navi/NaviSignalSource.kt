@@ -6,6 +6,7 @@ import ai.pleos.playground.navi.data.CautionPoint
 import ai.pleos.playground.navi.data.DestinationArrivedInfo
 import ai.pleos.playground.navi.data.DestinationInfo
 import ai.pleos.playground.navi.data.DrivingInfo
+import ai.pleos.playground.navi.data.RouteInfo
 import ai.pleos.playground.navi.data.TBTInfo
 import ai.pleos.playground.navi.data.TripInfo
 import ai.pleos.playground.navi.data.TripRequest
@@ -136,6 +137,24 @@ class NaviSignalSource(
             navi.release()
         }
         Log.d(TAG, "NaviHelper SDK 해제")
+    }
+
+    /**
+     * [place] 로 경로 안내를 시작한다 (권한 NAVI_ROUTE_SEARCH).
+     * 에뮬레이터 실측: 호출하면 내비 앱이 앞으로 나오고 바로 안내를 시작한다. 결과(남은 거리 등)는 기존 리스너로 온다.
+     */
+    fun requestRoute(place: CommutePlace) = guarded("경로 안내 요청") {
+        Log.d(TAG, "경로 안내 요청 -> ${place.name}")
+        navi.requestRoute(
+            RouteInfo(
+                latitude = place.point.latitude,
+                longitude = place.point.longitude,
+                poiName = place.name,
+                poiId = place.poiId,
+                address = "",
+                poiSubId = place.poiSubId.orEmpty()
+            )
+        )
     }
 
     /** 이미 안내 중인 경로가 있으면 현재 값을 한 번 받아 온다 (결과는 리스너로 온다) */

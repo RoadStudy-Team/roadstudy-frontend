@@ -11,6 +11,8 @@ constraintlayout = "2.1.4"
 lifecycle = "2.8.7"
 pleosVehicle = "2.3.2"
 pleosNaviHelper = "3.0.5"
+pleosTextToSpeech = "3.3.1"
+media3 = "1.10.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -25,6 +27,9 @@ androidx-lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifec
 androidx-lifecycle-livedata-ktx = { group = "androidx.lifecycle", name = "lifecycle-livedata-ktx", version.ref = "lifecycle" }
 pleos-vehicle ={ group = "ai.pleos.playground", name = "Vehicle", version.ref = "pleosVehicle" }
 pleos-navihelper = { group = "ai.pleos.playground", name = "NaviHelper", version.ref = "pleosNaviHelper" }
+pleos-texttospeech = { group = "ai.pleos.playground", name = "TextToSpeech", version.ref = "pleosTextToSpeech" }
+androidx-media3-session = { group = "androidx.media3", name = "media3-session", version.ref = "media3" }
+androidx-media3-common = { group = "androidx.media3", name = "media3-common", version.ref = "media3" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

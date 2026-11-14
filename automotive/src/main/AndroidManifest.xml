@@ -2,16 +2,25 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!--
-        Vehicle SDK 권한 (모두 protection level normal 이라 실행 중 허용 팝업은 없다).
-        - CAR_DRIVE   : 기어 선택 상태
-        - CAR_LIGHTS  : 전조등, 안개등 상태
-        - CAR_WINDOWS : 와이퍼 상태와 스위치
-        TODO: 내비 연동 시 NaviHelper 권한(pleos.car.permission.NAVI_ROUTE)을 추가한다.
+        Pleos SDK 권한 (Vehicle·NaviHelper 는 protection level normal 이라 실행 중 허용 팝업은 없다).
+        - CAR_DRIVE         : 기어 선택 상태
+        - CAR_LIGHTS        : 전조등, 안개등 상태
+        - CAR_WINDOWS       : 와이퍼 상태와 스위치
+        - NAVI_ROUTE        : 목적지·회전·즐겨찾기 조회, 경로 미리보기(requestTrip)
+        - NAVI_ROUTE_SEARCH : 시작 버튼으로 내비 경로 안내 시작(requestRoute)
+        - TTS_SERVICE       : 개념 설명을 읽는 TextToSpeech
     -->
     <uses-permission android:name="pleos.car.permission.CAR_DRIVE" />
     <uses-permission android:name="pleos.car.permission.CAR_LIGHTS" />
     <uses-permission android:name="pleos.car.permission.CAR_WINDOWS" />
     <uses-permission android:name="pleos.car.permission.NAVI_ROUTE" />
+    <uses-permission android:name="pleos.car.permission.NAVI_ROUTE_SEARCH" />
+    <uses-permission android:name="pleos.car.permission.TTS_SERVICE" />
+
+    <!-- 내비가 앞에 있어도 학습 오디오가 이어지도록 미디어 재생 포그라운드 서비스로 실행한다 -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application
         android:allowBackup="false"
@@ -46,6 +55,19 @@
                 android:name="distractionOptimized"
                 android:value="true" />
         </activity>
+        <!--
+            주행 학습 미디어 서비스 (Pleos Music/Audio 가이드: MediaBrowserService 필수).
+            차량 미디어 시스템과 운전대 버튼이 이 서비스로 학습을 조작한다.
+        -->
+        <service
+            android:name=".playback.LearningPlaybackService"
+            android:exported="true"
+            android:foregroundServiceType="mediaPlayback">
+            <intent-filter>
+                <action android:name="androidx.media3.session.MediaLibraryService" />
+                <action android:name="android.media.browse.MediaBrowserService" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>

@@ -1,6 +1,5 @@
 package com.roadstudy.automotive.ui.driving
 
-import com.roadstudy.automotive.session.ArrivalRule
 import com.roadstudy.automotive.session.DrivingContext
 import com.roadstudy.automotive.session.Gear
 import com.roadstudy.automotive.session.NaviSignals
@@ -39,9 +38,8 @@ enum class DrivingScenario {
 }
 
 /**
- * 실제 차량·내비 신호 없이 주행 중 화면을 확인하기 위한 데모 러너.
- * 가짜 신호를 진짜 [SessionController] 에 넣어서, 실제와 같은 상태가 나오는지 본다.
- * TODO: Pleos SDK 연동 후에는 이 클래스 대신 실제 신호를 SessionController 에 전달한다.
+ * 주행 세션의 학습 계획을 세우고, 개발용 가짜 주행 상황([run])을 돌려 보는 곳.
+ * 실제 신호로 진행하는 세션은 [com.roadstudy.automotive.playback.LearningSession] 이 이 계획으로 진행한다.
  */
 class DrivingDemo(
     private val input: HomeInput,
@@ -60,36 +58,14 @@ class DrivingDemo(
     val destinationName: String get() = input.destinationName
     val sectionTitle: String get() = section?.title.orEmpty()
 
-    /**
-     * 실제 차량 신호([vehicle])와 내비 신호([navi])로 만든 세션 상태를 돌려준다.
-     * 내비가 경로를 안내 중이 아니면 남은 거리와 시간은 가짜 경로 값을 쓴다.
-     * 처음에는 안전한 주행으로 첫 개념 설명을 시작한 뒤 받은 신호를 적용한다.
-     *
-     * P단이어도 [ArrivalRule] 이 도착으로 보지 않으면(아직 주행 전이거나 목적지에서 먼 곳의 정차) 주행 중으로 둔다.
-     * 그래야 들어오자마자, 또는 길가 정차에서 복습 화면으로 넘어가지 않는다.
-     * TODO: 신호가 바뀔 때마다 같은 SessionController 에 전달하도록 바꾼다 (지금은 매번 처음부터 계산한다).
-     */
-    fun runLive(
-        vehicle: VehicleSignals,
-        navi: NaviSignals,
-        hasDriven: Boolean,
-        nowMillis: Long = System.currentTimeMillis()
-    ): SessionUiState {
-        val stoppedButNotArrived = vehicle.gear == Gear.PARK && !ArrivalRule.isArrived(vehicle, navi, hasDriven)
-        val effective = if (stoppedButNotArrived) vehicle.copy(gear = Gear.DRIVE) else vehicle
-        val controller = newController()
-        controller.onContextChanged(context(VehicleSignals(gear = Gear.DRIVE), liveNavi(navi), nowMillis))
-        controller.onContextChanged(context(effective, liveNavi(navi), nowMillis))
-        return controller.uiState
-    }
+    /** 실제 신호로 진행하는 세션([com.roadstudy.automotive.playback.LearningSession])에 넘길 학습 계획과 진도 */
+    val sessionPlan: SessionPlan get() = plan
 
-    /**
-     * 경로 안내 중이 아니면 가짜 경로의 남은 거리·시간을 쓴다.
-     * 에뮬레이터 실측: 안내가 끝난 뒤에도 내비가 지난 회전 정보를 돌려주므로, 경로가 없을 때의 회전·주의 구간·재탐색 값은 무시한다.
-     */
-    private fun liveNavi(live: NaviSignals): NaviSignals =
-        if (live.hasRoute) live
-        else NaviSignals(remainingSec = input.route?.etaSec, remainingMeters = input.route?.remainingMeters)
+    fun newProgress() = ProgressTracker(input.statuses, input.reviewQueue)
+
+    /** 내비 안내가 없을 때 쓰는 남은 거리(m)·시간(초): 홈에서 본 경로 */
+    val fallbackMeters: Int? get() = input.route?.remainingMeters
+    val fallbackSec: Int? get() = input.route?.etaSec
 
     /** 처음부터 시작해서 [scenario] 상황이 된 시점의 세션 상태를 돌려준다 */
     fun run(scenario: DrivingScenario): SessionUiState {
