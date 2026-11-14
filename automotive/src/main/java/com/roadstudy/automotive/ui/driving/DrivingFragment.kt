@@ -11,10 +11,13 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.roadstudy.automotive.R
+import com.roadstudy.automotive.navi.NaviSignalHub
+import com.roadstudy.automotive.session.NaviSignals
 import com.roadstudy.automotive.session.VehicleSignals
 import com.roadstudy.shared.R as SharedR
 import com.roadstudy.automotive.databinding.FragmentDrivingBinding
 import com.roadstudy.automotive.ui.home.FakeHomeDataSource
+import com.roadstudy.automotive.ui.home.withNavi
 import com.roadstudy.automotive.ui.parked.ParkedFragment
 import com.roadstudy.automotive.vehicle.VehicleSignalHub
 
@@ -52,6 +55,7 @@ class DrivingFragment : Fragment() {
         binding.rootDriving.setOnClickListener { viewModel.nextScenario() }
 
         VehicleSignalHub.signals.observe(viewLifecycleOwner) { signals -> viewModel.onVehicleSignals(signals) }
+        NaviSignalHub.signals.observe(viewLifecycleOwner) { signals -> viewModel.onNaviSignals(signals) }
         viewModel.uiState.observe(viewLifecycleOwner) { state ->
             render(state)
             // 도착(P단)하면 주차 후 복습 화면으로 넘어간다. 뒤로 돌아왔을 때 다시 넘어가지 않도록 한 번만 처리한다
@@ -122,9 +126,16 @@ class DrivingFragment : Fragment() {
         object : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                // TODO: Pleos SDK 연동 시 가짜 입력 대신 실제 내비 경로와 저장된 진도를 쓴다
-                val demo = DrivingDemo(FakeHomeDataSource.fromIntent(requireActivity().intent).load(), sectionId)
-                return DrivingViewModel(demo, scenario, VehicleSignalHub.signals.value ?: VehicleSignals()) as T
+                // TODO: 저장된 진도 연동 시 가짜 입력 대신 실제 진도를 쓴다 (내비 경로는 NaviSignalHub 값이 있으면 그것을 쓴다)
+                // 홈과 같은 경로로 학습 계획(개념 수)을 세워서, 홈에서 본 분량과 주행 화면의 "개념 n/N"이 맞게 한다
+                val navi = NaviSignalHub.signals.value ?: NaviSignals()
+                val input = FakeHomeDataSource.fromIntent(requireActivity().intent).load().withNavi(navi)
+                return DrivingViewModel(
+                    DrivingDemo(input, sectionId),
+                    scenario,
+                    VehicleSignalHub.signals.value ?: VehicleSignals(),
+                    navi
+                ) as T
             }
         }
 

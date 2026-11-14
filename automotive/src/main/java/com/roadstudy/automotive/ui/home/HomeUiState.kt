@@ -17,7 +17,8 @@ import com.roadstudy.shared.model.StudySection
 data class RouteSummary(
     val remainingMeters: Int,
     val etaSec: Int,
-    val congestionCount: Int
+    /** 정체 구간 수. 내비가 알려주지 않으면 null (화면에는 "-") */
+    val congestionCount: Int?
 )
 
 /** 홈 화면을 그리는 데 필요한 원재료 */
