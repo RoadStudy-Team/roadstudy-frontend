@@ -44,5 +44,6 @@ dependencies {
     implementation(libs.pleos.texttospeech)
     implementation(libs.androidx.media3.session)
     implementation(libs.androidx.media3.common)
+    implementation(libs.androidx.media3.exoplayer)
     testImplementation(libs.junit)
 }
