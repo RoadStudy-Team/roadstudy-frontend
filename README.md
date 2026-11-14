@@ -243,7 +243,7 @@ roadstudy-frontend
 `apk/` 폴더의 release APK를 에뮬레이터에 설치합니다.
 
 ## 📱 APK 파일 위치
-- `apk/Car공족_RoadStudy_automotive_release.apk`: 차량용(automotive) 앱, 메인 제출 파일
+- `apk/Car공족_RoadStudy_automotive_release.apk`: 차량용(automotive) 앱
 - `apk/Car공족_RoadStudy_mobile_release.apk`: 모바일(mobile) 앱
 
 ## ⚙️Android Studio 환경 설정
