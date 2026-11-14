@@ -1,0 +1,337 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cardChapter"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="12dp"
+    app:cardBackgroundColor="#1C1F26"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="0dp"
+    app:strokeColor="#2A2E37"
+    app:strokeWidth="1dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- 1. 상단 기본 영역 (번호, 제목 / 입력창, 편집 아이콘) -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tvChapterNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="01"
+                android:textColor="#5B9CF6"
+                android:textSize="13sp"
+                android:textStyle="bold" />
+
+            <!-- 평소에 보이는 제목 TextView -->
+            <TextView
+                android:id="@+id/tvChapterTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_weight="1"
+                android:text="정규화란"
+                android:textColor="#E9EBEE"
+                android:textSize="13sp"
+                android:textStyle="bold" />
+
+            <!-- 수정 모드일 때 나타나는 제목 입력창 -->
+            <EditText
+                android:id="@+id/etChapterTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_weight="1"
+                android:background="@null"
+                android:inputType="text"
+                android:maxLines="1"
+                android:textColor="#E9EBEE"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/btnEditChapter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="4dp"
+                android:src="@drawable/ic_compile"
+                app:tint="#7D848E" />
+        </LinearLayout>
+
+        <!-- 2. 설명 영역 (TextView 및 수정용 EditText) -->
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="26dp"
+            android:layout_marginTop="8dp">
+
+            <!-- 평소에 보이는 설명 TextView -->
+            <TextView
+                android:id="@+id/tvChapterDesc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="데이터 중복을 줄이고 이상 현상을 막기 위해 릴레이션을 나누는 과정이에요.."
+                android:textColor="#858C95"
+                android:textSize="11sp" />
+
+            <!-- 수정 모드일 때 나타나는 설명 입력창 -->
+            <EditText
+                android:id="@+id/etChapterDesc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:inputType="textMultiLine"
+                android:textColor="#858C95"
+                android:textSize="11sp"
+                android:visibility="gone" />
+        </FrameLayout>
+
+        <!-- 구분선 -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginStart="26dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="10dp"
+            android:background="#222B3A" />
+
+        <!-- 재생 시간 및 질문 정보 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="26dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tvChapterInfo"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="▶ 2분 40초 · 확인 질문 1개"
+                android:textColor="#707782"
+                android:textSize="10.5sp" />
+
+            <ImageView
+                android:id="@+id/btnPlayChapter"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_play"
+                app:tint="#8A9099" />
+        </LinearLayout>
+
+        <!-- ========================================================== -->
+        <!-- 카드 확장 시에만 나타나는 상세 내용 영역 -->
+        <!-- ========================================================== -->
+        <LinearLayout
+            android:id="@+id/layoutExpandedContent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="26dp"
+            android:orientation="vertical"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="12dp"
+                android:background="#222B3A" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="설명"
+                android:textColor="#7E858F"
+                android:textSize="12sp" />
+
+            <!-- 설명 내용 박스 -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                app:cardBackgroundColor="#171A20"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="0dp"
+                app:strokeColor="#343C47"
+                app:strokeWidth="1dp">
+
+                <TextView
+                    android:id="@+id/tvExpandedDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:lineSpacingExtra="4dp"
+                    android:padding="14dp"
+                    android:text="제3정규형은 기본키가 아닌 속성이 다른 속성을 거쳐 결정되는 이행 함수 종속을 없앤 상태예요..."
+                    android:textColor="#CDD1D6"
+                    android:textSize="9.5sp" />
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- '확인 질문' 타이틀 -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:text="확인 질문"
+                android:textColor="#7E858F"
+                android:textSize="12sp" />
+
+            <!-- Q&A 박스 -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                app:cardBackgroundColor="#171A20"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="0dp"
+                app:strokeColor="#343C47"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="14dp">
+
+                    <!-- Q 라인 -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Q"
+                            android:textColor="#72AAFA"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tvQuestion"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_weight="1"
+                            android:text="제3정규형에서 없애는 종속은?"
+                            android:textColor="#C8CCD1"
+                            android:textSize="9.5sp" />
+                    </LinearLayout>
+
+                    <!-- A 라인 -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="A"
+                            android:textColor="#72AAFA"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tvAnswer"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_weight="1"
+                            android:text="이행 함수 종속"
+                            android:textColor="#C8CCD1"
+                            android:textSize="9.5sp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- 하단 버튼 영역 ('미리 듣기', '저장') -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:gravity="end"
+                android:orientation="horizontal">
+
+                <!-- 미리 듣기 버튼 -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/btnPreview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    app:cardBackgroundColor="#20242B"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="0dp"
+                    app:strokeColor="#343C47"
+                    app:strokeWidth="1dp">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingHorizontal="14dp"
+                        android:paddingVertical="10dp">
+
+                        <ImageView
+                            android:layout_width="14dp"
+                            android:layout_height="14dp"
+                            android:src="@drawable/ic_play"
+                            app:tint="#A9AFB7" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="6dp"
+                            android:text="미리 듣기"
+                            android:textColor="#A9AFB7"
+                            android:textSize="10sp" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- 저장 버튼 -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/btnSave"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:focusable="true"
+                    app:cardBackgroundColor="#20242B"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="0dp"
+                    app:strokeColor="#343C47"
+                    app:strokeWidth="1dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingHorizontal="18dp"
+                        android:paddingVertical="11dp"
+                        android:text="저장"
+                        android:textColor="#416EA7"
+                        android:textSize="10sp"
+                        android:textStyle="bold" />
+                </com.google.android.material.card.MaterialCardView>
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>
