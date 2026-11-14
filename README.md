@@ -236,9 +236,12 @@ roadstudy-frontend
 
 ### Android Studio에서 실행
 1. 저장소를 clone하고 Android Studio에서 프로젝트를 엽니다.
-2. Gradle Sync가 끝날 때까지 기다립니다.
-3. 실행할 모듈(`mobile` 또는 `automotive`)을 선택합니다.
-4. 아래 테스트 환경에 맞는 에뮬레이터를 실행한 뒤 Run을 누릅니다.
+```
+git clone https://github.com/RoadStudy-Team/roadstudy-frontend.git
+```
+3. Gradle Sync가 끝날 때까지 기다립니다.
+4. 실행할 모듈(`mobile` 또는 `automotive`)을 선택합니다.
+5. 아래 테스트 환경에 맞는 에뮬레이터를 실행한 뒤 Run을 누릅니다.
    - `mobile`: 일반 휴대폰 에뮬레이터
    - `automotive`: Pleos Connect Emulator v2.1.0 + Virtual Console
   
