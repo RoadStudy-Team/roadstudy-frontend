@@ -138,7 +138,7 @@ class SessionControllerTest {
 
         controller.onContextChanged(driving(now = 0))
         controller.onAudioFinished(1_000)
-        controller.onSteeringPrevious()
+        controller.onSteeringPrevious(1_500)
 
         assertEquals(ConceptStatus.NEEDS_REVIEW, progress.statuses()["n1"])
         assertEquals(listOf("n1"), progress.reviewQueue())
@@ -151,10 +151,77 @@ class SessionControllerTest {
         controller.onContextChanged(driving(now = 0))
         controller.onAudioFinished(1_000)
         controller.onContextChanged(driving(turnMeters = 100, now = 1_500))
-        controller.onSteeringNext()
+        controller.onSteeringNext(2_000)
 
         assertTrue(progress.reviewQueue().isEmpty())
         assertEquals(ConceptStatus.LEARNED, progress.statuses()["n1"])
+    }
+
+    @Test fun steeringNextDuringExplanationSkipsToNextConcept() {
+        val audio = FakeAudio()
+        val progress = ProgressTracker()
+        val controller = SessionController(plan, progress, audio)
+
+        controller.onContextChanged(driving(now = 0))
+        controller.onSteeringNext(500)
+
+        assertEquals(listOf("play:n1/explain.mp3", "stop", "play:r1/explain.mp3"), audio.calls)
+        assertEquals(ConceptStatus.LEARNED, progress.statuses()["n1"])
+        assertEquals(2, controller.uiState.conceptIndex)
+    }
+
+    @Test fun steeringPreviousRestartsExplanation() {
+        val audio = FakeAudio()
+        val controller = SessionController(plan, ProgressTracker(), audio)
+
+        controller.onContextChanged(driving(now = 0))
+        controller.onAudioFinished(1_000)
+        controller.onSteeringPrevious(1_500)
+
+        assertEquals(listOf("stop", "play:n1/explain.mp3"), audio.calls.takeLast(2))
+        assertEquals(Step.EXPLAIN, controller.uiState.step)
+        assertEquals(1, controller.uiState.conceptIndex)
+    }
+
+    @Test fun steeringNextDuringThinkCancelsAnswer() {
+        val audio = FakeAudio()
+        val controller = SessionController(plan, ProgressTracker(), audio)
+
+        controller.onContextChanged(driving(now = 0))
+        controller.onAudioFinished(1_000)
+        controller.onAudioFinished(2_000)
+        controller.onSteeringNext(2_500)
+        controller.tick(7_000)
+
+        assertTrue(audio.calls.none { it == "play:n1/answer.mp3" })
+        assertEquals("play:r1/explain.mp3", audio.calls.last())
+    }
+
+    @Test fun steeringNextOnLastConceptFinishes() {
+        val audio = FakeAudio()
+        val controller = SessionController(plan, ProgressTracker(), audio)
+
+        controller.onContextChanged(driving(now = 0))
+        controller.onSteeringNext(500)
+        controller.onSteeringNext(1_000)
+
+        assertTrue(controller.uiState.finished)
+        assertEquals("stop", audio.calls.last())
+    }
+
+    @Test fun steeringWhilePausedMovesAndPlaysOnResume() {
+        val audio = FakeAudio()
+        val controller = SessionController(plan, ProgressTracker(), audio)
+
+        controller.onContextChanged(driving(now = 0))
+        controller.pauseByUser()
+        controller.onSteeringNext(1_000)
+        assertEquals(listOf("play:n1/explain.mp3", "pause"), audio.calls)
+
+        controller.resumeByUser(2_000)
+
+        assertEquals("play:r1/explain.mp3", audio.calls.last())
+        assertTrue(audio.calls.none { it == "resume" })
     }
 
     @Test fun parkingEndsSession() {

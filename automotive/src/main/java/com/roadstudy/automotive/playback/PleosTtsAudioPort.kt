@@ -8,6 +8,7 @@ import ai.pleos.playground.tts.listener.OnInitializeListener
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
+import android.os.SystemClock
 import android.util.Log
 import com.roadstudy.automotive.session.AudioClip
 import com.roadstudy.automotive.session.AudioPort
@@ -41,8 +42,11 @@ class PleosTtsAudioPort(
     /** 일부러 멈춘 경우의 onStop 은 "다 읽음"으로 보지 않는다 */
     private var speaking = false
 
-    /** 우리가 tts.stop() 을 불렀는지. 아니면 onStop 은 다른 소리(내비 안내 등)에 끊긴 것이다 */
-    private var stopRequested = false
+    /**
+     * 우리가 tts.stop() 을 부른 시각. 그 직후의 onStop 은 우리가 멈춘 것이고, 아니면 다른 소리(내비 안내 등)에 끊긴 것이다.
+     * 운전대 버튼처럼 멈추자마자 다음 문장을 읽으면 onStop 이 새 문장 시작 뒤에 늦게 올 수 있어서, 표시 대신 시각으로 판단한다.
+     */
+    private var stopRequestedAt = NEVER
 
     /** 지금 문장을 다시 읽은 횟수 (끊길 때마다 다시 읽되 무한 반복하지 않는다) */
     private var retries = 0
@@ -135,7 +139,6 @@ class PleosTtsAudioPort(
 
     private fun speak(clip: AudioClip) {
         Log.d(TAG, "읽기: ${clip.text}")
-        stopRequested = false
         main.removeCallbacks(watchdog)
         main.postDelayed(watchdog, timeoutMillis(clip.text))
         tts.speak(clip.text, true)
@@ -143,16 +146,13 @@ class PleosTtsAudioPort(
 
     private fun requestStop() {
         if (!ready) return
-        stopRequested = true
+        stopRequestedAt = SystemClock.uptimeMillis()
         tts.stop()
     }
 
     /** 우리가 멈추지 않았는데 멈췄으면 다른 소리에 끊긴 것으로 보고 그 문장을 다시 읽는다 */
     private fun onSpeechStopped() {
-        if (stopRequested) {
-            stopRequested = false
-            return
-        }
+        if (SystemClock.uptimeMillis() - stopRequestedAt < OWN_STOP_WINDOW_MILLIS) return
         val clip = current ?: return
         if (!speaking || released) return
         if (retries >= MAX_RETRIES) {
@@ -184,5 +184,7 @@ class PleosTtsAudioPort(
         const val RETRY_DELAY_MILLIS = 1_000L
         const val BASE_TIMEOUT_MILLIS = 8_000L
         const val MILLIS_PER_CHAR = 300L
+        const val OWN_STOP_WINDOW_MILLIS = 1_500L
+        const val NEVER = -100_000L
     }
 }
