@@ -1,24 +1,30 @@
-package com.roadstudy.mobile.mydata
+package com.roadstudy.mobile.ui.mydata
 
 import android.graphics.Color
+import android.graphics.Typeface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
+import android.widget.FrameLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.roadstudy.mobile.R
 import com.roadstudy.mobile.databinding.FragmentMydataStorageBinding
-import com.roadstudy.mobile.main.MainActivity
-import com.roadstudy.mobile.mydata.adapter.MydataAdapter // 본인 프로젝트의 어댑터 경로에 맞춰 확인
-import com.roadstudy.mobile.mydata.data.MydataItem // 본인 프로젝트의 데이터 클래스 경로에 맞춰 확인
+import com.roadstudy.mobile.mydata.MydataRepository
+import com.roadstudy.mobile.ui.main.MainActivity
+import com.roadstudy.mobile.ui.mydata.adapter.MydataAdapter
+import com.roadstudy.mobile.ui.mydata.data.MydataItem
 
 class MydataStorageFragment : Fragment() {
 
     private var _binding: FragmentMydataStorageBinding? = null
     private val binding get() = _binding!!
+
+    private lateinit var adapter: MydataAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -39,9 +45,15 @@ class MydataStorageFragment : Fragment() {
         setupChipFilters()
         setupRecyclerView()
 
-        // 3. '새 자료 올리기' 카드 클릭 리스너
+        // 3. '새 자료 올리기' 카드 클릭 -> 업로드 1단계로 이동
         binding.cardAddNewData.setOnClickListener {
-            // TODO: 새 자료 올리기 화면으로 이동하는 코드
+            // 업로드 플로우 동안 바텀 네비게이션 숨김 (Step1의 X 버튼에서 다시 보이게 함)
+            (activity as? MainActivity)?.setBottomNavigationVisibility(false)
+
+            requireActivity().supportFragmentManager.beginTransaction()
+                .replace(R.id.main_frm, UploadStep1Fragment())
+                .addToBackStack(null)
+                .commit()
         }
     }
 
@@ -64,14 +76,14 @@ class MydataStorageFragment : Fragment() {
                 for (c in chips) {
                     c.setBackgroundResource(R.drawable.bg_chip_unselected)
                     c.setTextColor(Color.parseColor("#7E858E"))
-                    c.setTypeface(null, android.graphics.Typeface.NORMAL)
+                    c.setTypeface(null, Typeface.NORMAL)
                 }
 
                 // 클릭된 칩만 선택 상태로 변경
                 val selected = clickedChip as TextView
                 selected.setBackgroundResource(R.drawable.bg_chip_selected)
                 selected.setTextColor(Color.parseColor("#07121F"))
-                selected.setTypeface(null, android.graphics.Typeface.BOLD)
+                selected.setTypeface(null, Typeface.BOLD)
 
                 // TODO: 칩 카테고리별 필터링 로직 구현
             }
@@ -79,42 +91,74 @@ class MydataStorageFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        // 테스트용 가상 데이터 목록 (필요에 맞게 데이터 클래스 구조를 연동해 사용하세요)
-        val dummyList = listOf(
-            MydataItem("DB 정규화 정리", "DB_정규화_정리.pc · 3월 9일", "5/8 개념 · 24분", true),
-            MydataItem("자바 객체지향 핵심 요약", "OOP_Summary.pdf · 3월 7일", "8/8 개념 · 40분", false),
-            MydataItem("토익 파트 5 핵심 단어", "Toeic_Voca.pdf · 3월 5일", "12/20 개념 · 15분", false)
-        )
+        // ⋮ 버튼(btnCardMore)을 누르면 (버튼 View, 해당 카드 데이터)가 전달돼요
+        adapter = MydataAdapter { anchor, item ->
+            showCardMenu(anchor, item)
+        }
 
         val recyclerView = binding.recyclerViewMyData
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        // ⋮ 버튼(btnCardMore)을 누르면 (버튼 View, 해당 카드 데이터)가 전달돼요
-        recyclerView.adapter = MydataAdapter(dummyList) { anchor, item ->
-            showCardMenu(anchor, item)
-        }
+        recyclerView.adapter = adapter
         recyclerView.isNestedScrollingEnabled = false // NestedScrollView 안에서 스크롤 꼬임 방지
+
+        refreshList()
+    }
+
+    // 저장소의 최신 목록을 화면에 반영
+    private fun refreshList() {
+        adapter.submitList(MydataRepository.getAll())
     }
 
     private fun showCardMenu(anchor: View, item: MydataItem) {
         CardMenuPopup(
             context = requireContext(),
             onSetToday = {
-                // TODO: 오늘 세션으로 설정
-//                Toast.makeText(requireContext(), "오늘 세션으로 설정", Toast.LENGTH_SHORT).show()
+                // 오늘 세션으로 설정 -> 해당 카드에만 배지 표시
+                MydataRepository.setToday(item.id)
+                refreshList()
             },
             onRename = {
-                // TODO: 이름 변경 (다이얼로그 또는 인라인 수정)
-//                Toast.makeText(requireContext(), "이름 변경", Toast.LENGTH_SHORT).show()
+                showRenameDialog(item)
             },
             onAddMaterial = {
                 // TODO: 자료 추가로 올리기 화면으로 이동
-//                Toast.makeText(requireContext(), "자료 추가로 올리기", Toast.LENGTH_SHORT).show()
             },
             onDelete = {
-                // TODO: 삭제 확인 다이얼로그 후 삭제
-//                Toast.makeText(requireContext(), "삭제", Toast.LENGTH_SHORT).show()
+                // 카드 삭제
+                MydataRepository.remove(item.id)
+                refreshList()
             }
         ).show(anchor)
+    }
+
+    // 이름 변경 다이얼로그
+    private fun showRenameDialog(item: MydataItem) {
+        val editText = EditText(requireContext()).apply {
+            setText(item.title)
+            setSelection(text.length)
+            maxLines = 1
+            inputType = android.text.InputType.TYPE_CLASS_TEXT
+        }
+
+        val padding = (20 * resources.displayMetrics.density).toInt()
+        val container = FrameLayout(requireContext()).apply {
+            setPadding(padding, padding / 2, padding, 0)
+            addView(editText)
+        }
+
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle("이름 변경")
+            .setView(container)
+            .setPositiveButton("확인") { _, _ ->
+                val newTitle = editText.text.toString().trim()
+                // 빈 값이면 기존 이름 유지
+                if (newTitle.isNotEmpty()) {
+                    MydataRepository.rename(item.id, newTitle)
+                    refreshList()
+                }
+            }
+            .setNegativeButton("취소", null)
+            .show()
     }
 
     override fun onDestroyView() {

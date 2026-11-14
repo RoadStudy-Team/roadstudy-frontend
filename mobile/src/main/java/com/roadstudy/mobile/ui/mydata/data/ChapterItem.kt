@@ -1,4 +1,4 @@
-package com.roadstudy.mobile.mydata.data
+package com.roadstudy.mobile.ui.mydata.data
 
 data class ChapterItem(
     val number: String,

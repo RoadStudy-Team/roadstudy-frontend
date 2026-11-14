@@ -1,4 +1,4 @@
-package com.roadstudy.mobile.mydata.adapter
+package com.roadstudy.mobile.ui.mydata.adapter
 
 import android.content.Context
 import android.graphics.Color
@@ -9,7 +9,7 @@ import android.view.inputmethod.InputMethodManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
 import com.roadstudy.mobile.databinding.ItemChapterBinding
-import com.roadstudy.mobile.mydata.data.ChapterItem
+import com.roadstudy.mobile.ui.mydata.data.ChapterItem
 import kotlin.math.roundToInt
 
 class ChapterAdapter(private val items: List<ChapterItem>) :

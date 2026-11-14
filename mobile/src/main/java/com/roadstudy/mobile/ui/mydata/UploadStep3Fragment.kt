@@ -1,4 +1,4 @@
-package com.roadstudy.mobile.mydata
+package com.roadstudy.mobile.ui.mydata
 
 import android.content.Context
 import android.content.res.ColorStateList
@@ -10,12 +10,18 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.roadstudy.mobile.R
 import com.roadstudy.mobile.databinding.FragmentUploadStep3Binding
-import com.roadstudy.mobile.main.MainActivity
-import com.roadstudy.mobile.mydata.adapter.ChapterAdapter
-import com.roadstudy.mobile.mydata.data.ChapterItem
+import com.roadstudy.mobile.mydata.MydataRepository
+import com.roadstudy.mobile.ui.main.MainActivity
+import com.roadstudy.mobile.ui.mydata.adapter.ChapterAdapter
+import com.roadstudy.mobile.ui.mydata.data.ChapterItem
+import com.roadstudy.mobile.ui.mydata.data.MydataItem
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class UploadStep3Fragment : Fragment() {
 
@@ -24,6 +30,9 @@ class UploadStep3Fragment : Fragment() {
 
     // 스터디 세션 이름 수정 모드 여부
     private var isEditingStudyTitle = false
+
+    // 처음에 보여 줄 챕터 개수
+    private val previewCount = 2
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -37,15 +46,28 @@ class UploadStep3Fragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // 상단 닫기(X) 버튼 누를 때
+        // 상단 닫기(X) 버튼: 저장하지 않고 '내 자료' 화면으로 이동
         binding.btnClose.setOnClickListener {
-            // 1. MainActivity의 바텀 네비게이션을 다시 보이게 켜기
-            (requireActivity() as? MainActivity)?.setBottomNavigationVisibility(true)
+            goToMydataStorage()
+        }
 
-            // 2. 백스택에 기대지 않고 '내 자료' 화면(MydataStorageFragment)으로 안전하게 교체
-            requireActivity().supportFragmentManager.beginTransaction()
-                .replace(R.id.main_frm, MydataStorageFragment()) // MainActivity의 프레임레이아웃 ID인 main_frm 사용
-                .commit()
+        // '섹션 추가' 버튼: 내 자료에 저장하고 '내 자료' 화면으로 이동
+        binding.btnAddSection.setOnClickListener {
+            // 이름 수정 중이었다면 먼저 확정
+            if (isEditingStudyTitle) finishStudyTitleEdit()
+
+            saveToMydata()
+            goToMydataStorage()
+        }
+
+        val fileName = arguments?.getString("fileName")
+        if (!fileName.isNullOrBlank()) {
+            val title = fileName
+                .substringBeforeLast(".", fileName)   // 확장자가 없는 파일명도 안전하게 처리
+                .replace(Regex("_+"), " ")            // 연속된 _ 도 공백 하나로
+                .trim()
+
+            binding.tvStudyTitle.text = if (title.isNotEmpty()) title else fileName
         }
 
         // 스터디 세션 이름 수정 세팅
@@ -53,6 +75,34 @@ class UploadStep3Fragment : Fragment() {
 
         // 가상 데이터 및 리사이클러뷰 세팅 실행
         setupRecyclerView()
+    }
+
+    // 현재 화면의 정리 결과를 '내 자료' 목록에 추가
+    private fun saveToMydata() {
+        val title = binding.tvStudyTitle.text.toString()
+        val originalFileName = arguments?.getString("fileName") ?: title
+        val date = SimpleDateFormat("M월 d일", Locale.KOREA).format(Date())
+
+        MydataRepository.add(
+            MydataItem(
+                title = title,
+                subInfo = "$originalFileName · $date",
+                progressText = "0/8 개념 · 24분"
+            )
+        )
+    }
+
+    // 업로드 플로우를 모두 정리하고 '내 자료' 화면으로 이동
+    private fun goToMydataStorage() {
+        // 바텀 네비게이션 다시 보이기
+        (requireActivity() as? MainActivity)?.setBottomNavigationVisibility(true)
+
+        val fm = requireActivity().supportFragmentManager
+        // 업로드 단계(Step1~3)가 백스택에 남지 않도록 비우고 이동
+        fm.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+        fm.beginTransaction()
+            .replace(R.id.main_frm, MydataStorageFragment()) // MainActivity의 프레임레이아웃 ID인 main_frm 사용
+            .commit()
     }
 
     private fun setupStudyTitleEdit() {
@@ -140,8 +190,25 @@ class UploadStep3Fragment : Fragment() {
 
         val recyclerView = binding.recyclerViewChapters
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        recyclerView.adapter = ChapterAdapter(dummyList)
         recyclerView.isNestedScrollingEnabled = false
+
+        // 처음에는 previewCount개만 보여 줌
+        recyclerView.adapter = ChapterAdapter(dummyList.take(previewCount))
+
+        // 남은 개수가 있을 때만 "+N개 더보기" 표시
+        val remaining = dummyList.size - previewCount
+        if (remaining > 0) {
+            binding.btnMore.visibility = View.VISIBLE
+            binding.tvMoreText.text = "+${remaining}개 더보기"
+
+            binding.btnMore.setOnClickListener {
+                // 전체 목록으로 교체 후 버튼 숨김
+                recyclerView.adapter = ChapterAdapter(dummyList)
+                binding.btnMore.visibility = View.GONE
+            }
+        } else {
+            binding.btnMore.visibility = View.GONE
+        }
     }
 
     override fun onDestroyView() {

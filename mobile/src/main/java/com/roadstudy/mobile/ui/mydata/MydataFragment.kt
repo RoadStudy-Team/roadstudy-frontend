@@ -1,4 +1,4 @@
-package com.roadstudy.mobile.mydata
+package com.roadstudy.mobile.ui.mydata
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.roadstudy.mobile.R
 import com.roadstudy.mobile.databinding.FragmentMydataBinding
-import com.roadstudy.mobile.main.MainActivity
+import com.roadstudy.mobile.ui.main.MainActivity
 
 class MydataFragment : Fragment() {
 

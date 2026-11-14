@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background_color"
-    tools:context=".mydata.UploadStep3Fragment">
+    tools:context=".remot.UploadStep3Fragment">
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="0dp"
@@ -151,10 +151,10 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="DB 정규화 정리"
                             android:textColor="#F3F4F6"
                             android:textSize="15sp"
-                            android:textStyle="bold" />
+                            android:textStyle="bold"
+                            tools:text="DB_정규화_정리.pdf" />
 
                         <!-- 수정 모드일 때 나타나는 입력창 -->
                         <EditText
@@ -391,6 +391,7 @@
                 app:strokeWidth="1dp">
 
                 <TextView
+                    android:id="@+id/tvMoreText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"

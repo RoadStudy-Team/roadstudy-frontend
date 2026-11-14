@@ -1,4 +1,4 @@
-package com.roadstudy.mobile.today
+package com.roadstudy.mobile.ui.today
 
 import android.os.Bundle
 import android.view.LayoutInflater

@@ -1,4 +1,4 @@
-package com.roadstudy.mobile.growth
+package com.roadstudy.mobile.ui.growth
 
 import android.graphics.Color
 import android.os.Bundle

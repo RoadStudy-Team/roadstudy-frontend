@@ -1,15 +1,19 @@
-package com.roadstudy.mobile.main
+package com.roadstudy.mobile.ui.main
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.core.view.WindowCompat
 import androidx.fragment.app.Fragment
 import com.roadstudy.mobile.R
 import com.roadstudy.mobile.databinding.ActivityMainBinding
-import com.roadstudy.mobile.growth.GrowthFragment
-import com.roadstudy.mobile.mydata.MydataFragment
-import com.roadstudy.mobile.setting.SettingFragment
-import com.roadstudy.mobile.today.TodayFragment
+import com.roadstudy.mobile.ui.growth.GrowthFragment
+import com.roadstudy.mobile.ui.mydata.MydataFragment
+import com.roadstudy.mobile.ui.setting.SettingFragment
+import com.roadstudy.mobile.ui.today.TodayFragment
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -17,6 +21,9 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        window.statusBarColor = Color.parseColor("#0F1218")
+        WindowCompat.getInsetsController(window, window.decorView).isAppearanceLightStatusBars = false
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
