@@ -9,6 +9,8 @@ import android.os.Looper
 import android.util.Log
 import androidx.lifecycle.Observer
 import com.roadstudy.automotive.navi.NaviSignalHub
+import com.roadstudy.automotive.session.AudioClip
+import com.roadstudy.automotive.session.AudioPort
 import com.roadstudy.automotive.session.Gear
 import com.roadstudy.automotive.session.LearningMode
 import com.roadstudy.automotive.session.LiveDrivingContext
@@ -36,7 +38,9 @@ data class SessionRequest(
     /** 개발·시연용: 내비의 회전·주의 구간·재탐색으로 멈추지 않는다 ([LiveDrivingContext] 참고) */
     val ignoreNaviFocus: Boolean = false,
     /** 출근·퇴근·기타. 주차 후 복습 화면의 제목에 쓴다 */
-    val tripType: TripType = TripType.TO_WORK
+    val tripType: TripType = TripType.TO_WORK,
+    /** 백엔드 학습 음성 주소. 있으면 이 파일을 통째로 재생하고, 없거나 실패하면 TTS 로 개념별로 읽는다 */
+    val streamUrl: String? = null
 )
 
 /**
@@ -44,7 +48,10 @@ data class SessionRequest(
  *
  * - 하나의 [SessionController] 를 끝까지 유지해서 "몇 번째 개념"이 이어진다 (화면이 다시 만들어져도 그대로다).
  * - 신호 허브를 직접 구독하고, 0.5초마다 진행기를 깨워 떠올리기 시간·재탐색 후 집중 모드 해제를 처리한다.
- * - 소리는 [PleosTtsAudioPort] 로 읽는다. 운전대 버튼을 받기 위해 세션 동안 무음도 재생한다([SilentKeepAlive]).
+ * - 소리: [SessionRequest.streamUrl] 이 있으면 백엔드 음성 파일을 [StreamPlayer] 로 통째로 재생한다(MVP).
+ *   진행기는 모드(집중·주의·주차) 판단과 도착 처리에만 쓰고, 재생·멈춤은 모드와 사용자 일시정지를 따른다.
+ *   운전대 ▶/◀ 는 30초 앞/뒤로 옮긴다. 파일을 받지 못하면 TTS 로 바꿔 개념별로 읽는다.
+ * - 음성 파일이 없으면 [PleosTtsAudioPort] 로 개념별로 읽는다. 운전대 버튼을 받기 위해 세션 동안 무음도 재생한다([SilentKeepAlive]).
  *   오디오 포커스를 잃으면(다른 앱 재생) 멈추고, 잠깐 잃으면(내비 음성 안내) 일시정지했다가 이어 간다.
  *   실제 목소리는 TTS 서비스(다른 프로세스)가 내므로 시스템의 "소리 줄이기"가 적용되지 않는다. 그래서 줄이는 대신 멈춘다.
  * - 바뀐 상태는 [onState] 로 알린다. 메인 스레드에서만 쓴다.
@@ -60,8 +67,15 @@ class LearningSession(
     private val clock: () -> Long = System::currentTimeMillis
 ) {
     private val main = Handler(Looper.getMainLooper())
-    private val audio = PleosTtsAudioPort(context, onFinished = ::onAudioFinished, onLevel = onLevel)
-    private val controller = SessionController(request.plan, request.progress, audio)
+    private val appContext = context.applicationContext
+
+    /** 백엔드 음성 파일 재생. 없거나 실패하면 null 이고 TTS 로 읽는다 */
+    private var stream: StreamPlayer? = request.streamUrl?.let { StreamPlayer(appContext, it, onError = ::fallbackToTts) }
+
+    /** TTS 는 실제로 읽을 때 만든다 (음성 파일을 재생하면 쓰지 않는다) */
+    private var tts: PleosTtsAudioPort? = null
+    private val clips = ClipAudio()
+    private val controller = SessionController(request.plan, request.progress, clips)
     private val audioManager = context.getSystemService(AudioManager::class.java)
     private val keepAlive = SilentKeepAlive()
 
@@ -117,8 +131,10 @@ class LearningSession(
         running = true
         startedAtMillis = clock()
         val focus = audioManager.requestAudioFocus(focusRequest)
-        keepAlive.start()
+        // 음성 파일은 우리 앱이 직접 소리를 내므로 운전대 버튼용 무음이 필요 없다
+        if (stream == null) keepAlive.start()
         Log.d(TAG, "세션 시작: ${request.sectionTitle}, 개념 ${request.plan.items.size}개, 오디오 포커스 $focus" +
+            (if (stream != null) ", 백엔드 음성 파일 재생" else ", TTS") +
             if (request.ignoreNaviFocus) " (개발용: 내비 회전·주의 구간 무시)" else "")
         VehicleSignalHub.signals.observeForever(vehicleObserver)
         NaviSignalHub.signals.observeForever(naviObserver)
@@ -134,7 +150,9 @@ class LearningSession(
         NaviSignalHub.signals.removeObserver(naviObserver)
         audioManager.abandonAudioFocusRequest(focusRequest)
         keepAlive.stop()
-        audio.release()
+        stream?.release()
+        stream = null
+        tts?.release()
         Log.d(TAG, "세션 끝")
     }
 
@@ -154,15 +172,23 @@ class LearningSession(
         publish()
     }
 
-    /** 운전대 다음(▶): 알아요 → 다음 개념 */
+    /** 운전대 다음(▶): 알아요 → 다음 개념. 음성 파일 재생 중에는 30초 앞으로 */
     fun onNext() {
+        stream?.let {
+            it.seekBy(SEEK_MILLIS)
+            return
+        }
         Log.d(TAG, "운전대 다음(알아요): ${controller.uiState.step}")
         controller.onSteeringNext(clock())
         publish()
     }
 
-    /** 운전대 이전(◀): 다시 들려줘 → 설명부터 다시 */
+    /** 운전대 이전(◀): 다시 들려줘 → 설명부터 다시. 음성 파일 재생 중에는 30초 뒤로 */
     fun onPrevious() {
+        stream?.let {
+            it.seekBy(-SEEK_MILLIS)
+            return
+        }
         Log.d(TAG, "운전대 이전(다시 들려줘): ${controller.uiState.step}")
         controller.onSteeringPrevious(clock())
         publish()
@@ -186,6 +212,7 @@ class LearningSession(
 
     private fun publish() {
         val state = controller.uiState
+        applyStream(state)
         if (state == lastState) return
         if (state.mode != lastState?.mode || state.conceptIndex != lastState?.conceptIndex || state.step != lastState?.step) {
             Log.d(TAG, "상태 ${state.mode}(${state.reason}) 개념 ${state.conceptIndex}/${state.conceptTotal} ${state.step}")
@@ -198,6 +225,65 @@ class LearningSession(
             onArrived()
         }
         onState(state)
+    }
+
+    /** 음성 파일은 학습해도 되는 상황(안전·주의)이고 사용자가 멈추지 않았을 때만 재생한다 */
+    private fun applyStream(state: SessionUiState) {
+        val canPlay = state.mode == LearningMode.NORMAL || state.mode == LearningMode.CAUTION
+        stream?.setPlaying(running && !state.finished && !state.userPaused && canPlay)
+    }
+
+    /** 음성 파일을 받지 못하면(백엔드 꺼짐 등) TTS 로 바꿔 지금 개념부터 읽는다 */
+    private fun fallbackToTts() {
+        val failed = stream ?: return
+        stream = null
+        failed.release()
+        Log.w(TAG, "음성 파일 대신 TTS 로 읽음")
+        if (!running) return
+        keepAlive.start()
+        val clip = clips.lastClip ?: return
+        val port = ttsPort()
+        port.play(clip)
+        val state = controller.uiState
+        val canPlay = state.mode == LearningMode.NORMAL || state.mode == LearningMode.CAUTION
+        if (state.userPaused || !canPlay || !clips.active) port.pause()
+    }
+
+    private fun ttsPort(): PleosTtsAudioPort =
+        tts ?: PleosTtsAudioPort(appContext, onFinished = ::onAudioFinished, onLevel = onLevel).also { tts = it }
+
+    /**
+     * 진행기가 읽으라는 문장. 음성 파일을 재생하는 동안에는 소리를 내지 않고 마지막 문장만 기억한다
+     * (실패해서 TTS 로 바꿀 때 그 문장부터 읽기 위해).
+     */
+    private inner class ClipAudio : AudioPort {
+        var lastClip: AudioClip? = null
+            private set
+
+        /** 진행기가 지금 문장을 재생 중이라고 보는지 (멈춤·정지가 아닌지) */
+        var active = false
+            private set
+
+        override fun play(clip: AudioClip) {
+            lastClip = clip
+            active = true
+            if (stream == null) ttsPort().play(clip)
+        }
+
+        override fun pause() {
+            active = false
+            if (stream == null) tts?.pause()
+        }
+
+        override fun resume() {
+            active = true
+            if (stream == null) tts?.resume()
+        }
+
+        override fun stop() {
+            active = false
+            if (stream == null) tts?.stop()
+        }
     }
 
     private fun onFocusChange(change: Int) {
@@ -221,6 +307,9 @@ class LearningSession(
 
     private companion object {
         const val TAG = "RoadStudySession"
+
+        /** 음성 파일 재생 중 운전대 ▶/◀ 로 옮기는 길이 */
+        const val SEEK_MILLIS = 30_000L
         const val TICK_MILLIS = 500L
     }
 }
