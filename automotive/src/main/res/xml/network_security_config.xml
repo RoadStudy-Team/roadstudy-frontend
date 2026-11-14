@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    개발용 로컬 백엔드(http)만 허용한다. 에뮬레이터에서 10.0.2.2 는 에뮬레이터를 실행한 컴퓨터(맥북)를 가리킨다.
+    실제 서버는 https 를 쓰므로 여기에 추가하지 않는다.
+-->
+<network-security-config>
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="false">10.0.2.2</domain>
+    </domain-config>
+</network-security-config>
