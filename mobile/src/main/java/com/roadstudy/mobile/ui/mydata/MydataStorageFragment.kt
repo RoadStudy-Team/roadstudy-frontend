@@ -132,12 +132,18 @@ class MydataStorageFragment : Fragment() {
     }
 
     // 이름 변경 다이얼로그
+    // 이름 변경 다이얼로그
     private fun showRenameDialog(item: MydataItem) {
         val editText = EditText(requireContext()).apply {
             setText(item.title)
             setSelection(text.length)
             maxLines = 1
             inputType = android.text.InputType.TYPE_CLASS_TEXT
+
+            // 어두운 배경에 맞는 글자색 / 밑줄색
+            setTextColor(Color.parseColor("#F3F4F6"))
+            setHintTextColor(Color.parseColor("#8A9099"))
+            backgroundTintList = android.content.res.ColorStateList.valueOf(Color.parseColor("#5B9CF6"))
         }
 
         val padding = (20 * resources.displayMetrics.density).toInt()
@@ -146,7 +152,7 @@ class MydataStorageFragment : Fragment() {
             addView(editText)
         }
 
-        MaterialAlertDialogBuilder(requireContext())
+        MaterialAlertDialogBuilder(requireContext(), R.style.RoadstudyDialog)
             .setTitle("이름 변경")
             .setView(container)
             .setPositiveButton("확인") { _, _ ->

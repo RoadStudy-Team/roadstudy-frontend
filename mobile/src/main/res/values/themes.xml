@@ -13,6 +13,14 @@
 
     <style name="Theme.Roadstudyfrontend" parent="Base.Theme.Roadstudyfrontend" />
 
+    <style name="RoadstudyDialog" parent="ThemeOverlay.Material3.MaterialAlertDialog">
+        <item name="colorSurface">@color/background_color</item>
+        <item name="colorSurfaceContainerHigh">@color/background_color</item>
+        <item name="colorOnSurface">#F3F4F6</item>
+        <item name="colorOnSurfaceVariant">#8A9099</item>
+        <item name="colorPrimary">#5B9CF6</item>
+    </style>
+
     <!-- ===== 여기에 추가하기 ===== -->
     <!-- BottomNavigationView 스타일 -->
     <style name="NoIndicatorBottomNav" parent="Widget.Material3.BottomNavigationView">
