@@ -99,7 +99,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="20dp"
-                android:text="2월 9일 — 오늘"
+                android:text="11월 14일 — 오늘"
                 android:textColor="#9AA0AA"
                 android:textSize="13sp"
                 app:layout_constraintBottom_toBottomOf="@id/layoutSegment"

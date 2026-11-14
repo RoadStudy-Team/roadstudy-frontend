@@ -9,6 +9,9 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.roadstudy.mobile.R
 import com.roadstudy.mobile.databinding.FragmentGrowthBinding
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 class GrowthFragment : Fragment() {
 
@@ -38,6 +41,13 @@ class GrowthFragment : Fragment() {
 
     private enum class TabType { ALL, WEEK, MONTH }
 
+    // 오늘 기준 N일 전 날짜를 "11월 14일" 형식으로 반환
+    private fun dateDaysAgo(daysAgo: Int): String {
+        val calendar = Calendar.getInstance()
+        calendar.add(Calendar.DAY_OF_YEAR, -daysAgo)
+        return SimpleDateFormat("M월 d일", Locale.KOREA).format(calendar.time)
+    }
+
     private fun updateTabSelection(tabType: TabType) {
         // 모든 탭의 스타일을 초기화 (선택 안 된 상태)
         resetTabStyles()
@@ -48,11 +58,14 @@ class GrowthFragment : Fragment() {
                 binding.chipAll.background = ContextCompat.getDrawable(requireContext(), R.drawable.bg_segment_selected)
                 binding.chipAll.setTextColor(Color.parseColor("#0F1116"))
 
-                // 전체 데이터로 갱신
-                binding.tvPeriod.text = "2월 9일 — 오늘"
+                // 전체 데이터로 갱신: 날짜는 항상 오늘 기준
+                val today = dateDaysAgo(0)   // 오늘 날짜 (예: 11월 14일)
+
+                binding.tvPeriod.text = "$today — 오늘"
                 binding.tvBigNumber.text = "36"
-                binding.tvBigDesc.text = "2월 9일부터 꾸준히 함께했어요"
+                binding.tvBigDesc.text = "${today}부터 꾸준히 함께했어요"
             }
+
             TabType.WEEK -> {
                 // 주간 탭 선택된 스타일 적용
                 binding.chipWeek.background = ContextCompat.getDrawable(requireContext(), R.drawable.bg_segment_selected)
