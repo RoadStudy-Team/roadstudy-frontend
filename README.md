@@ -8,6 +8,9 @@
 ![Kotlin](https://img.shields.io/badge/Kotlin-7F52FF?logo=kotlin&logoColor=white)
 ![Android](https://img.shields.io/badge/Android-3DDC84?logo=android&logoColor=white)
 ![XML](https://img.shields.io/badge/XML-555555?logo=w3c&logoColor=white)
+![Pleos SDK](https://img.shields.io/badge/Pleos%20SDK-0A5CFF)
+![Media3 ExoPlayer](https://img.shields.io/badge/Media3%20ExoPlayer-3DDC84?logo=android&logoColor=white)
+![Material](https://img.shields.io/badge/Material-757575?logo=materialdesign&logoColor=white)
 
 ## 💻 Code Convention
 
