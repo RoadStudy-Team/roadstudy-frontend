@@ -89,7 +89,7 @@ class OtherTripFragment : Fragment() {
     private fun otherTripViewModelFactory(sectionId: String?) = object : ViewModelProvider.Factory {
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            // TODO: Pleos SDK 연동 시 가짜 입력 대신 실제 내비 경로와 선택한 섹션을 쓴다
+            // TODO: 저장소 연동 시 가짜 입력 대신 홈에서 선택한 섹션을 쓴다
             // 홈과 같은 목적지·경로를 보여 주도록 내비 값을 똑같이 반영한다
             val input = FakeHomeDataSource.fromIntent(requireActivity().intent).load().withRoute(
                 NaviSignalHub.signals.value ?: NaviSignals(),

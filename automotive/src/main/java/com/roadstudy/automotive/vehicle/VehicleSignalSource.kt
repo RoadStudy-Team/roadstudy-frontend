@@ -18,11 +18,10 @@ import com.roadstudy.automotive.session.VehicleSignals
 /**
  * Pleos Vehicle SDK 에서 기어, 조명, 와이퍼 신호를 받아 [VehicleSignals] 로 알려 준다.
  *
- * - [start] 로 SDK 에 연결하고 리스너를 등록하며, [stop] 으로 해제한다 (화면이 보이는 동안만 쓴다).
+ * - [start] 로 SDK 에 연결하고 리스너를 등록하며, [stop] 으로 해제한다 ([com.roadstudy.automotive.playback.SignalSources] 가 켜고 끈다).
  * - SDK 콜백은 다른 스레드에서 올 수 있어 메인 스레드로 옮겨서 처리한다.
  * - 와이퍼 단계는 리스너로 오지 않아서(상태는 꺼짐/켜짐뿐) 스위치 값을 주기적으로 읽는다.
- *
- * TODO: 기어는 SDK 에서 숨김(@hide)·사용 중단(Deprecated) API 라서 에뮬레이터 실측으로 값이 오는지 확인한다.
+ * - 기어는 SDK 에서 숨김(@hide)·사용 중단(Deprecated) API 지만 에뮬레이터에서 값이 오는 것을 확인했다.
  */
 class VehicleSignalSource(
     context: Context,

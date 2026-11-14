@@ -27,7 +27,7 @@ import java.time.LocalTime
 /**
  * Pleos NaviHelper SDK 에서 내비 이벤트를 받아 [NaviSignals] 로 알려 준다.
  *
- * - [start] 로 SDK 에 연결하고 리스너를 등록하며, [stop] 으로 해제한다 (화면이 보이는 동안만 쓴다).
+ * - [start] 로 SDK 에 연결하고 리스너를 등록하며, [stop] 으로 해제한다 ([com.roadstudy.automotive.playback.SignalSources] 가 켜고 끈다).
  * - 이벤트는 내비 앱이 보낼 때만 온다. 경로 안내 중이 아니면 아무 값도 오지 않고, 그때는 기본값(경로 없음)이다.
  * - SDK 콜백은 다른 스레드에서 올 수 있어 메인 스레드로 옮겨서 처리한다.
  * - 연결되면 현재 목적지와 회전 정보를 한 번 요청해서, 앱을 늦게 켠 경우에도 값을 채운다.

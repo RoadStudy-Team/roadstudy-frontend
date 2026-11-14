@@ -14,6 +14,7 @@ import com.roadstudy.automotive.R
 import com.roadstudy.automotive.databinding.FragmentDrivingBinding
 import com.roadstudy.automotive.navi.CommuteHub
 import com.roadstudy.automotive.navi.NaviSignalHub
+import com.roadstudy.automotive.playback.BackendConfig
 import com.roadstudy.automotive.playback.LearningHub
 import com.roadstudy.automotive.playback.SessionRequest
 import com.roadstudy.automotive.session.CommuteInfo
@@ -82,7 +83,6 @@ class DrivingFragment : Fragment() {
     }
 
     private fun openParkedReview(sectionId: String?) {
-        // 도착했으니 학습 세션(소리·미디어 서비스)을 끝낸다
         LearningHub.stop()
         parentFragmentManager.beginTransaction()
             .replace(R.id.container, ParkedFragment.newInstance(sectionId))
@@ -166,7 +166,8 @@ class DrivingFragment : Fragment() {
         fallbackMeters = fallbackMeters,
         fallbackSec = fallbackSec,
         ignoreNaviFocus = requireActivity().intent.getBooleanExtra(EXTRA_IGNORE_NAVI_FOCUS, false),
-        tripType = tripType
+        tripType = tripType,
+        streamUrl = BackendConfig.audioUrlFor(sectionId)
     )
 
     private fun driveViewModelFactory(demo: DrivingDemo, scenario: DrivingScenario?) =

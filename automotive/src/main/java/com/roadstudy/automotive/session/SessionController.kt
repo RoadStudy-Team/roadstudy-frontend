@@ -63,7 +63,7 @@ class SessionController(
             userPaused = userPaused
         )
 
-    /** 차량·내비 상태가 바뀔 때마다 호출 (vehicle / navi 패키지에서) */
+    /** 차량·내비 상태가 바뀔 때마다 호출 */
     fun onContextChanged(context: DrivingContext) {
         lastNavi = context.navi
         val previous = decision.mode
@@ -92,7 +92,7 @@ class SessionController(
         }
     }
 
-    /** 오디오 한 조각 재생이 끝났을 때 (audio 패키지에서) */
+    /** 오디오 한 조각 재생이 끝났을 때 */
     fun onAudioFinished(nowMillis: Long) {
         if (!playing || finished) return
         playing = false
