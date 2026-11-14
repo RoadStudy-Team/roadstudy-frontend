@@ -1,4 +1,4 @@
-package com.roadstudy.mobile.setting
+package com.roadstudy.mobile.ui.setting
 
 import android.os.Bundle
 import android.view.LayoutInflater

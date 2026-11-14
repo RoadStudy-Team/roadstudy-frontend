@@ -12,6 +12,10 @@
     <style name="NoIndicatorBottomNav" parent="Widget.Material3.BottomNavigationView">
         <item name="itemActiveIndicatorStyle">@style/NoIndicator</item>
 
+        <item name="android:windowBackground">@color/background_color</item>
+        <item name="android:statusBarColor">@color/background_color</item>
+        <item name="android:windowLightStatusBar">false</item>
+
         <item name="itemBackground">@color/transparent</item>
         <item name="itemRippleColor">@color/transparent</item>
 

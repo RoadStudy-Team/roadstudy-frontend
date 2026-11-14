@@ -8,47 +8,47 @@
     android:background="@color/background_color"
     tools:context=".today.TodayFragment">
 
-    <!-- 상단 로고  -->
+    <!-- 상단 로고 -->
     <LinearLayout
         android:id="@+id/layoutLogo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
         android:layout_marginStart="24dp"
         android:layout_marginTop="32dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_logo"
             android:contentDescription="Logo Icon"
-            app:tint="#B9BEC6"/>
+            android:src="@drawable/ic_logo"
+            app:tint="#B9BEC6" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
+            android:letterSpacing="0.1"
             android:text="ROADSTUDY"
             android:textColor="#B9BEC6"
             android:textSize="10sp"
-            android:textStyle="bold"
-            android:letterSpacing="0.1" />
+            android:textStyle="bold" />
     </LinearLayout>
 
     <TextView
         android:id="@+id/tvSubtitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="22dp"
+        android:layout_marginStart="24dp"
         android:layout_marginTop="44dp"
+        android:letterSpacing="0.08"
         android:text="DRIVE. RECALL. GROW."
         android:textColor="#5B9CF6"
         android:textSize="9sp"
         android:textStyle="bold"
-        android:letterSpacing="0.05"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/layoutLogo" />
 
@@ -56,14 +56,14 @@
         android:id="@+id/tvTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="22dp"
-        android:layout_marginEnd="22dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginEnd="24dp"
+        android:lineSpacingExtra="4dp"
         android:text="출퇴근길을\n복습 시간으로 바꿔볼까요?"
         android:textColor="#F3F4F6"
         android:textSize="26sp"
         android:textStyle="bold"
-        android:lineSpacingExtra="4dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvSubtitle" />
@@ -72,9 +72,9 @@
         android:id="@+id/tvDescription"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="22dp"
-        android:layout_marginEnd="22dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="14dp"
+        android:layout_marginEnd="24dp"
         android:text="내 자료로 만드는, 운전에 방해되지 않는 복습"
         android:textColor="#8A9099"
         android:textSize="13sp"
@@ -83,26 +83,30 @@
         app:layout_constraintTop_toBottomOf="@id/tvTitle" />
 
     <!-- 3단계 안내 카드 박스 -->
-    <androidx.cardview.widget.CardView
+    <com.google.android.material.card.MaterialCardView
         android:id="@+id/cardSteps"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="22dp"
-        android:layout_marginEnd="22dp"
-        android:layout_marginTop="45dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="36dp"
+        android:layout_marginEnd="24dp"
         app:cardBackgroundColor="#1C1F26"
-        app:cardCornerRadius="16dp"
+        app:cardCornerRadius="18dp"
         app:cardElevation="0dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvDescription">
+        app:layout_constraintTop_toBottomOf="@id/tvDescription"
+        app:strokeColor="#282D36"
+        app:strokeWidth="2dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="20dp">
+            android:paddingHorizontal="18dp"
+            android:paddingVertical="20dp">
 
+            <!-- Step 1 -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -117,34 +121,35 @@
                     android:textSize="10sp"
                     android:textStyle="bold" />
 
-                <!-- 아이콘 배경 박스 (Radius 적용 및 수직 중앙 정렬) -->
-                <androidx.cardview.widget.CardView
+                <!-- 아이콘 박스 (테두리 + 라운드) -->
+                <com.google.android.material.card.MaterialCardView
                     android:layout_width="32dp"
                     android:layout_height="32dp"
                     android:layout_marginStart="16dp"
-                    app:cardBackgroundColor="#353B46"
-                    app:cardCornerRadius="8dp"
+                    app:cardBackgroundColor="#1C1F26"
+                    app:cardCornerRadius="9dp"
                     app:cardElevation="0dp"
-                    app:cardUseCompatPadding="false">
+                    app:strokeColor="#353B46"
+                    app:strokeWidth="1.25dp">
 
                     <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:padding="6dp"
+                        android:contentDescription="Step 1 Icon"
+                        android:padding="7dp"
                         android:scaleType="centerInside"
                         android:src="@drawable/ic_file"
-                        android:contentDescription="Step 1 Icon"
                         app:tint="#DFE2E7" />
-                </androidx.cardview.widget.CardView>
+                </com.google.android.material.card.MaterialCardView>
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:layout_marginStart="14dp"
+                    android:layout_weight="1"
                     android:text="공부하던 노트나 자료를 올려요"
                     android:textColor="#DFE1E5"
-                    android:textSize="13sp" />
+                    android:textSize="12sp" />
             </LinearLayout>
 
             <View
@@ -152,7 +157,7 @@
                 android:layout_height="1dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="16dp"
-                android:background="#2D333D" />
+                android:background="#262A33" />
 
             <!-- Step 2 -->
             <LinearLayout
@@ -169,33 +174,35 @@
                     android:textSize="10sp"
                     android:textStyle="bold" />
 
-                <androidx.cardview.widget.CardView
+                <!-- 아이콘 박스 (테두리 + 라운드) -->
+                <com.google.android.material.card.MaterialCardView
                     android:layout_width="32dp"
                     android:layout_height="32dp"
                     android:layout_marginStart="16dp"
-                    app:cardBackgroundColor="#353B46"
-                    app:cardCornerRadius="8dp"
+                    app:cardBackgroundColor="#1C1F26"
+                    app:cardCornerRadius="9dp"
                     app:cardElevation="0dp"
-                    app:cardUseCompatPadding="false">
+                    app:strokeColor="#353B46"
+                    app:strokeWidth="1.25dp">
 
                     <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:padding="6dp"
+                        android:contentDescription="Step 2 Icon"
+                        android:padding="7dp"
                         android:scaleType="centerInside"
                         android:src="@drawable/ic_spark"
-                        android:contentDescription="Step 2 Icon"
                         app:tint="#DFE2E7" />
-                </androidx.cardview.widget.CardView>
+                </com.google.android.material.card.MaterialCardView>
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:layout_marginStart="14dp"
+                    android:layout_weight="1"
                     android:text="AI가 출퇴근용 학습으로 바꿔요"
                     android:textColor="#DFE1E5"
-                    android:textSize="13sp" />
+                    android:textSize="12sp" />
             </LinearLayout>
 
             <View
@@ -203,7 +210,7 @@
                 android:layout_height="1dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="16dp"
-                android:background="#2D333D" />
+                android:background="#262A33" />
 
             <!-- Step 3 -->
             <LinearLayout
@@ -220,52 +227,58 @@
                     android:textSize="10sp"
                     android:textStyle="bold" />
 
-                <androidx.cardview.widget.CardView
+                <!-- 아이콘 박스 (테두리 + 라운드) -->
+                <com.google.android.material.card.MaterialCardView
                     android:layout_width="32dp"
                     android:layout_height="32dp"
                     android:layout_marginStart="16dp"
-                    app:cardBackgroundColor="#353B46"
-                    app:cardCornerRadius="8dp"
+                    app:cardBackgroundColor="#1C1F26"
+                    app:cardCornerRadius="9dp"
                     app:cardElevation="0dp"
-                    app:cardUseCompatPadding="false">
+                    app:strokeColor="#353B46"
+                    app:strokeWidth="1.25dp">
 
                     <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:padding="6dp"
+                        android:contentDescription="Step 3 Icon"
+                        android:padding="7dp"
                         android:scaleType="centerInside"
                         android:src="@drawable/ic_car"
-                        android:contentDescription="Step 3 Icon"
                         app:tint="#DFE2E7" />
-                </androidx.cardview.widget.CardView>
+                </com.google.android.material.card.MaterialCardView>
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:layout_marginStart="14dp"
+                    android:layout_weight="1"
                     android:text="차에 타면 운전이 쉬운 순간에만 말을 걸어요"
                     android:textColor="#DFE1E5"
-                    android:textSize="13sp" />
+                    android:textSize="12sp" />
             </LinearLayout>
         </LinearLayout>
-    </androidx.cardview.widget.CardView>
+    </com.google.android.material.card.MaterialCardView>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnUpload"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="22dp"
-        android:layout_marginEnd="22dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
         android:layout_marginBottom="18dp"
         android:backgroundTint="#5B9CF6"
-        android:paddingTop="14dp"
-        android:paddingBottom="14dp"
-        android:text="올리기  →"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
+        android:text="올리기"
         android:textColor="#07121F"
         android:textSize="15sp"
         android:textStyle="bold"
-        app:cornerRadius="14dp"
+        app:cornerRadius="16dp"
+        app:icon="@drawable/ic_arrow_right"
+        app:iconGravity="textEnd"
+        app:iconPadding="8dp"
+        app:iconTint="#07121F"
         app:layout_constraintBottom_toTopOf="@id/tvSampleGuide"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -274,7 +287,7 @@
         android:id="@+id/tvSampleGuide"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="36dp"
+        android:layout_marginBottom="32dp"
         android:text="샘플 자료로 먼저 체험하기"
         android:textColor="#9298A1"
         android:textSize="12sp"

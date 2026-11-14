@@ -1,4 +1,4 @@
-package com.roadstudy.mobile.mydata
+package com.roadstudy.mobile.ui.mydata
 
 import android.R.attr.elevation
 import android.content.Context

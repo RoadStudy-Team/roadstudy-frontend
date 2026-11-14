@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 위쪽 구분선 -->
+    <item android:gravity="top|fill_horizontal">
+        <shape android:shape="rectangle">
+            <size android:height="2dp" />
+            <solid android:color="#2C2E35" />
+        </shape>
+    </item>
+</layer-list>
