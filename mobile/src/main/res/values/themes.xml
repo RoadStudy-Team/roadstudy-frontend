@@ -1,24 +1,33 @@
 <resources xmlns:tools="http://schemas.android.com/tools" xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- Base application theme. -->
     <style name="Base.Theme.Roadstudyfrontend" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <!-- 앱 배경 / 상태바 -->
+        <item name="android:windowBackground">@color/background_color</item>
+        <item name="android:statusBarColor">@color/background_color</item>
+        <item name="android:windowLightStatusBar">false</item>
+
+        <!-- 시스템 스플래시: 배경은 앱 배경색, 아이콘은 투명 (Android 12+) -->
+        <item name="android:windowSplashScreenBackground" tools:targetApi="31">@color/background_color</item>
+        <item name="android:windowSplashScreenAnimatedIcon" tools:targetApi="31">@drawable/splash_empty</item>
     </style>
 
     <style name="Theme.Roadstudyfrontend" parent="Base.Theme.Roadstudyfrontend" />
+
+    <style name="RoadstudyDialog" parent="ThemeOverlay.Material3.MaterialAlertDialog">
+        <item name="colorSurface">@color/background_color</item>
+        <item name="colorSurfaceContainerHigh">@color/background_color</item>
+        <item name="colorOnSurface">#F3F4F6</item>
+        <item name="colorOnSurfaceVariant">#8A9099</item>
+        <item name="colorPrimary">#5B9CF6</item>
+    </style>
 
     <!-- ===== 여기에 추가하기 ===== -->
     <!-- BottomNavigationView 스타일 -->
     <style name="NoIndicatorBottomNav" parent="Widget.Material3.BottomNavigationView">
         <item name="itemActiveIndicatorStyle">@style/NoIndicator</item>
 
-        <item name="android:windowBackground">@color/background_color</item>
-        <item name="android:statusBarColor">@color/background_color</item>
-        <item name="android:windowLightStatusBar">false</item>
-
         <item name="itemBackground">@color/transparent</item>
         <item name="itemRippleColor">@color/transparent</item>
-
 
         <item name="android:minHeight">70dp</item>
         <item name="itemIconSize">28dp</item>
