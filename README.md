@@ -220,11 +220,31 @@ roadstudy-frontend
 │   └── src/main/java/com/roadstudy/mobile
 │       ├── main                        MainActivity, 하단 탭
 │       └── today · mydata · growth · setting    탭별 화면(Fragment)
-└── shared                              공용 라이브러리
-    └── src/main
-        ├── java/com/roadstudy/shared/model      StudySection, Concept 등 데이터 모델
-        └── res/values/colors.xml                색상 값
+├── shared                              공용 라이브러리
+│   └── src/main
+│       ├── java/com/roadstudy/shared/model      StudySection, Concept 등 데이터 모델
+│       └── res/values/colors.xml                색상 값
+└── apk                                 제출용 release APK
+    ├── Car공족_RoadStudy_automotive_release.apk             차량용(automotive) 앱
+    └── Car공족_RoadStudy_mobile_release.apk      모바일(mobile) 앱
 ```
+
+## ▶️ 실행 방법
+
+### Android Studio에서 실행
+1. 저장소를 clone하고 Android Studio에서 프로젝트를 엽니다.
+2. Gradle Sync가 끝날 때까지 기다립니다.
+3. 실행할 모듈(`mobile` 또는 `automotive`)을 선택합니다.
+4. 아래 테스트 환경에 맞는 에뮬레이터를 실행한 뒤 Run을 누릅니다.
+   - `mobile`: 일반 휴대폰 에뮬레이터
+   - `automotive`: Pleos Connect Emulator v2.1.0 + Virtual Console
+  
+### APK로 설치
+`apk/` 폴더의 release APK를 에뮬레이터에 설치합니다.
+
+## 📱 APK 파일 위치
+- `apk/Car공족_RoadStudy_automotive_release.apk`: 차량용(automotive) 앱, 메인 제출 파일
+- `apk/Car공족_RoadStudy_mobile_release.apk`: 모바일(mobile) 앱
 
 ## ⚙️Android Studio 환경 설정
 버전 : Rabbit 2
@@ -240,6 +260,6 @@ minSDK : 28 (전 모듈 공통, Pleos Connect 차량 보안 요건)
 | 모듈 | 실행 환경 |
 | --- | --- |
 | `mobile` | 일반 휴대폰 에뮬레이터 (Phone, API 28 이상) |
-| `automotive` | Pleos Connect Emulator v2.1.0 (API 34) + Virtual Console. **휴대폰 에뮬레이터 사용 금지** |
+| `automotive` | Pleos Connect Emulator v2.1.0 (API 34, 화면 2560 x 1440 px, 160 dpi) + Virtual Console. **휴대폰 에뮬레이터 사용 금지** |
 
 Pleos Connect Emulator 설치: https://document.pleos.ai/docs/connect/guide/getting-started/application-development/setup-connect-sdk-emulator
