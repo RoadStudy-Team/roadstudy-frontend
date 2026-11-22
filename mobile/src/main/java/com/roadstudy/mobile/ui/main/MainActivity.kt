@@ -11,6 +11,7 @@ import com.roadstudy.mobile.R
 import com.roadstudy.mobile.databinding.ActivityMainBinding
 import com.roadstudy.mobile.ui.growth.GrowthFragment
 import com.roadstudy.mobile.ui.mydata.MydataFragment
+import com.roadstudy.mobile.ui.onboarding.OnBoardingRoutineFragment
 import com.roadstudy.mobile.ui.setting.SettingFragment
 import com.roadstudy.mobile.ui.today.TodayFragment
 
@@ -28,12 +29,17 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // 1. 앱 최초 실행 시 기본으로 보여줄 프래그먼트 설정
+        // 1. 최초 실행 시: 온보딩 완료 전이면 온보딩, 완료했으면 Today
         if (savedInstanceState == null) {
-            changeFragment(TodayFragment())
+            if (isOnboardingDone()) {
+                changeFragment(TodayFragment())
+            } else {
+                setBottomNavigationVisibility(false)
+                changeFragment(OnBoardingRoutineFragment())
+            }
         }
 
-        // 2. BottomNavigationView 아이템 선택 리스너 설정
+        // 2. BottomNavigationView 아이템 선택 리스너 (기존 그대로)
         binding.mainBnv.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.navigation_today -> {
@@ -57,7 +63,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // 3. 프래그먼트 교체를 담당하는 헬퍼 함수
     private fun changeFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction()
             .replace(R.id.main_frm, fragment)
@@ -66,5 +71,22 @@ class MainActivity : AppCompatActivity() {
 
     fun setBottomNavigationVisibility(isVisible: Boolean) {
         binding.mainBnv.visibility = if (isVisible) View.VISIBLE else View.GONE
+    }
+
+    // 온보딩 완료 후 호출: Today 화면으로 이동 + 바텀 네비 표시
+    fun finishOnboarding() {
+        getSharedPreferences("routine_prefs", MODE_PRIVATE)
+            .edit()
+            .putBoolean("onboarding_done", true)
+            .apply()
+
+        setBottomNavigationVisibility(true)
+        binding.mainBnv.selectedItemId = R.id.navigation_today // 리스너가 TodayFragment로 교체
+    }
+
+    private fun isOnboardingDone(): Boolean {
+        return false // 개발 중 임시: 항상 온보딩 표시
+        // return getSharedPreferences("routine_prefs", MODE_PRIVATE)
+        //     .getBoolean("onboarding_done", false)
     }
 }

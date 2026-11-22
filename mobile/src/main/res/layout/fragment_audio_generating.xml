@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background_color"
-    tools:context=".remot.AudioGeneratingFragment">
+    tools:context="ui.mydata.AudioGeneratingFragment">
 
     <ImageView
         android:id="@+id/btnClose"
