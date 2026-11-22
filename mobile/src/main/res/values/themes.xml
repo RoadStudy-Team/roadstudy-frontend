@@ -21,6 +21,21 @@
         <item name="colorPrimary">#5B9CF6</item>
     </style>
 
+    <style name="DarkBottomSheetDialog" parent="Theme.Material3.Dark.BottomSheetDialog">
+        <item name="android:navigationBarColor">@color/background_color</item>
+        <item name="bottomSheetStyle">@style/DarkBottomSheetStyle</item>
+    </style>
+
+    <style name="DarkBottomSheetStyle" parent="Widget.Material3.BottomSheet.Modal">
+        <item name="android:background">@drawable/bg_bottom_sheet</item>
+        <item name="backgroundTint">@null</item>
+    </style>
+
+    <style name="DarkTimePicker" parent="ThemeOverlay.AppCompat.Dark">
+        <item name="android:textColorPrimary">#F3F4F6</item>
+        <item name="android:textColorSecondary">#8B91A0</item>
+    </style>
+
     <!-- ===== 여기에 추가하기 ===== -->
     <!-- BottomNavigationView 스타일 -->
     <style name="NoIndicatorBottomNav" parent="Widget.Material3.BottomNavigationView">
