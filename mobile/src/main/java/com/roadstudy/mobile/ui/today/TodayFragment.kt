@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.roadstudy.mobile.R
 import com.roadstudy.mobile.databinding.FragmentTodayBinding
 
 class TodayFragment : Fragment() {
@@ -16,7 +17,7 @@ class TodayFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentTodayBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -24,7 +25,21 @@ class TodayFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // 여기에 버튼 클릭 리스너나 데이터 세팅 등 UI 로직을 작성
+        binding.btnUpload.setOnClickListener {
+            // TODO: 실제 파일 업로드 연동 전까지는 바로 메인 화면으로 이동
+            moveToTodayMain()
+        }
+
+        binding.tvSampleGuide.setOnClickListener {
+            // TODO: 샘플 자료 체험 (지금은 같은 메인 화면으로 이동)
+            moveToTodayMain()
+        }
+    }
+
+    private fun moveToTodayMain() {
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.main_frm, TodayMainFragment())
+            .commit()
     }
 
     override fun onDestroyView() {
