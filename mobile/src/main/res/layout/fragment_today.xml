@@ -8,12 +8,12 @@
     android:background="@color/background_color"
     tools:context="ui.today.TodayFragment">
 
-    <!-- 상단 로고 -->
+    <!-- 상단 로고  -->
     <LinearLayout
         android:id="@+id/layoutLogo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="42dp"
         android:gravity="center_vertical"
         android:orientation="horizontal"
@@ -21,20 +21,19 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:contentDescription="Logo Icon"
-            android:src="@drawable/ic_logo"
-            app:tint="#B9BEC6" />
+            android:src="@drawable/ic_logo" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:letterSpacing="0.1"
+            android:letterSpacing="0.15"
             android:text="ROADSTUDY"
             android:textColor="#B9BEC6"
-            android:textSize="10sp"
+            android:textSize="11sp"
             android:textStyle="bold" />
     </LinearLayout>
 
@@ -121,7 +120,6 @@
                     android:textSize="10sp"
                     android:textStyle="bold" />
 
-                <!-- 아이콘 박스 (테두리 + 라운드) -->
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="32dp"
                     android:layout_height="32dp"
@@ -174,7 +172,6 @@
                     android:textSize="10sp"
                     android:textStyle="bold" />
 
-                <!-- 아이콘 박스 (테두리 + 라운드) -->
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="32dp"
                     android:layout_height="32dp"
@@ -227,7 +224,6 @@
                     android:textSize="10sp"
                     android:textStyle="bold" />
 
-                <!-- 아이콘 박스 (테두리 + 라운드) -->
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="32dp"
                     android:layout_height="32dp"
@@ -260,39 +256,51 @@
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnUpload"
+    <!-- 하단 버튼 -->
+    <LinearLayout
+        android:id="@+id/layoutBottom"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginBottom="18dp"
-        android:backgroundTint="#5B9CF6"
-        android:paddingTop="16dp"
-        android:paddingBottom="16dp"
-        android:text="올리기"
-        android:textColor="#07121F"
-        android:textSize="15sp"
-        android:textStyle="bold"
-        app:cornerRadius="16dp"
-        app:icon="@drawable/ic_arrow_right"
-        app:iconGravity="textEnd"
-        app:iconPadding="8dp"
-        app:iconTint="#07121F"
-        app:layout_constraintBottom_toTopOf="@id/tvSampleGuide"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <TextView
-        android:id="@+id/tvSampleGuide"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="32dp"
-        android:text="샘플 자료로 먼저 체험하기"
-        android:textColor="#9298A1"
-        android:textSize="12sp"
+        android:orientation="vertical"
+        android:paddingHorizontal="24dp"
+        android:paddingBottom="32dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent">
+
+        <LinearLayout
+            android:id="@+id/btnUpload"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:background="@drawable/bg_button_primary"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="올리기"
+                android:textColor="#07121F"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_marginStart="8dp"
+                android:src="@drawable/ic_arrow_right"
+                app:tint="#07121F" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tvSampleGuide"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:gravity="center"
+            android:text="샘플 자료로 먼저 체험하기"
+            android:textColor="#9298A1"
+            android:textSize="12sp" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
